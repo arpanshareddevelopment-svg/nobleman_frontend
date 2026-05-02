@@ -1,0 +1,286 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap");
+@import "tailwindcss";
+/* ─── Design tokens ─────────────────────────────────────────── */
+:root {
+  /* surfaces */
+  --bg-page: #f8fafc;
+  --bg-card: #f1f5f9;
+  --bg-nav: rgba(255, 255, 255, 0.72);
+
+  /* text */
+  --fg-primary: #0d1117;
+  --fg-secondary: #475569;
+  --fg-muted: #94a3b8;
+
+  /* brand — primary green */
+  --brand-green: #16a34a;
+  --brand-green-light: #22c55e;
+  --brand-green-dark: #14532d;
+  --brand-green-glow: rgba(34, 197, 94, 0.18);
+
+  /* brand — blue */
+  --brand-blue: #1d4ed8;
+  --brand-blue-light: #3b82f6;
+  --brand-blue-dark: #1e3a8a;
+  --brand-blue-glow: rgba(59, 130, 246, 0.18);
+
+  /* brand — yellow */
+  --brand-yellow: #ca8a04;
+  --brand-yellow-light: #facc15;
+  --brand-yellow-dark: #713f12;
+  --brand-yellow-glow: rgba(250, 204, 21, 0.18);
+
+  /* brand — orange */
+  --brand-orange: #ea580c;
+  --brand-orange-light: #fb923c;
+  --brand-orange-dark: #7c2d12;
+  --brand-orange-glow: rgba(251, 146, 60, 0.18);
+
+  /* brand — pink */
+  --brand-pink: #ec4899;
+  --brand-pink-light: #f472b6;
+  --brand-pink-dark: #831843;
+  --brand-pink-glow: rgba(244, 114, 182, 0.18);
+
+  /* brand — purple */
+  --brand-purple: #a855f7;
+  --brand-purple-light: #c084fc;
+  --brand-purple-dark: #4c1d95;
+  --brand-purple-glow: rgba(192, 132, 252, 0.18);
+
+  /* semantic — error */
+  --color-error: #ef4444;
+  --color-error-light: #fca5a5;
+  --color-error-dark: #991b1b;
+  --color-error-glow: rgba(239, 68, 68, 0.18);
+
+  /* accent (used for buttons, focus rings) */
+  --accent: var(--brand-green);
+  --accent-hover: var(--brand-green-dark);
+
+  /* borders */
+  --border: rgba(0, 0, 0, 0.08);
+
+  /* shadows */
+  --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dark {
+  --bg-page: #060a0f;
+  --bg-card: #0d1117;
+  --bg-nav: rgba(10, 14, 20, 0.7);
+
+  --fg-primary: #e2e8f0;
+  --fg-secondary: #94a3b8;
+  --fg-muted: #475569;
+
+  /* brand stays the same hue, slightly brighter in dark */
+  --brand-green: #22c55e;
+  --brand-green-light: #4ade80;
+  --brand-green-dark: #166534;
+  --brand-green-glow: rgba(74, 222, 128, 0.14);
+
+  --brand-blue: #3b82f6;
+  --brand-blue-light: #60a5fa;
+  --brand-blue-dark: #1e40af;
+  --brand-blue-glow: rgba(96, 165, 250, 0.14);
+
+  --brand-yellow: #facc15;
+  --brand-yellow-light: #fde047;
+  --brand-yellow-dark: #854d0e;
+  --brand-yellow-glow: rgba(253, 224, 71, 0.14);
+
+  --accent: var(--brand-green);
+  --accent-hover: var(--brand-green-dark);
+
+  --border: rgba(255, 255, 255, 0.07);
+
+  --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.35);
+
+  /* brand — orange (dark mode) */
+  --brand-orange: #f97316;
+  --brand-orange-light: #fb923c;
+  --brand-orange-dark: #92400e;
+  --brand-orange-glow: rgba(251, 146, 60, 0.14);
+
+  /* brand — pink (dark mode) */
+  --brand-pink: #ec4899;
+  --brand-pink-light: #f472b6;
+  --brand-pink-dark: #831843;
+  --brand-pink-glow: rgba(244, 114, 182, 0.14);
+
+  /* brand — purple (dark mode) */
+  --brand-purple: #d8b4fe;
+  --brand-purple-light: #e9d5ff;
+  --brand-purple-dark: #4c1d95;
+  --brand-purple-glow: rgba(217, 70, 239, 0.14);
+
+  /* semantic — error (dark mode) */
+  --color-error: #fca5a5;
+  --color-error-light: #fecaca;
+  --color-error-dark: #7f1d1d;
+  --color-error-glow: rgba(252, 165, 165, 0.14);
+}
+
+/* ─── Tailwind theme bridge ──────────────────────────────────── */
+@theme inline {
+  --color-background: var(--bg-page);
+  --color-foreground: var(--fg-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ─── Base ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--fg-primary);
+
+  /* smooth theme transition */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography helpers ─────────────────────────────────────── */
+h1,
+h2,
+h3 {
+  font-family: "Manrope", sans-serif;
+  line-height: 1.2;
+  color: var(--fg-secondary);
+}
+
+h4,
+h5,
+h6,
+p {
+  font-family: "Space Grotesk", sans-serif;
+  line-height: 1.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Scrollbar (webkit) ─────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+
+/* ─── Focus ring ─────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── Common component classes ───────────────────────────────── */
+
+/* Glass card */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Pill button */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    background-color 0.3s ease;
+}
+.btn-pill:hover {
+  opacity: 0.88;
+}
+.btn-pill:active {
+  transform: scale(0.97);
+}
+
+/* Primary variant */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  opacity: 1;
+}
+
+/* Ghost variant */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-primary);
+}
+.btn-ghost:hover {
+  background: var(--border);
+  opacity: 1;
+}
+
+/* ─── Page wrapper ───────────────────────────────────────────── */
+.page-bg {
+  min-height: 100vh;
+  background: var(--bg-page);
+  transition: background-color 0.3s ease;
+}
+
+.dark .page-bg {
+  background: linear-gradient(
+    160deg,
+    #060a0f 0%,
+    #071220 45%,
+    #080e1a 75%,
+    #060a12 100%
+  );
+}
+
+/* ─── Gradient text utility ──────────────────────────────────── */
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent), #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glow effect ────────────────────────────────────────────── */
+.glow {
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.25);
+}
+.glow-sm {
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.18);
+}
