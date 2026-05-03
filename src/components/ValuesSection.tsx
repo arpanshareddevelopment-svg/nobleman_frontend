@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { Radio, MessageCircle, Zap, Users } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const VALUES = [
   {
@@ -40,9 +40,10 @@ const VALUES = [
     glow: "var(--brand-blue-glow)",
   },
 ];
+
+/* 🔥 SSR-safe theme hook */
 function useThemeMode() {
   const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -52,7 +53,6 @@ function useThemeMode() {
     };
 
     update();
-    setMounted(true);
 
     const observer = new MutationObserver(update);
     observer.observe(root, {
@@ -63,17 +63,14 @@ function useThemeMode() {
     return () => observer.disconnect();
   }, []);
 
-  return { isDark, mounted };
+  return isDark;
 }
+
 export default function ValuesSection() {
-  const { isDark, mounted } = useThemeMode();
- 
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
- if (!mounted) return null;
+  const isDark = useThemeMode();
+
   return (
     <section
-      ref={ref}
       className="relative isolate overflow-hidden py-24 md:py-28"
       style={{
         background: isDark
@@ -89,33 +86,35 @@ export default function ValuesSection() {
     `,
       }}
     >
-      {/* GRID */}
+      {/* GRID BG */}
       <div
         className="absolute inset-0 -z-20 opacity-[0.08]"
         style={{
           backgroundImage: `
-      linear-gradient(var(--fg-muted) 1px, transparent 1px),
-      linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
-    `,
+            linear-gradient(var(--fg-muted) 1px, transparent 1px),
+            linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
+          `,
           backgroundSize: "40px 40px",
         }}
       />
+
+      {/* GLOW */}
       <div
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 -z-10 blur-3xl"
         style={{
           background: `
-      radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),
-      radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 50%)
-    `,
-          filter: "blur(60px)",
+            radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),
+            radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 50%)
+          `,
         }}
       />
 
       <div className="mx-auto max-w-7xl px-6 md:px-10 xl:px-14">
-        {/* HEADER */}
+        {/* 🔥 HEADER */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           className="text-center font-black leading-[1.05] tracking-tight text-[clamp(2.2rem,3.8vw,3.8rem)] text-[color:var(--fg-primary)]"
         >
@@ -132,7 +131,7 @@ export default function ValuesSection() {
           way
         </motion.h2>
 
-        {/* GRID */}
+        {/* 🔥 CARDS */}
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {VALUES.map((value, i) => {
             const Icon = value.icon;
@@ -141,23 +140,18 @@ export default function ValuesSection() {
               <motion.div
                 key={value.id}
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group relative rounded-[1.5rem] border p-6 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background: isDark
                     ? "rgba(255,255,255,0.05)"
                     : "rgba(255,255,255,0.65)",
-
-                  backdropFilter: "blur(18px)",
-                  WebkitBackdropFilter: "blur(18px)",
                   borderColor: "var(--border)",
                 }}
               >
-                {/* DARK MODE FIX */}
-                <div className="dark:absolute dark:inset-0 dark:rounded-[1.5rem] dark:bg-white/5" />
-
-                {/* HOVER GLOW */}
+                {/* Hover Glow */}
                 <div
                   className="absolute inset-0 rounded-[1.5rem] opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100"
                   style={{
@@ -165,7 +159,7 @@ export default function ValuesSection() {
                   }}
                 />
 
-                {/* ICON */}
+                {/* Icon */}
                 <div
                   className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
                   style={{
@@ -176,17 +170,17 @@ export default function ValuesSection() {
                   <Icon size={26} strokeWidth={1.6} />
                 </div>
 
-                {/* TITLE */}
-                <h3 className="relative z-10 font-bold text-lg leading-tight text-[color:var(--fg-primary)]">
+                {/* Title */}
+                <h3 className="relative z-10 font-bold text-lg text-[color:var(--fg-primary)]">
                   {value.title}
                 </h3>
 
-                {/* DESC */}
-                <p className="relative z-10 mt-2 text-sm leading-relaxed text-[color:var(--fg-secondary)]">
+                {/* Description */}
+                <p className="relative z-10 mt-2 text-sm text-[color:var(--fg-secondary)]">
                   {value.description}
                 </p>
 
-                {/* BOTTOM ACCENT */}
+                {/* Bottom line */}
                 <div
                   className="absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full"
                   style={{
