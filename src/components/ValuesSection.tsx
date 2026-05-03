@@ -1,7 +1,8 @@
 "use client";
-import { useRef } from "react";
+
 import { motion, useInView } from "framer-motion";
 import { Radio, MessageCircle, Zap, Users } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
 
 const VALUES = [
   {
@@ -39,8 +40,32 @@ const VALUES = [
     glow: "var(--brand-blue-glow)",
   },
 ];
+function useThemeMode() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
 
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const observer = new MutationObserver(() => {
+      const next = root.classList.contains("dark");
+      setIsDark((current) => (current === next ? current : next));
+    });
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
 export default function ValuesSection() {
+  const isDark = useThemeMode();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -48,28 +73,39 @@ export default function ValuesSection() {
     <section
       ref={ref}
       className="relative isolate overflow-hidden py-24 md:py-28"
-      style={{ background: "var(--bg-page)" }}
+      style={{
+        background: isDark
+          ? `
+      linear-gradient(155deg, #030712 0%, #020617 45%, #000000 100%),
+      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.12), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.10), transparent 45%)
+    `
+          : `
+      linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%),
+      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.10), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.08), transparent 45%)
+    `,
+      }}
     >
       {/* GRID */}
       <div
         className="absolute inset-0 -z-20 opacity-[0.08]"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
+          backgroundImage: `
+      linear-gradient(var(--fg-muted) 1px, transparent 1px),
+      linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
+    `,
+          backgroundSize: "40px 40px",
         }}
       />
-
-      {/* AMBIENT GLOW */}
       <div
-        className="absolute -z-10 blur-3xl"
+        className="absolute inset-0 -z-10"
         style={{
-          width: 600,
-          height: 600,
-          background: "var(--brand-green-glow)",
-          top: "20%",
-          left: "50%",
-          transform: "translateX(-50%)",
+          background: `
+      radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),
+      radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 50%)
+    `,
+          filter: "blur(60px)",
         }}
       />
 
@@ -107,7 +143,12 @@ export default function ValuesSection() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group relative rounded-[1.5rem] border p-6 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1"
                 style={{
-                  background: "rgba(255,255,255,0.7)",
+                  background: isDark
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(255,255,255,0.65)",
+
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
                   borderColor: "var(--border)",
                 }}
               >

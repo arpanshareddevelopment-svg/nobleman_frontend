@@ -8,7 +8,7 @@ import InstructorCarousel from "../components/InstructorCarousel";
 import ProgramsShowcase from "../components/ProgramsShowcase";
 import CertificationsShowcase from "../components/CertificationsShowcase";
 import PlacementStats from "../components/PlacementStats";
-import WhySkillsXindia from "../components/WhySkillsXindia";
+import WhyNobleMaLearning from "../components/WhyNobleManLearning";
 import Testimonials from "../components/Testimonials";
 import ValuesSection from "../components/ValuesSection";
 import Footer from "../components/Footer";
@@ -58,7 +58,7 @@ export default function Home() {
         <CertificationsShowcase />
 
         <PlacementStats />
-        <WhySkillsXindia />
+        <WhyNobleMaLearning />
         <Testimonials />
       </main>
 

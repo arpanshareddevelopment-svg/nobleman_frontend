@@ -91,7 +91,7 @@ export default function Footer() {
                   className="text-2xl font-black"
                   style={{ color: "var(--fg-primary)" }}
                 >
-                  SkillsXIndia
+                  NobleMan Learning
                 </span>
               </div>
               <p className="max-w-sm" style={{ color: "var(--fg-secondary)" }}>
@@ -175,7 +175,8 @@ export default function Footer() {
         >
           {/* Copyright */}
           <p className="text-sm" style={{ color: "var(--fg-muted)" }}>
-            © 2026 SkillsXIndia. All rights reserved. | Built with ❤️ in India
+            © 2026 NobleMan Learning. All rights reserved. | Built with ❤️ in
+            India
           </p>
 
           {/* Social links */}

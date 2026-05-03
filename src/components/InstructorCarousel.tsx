@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 /* ─── Instructor data ──────────────────────────────────────── */
@@ -115,6 +115,26 @@ function Stars({ rating, color }: { rating: number; color: string }) {
   );
 }
 
+function useThemeMode() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => {
+      const next = root.classList.contains("dark");
+      setIsDark((current) => (current === next ? current : next));
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
+
 /* ─── Vertical thumb strip ─────────────────────────────────── */
 function ThumbStrip({
   active,
@@ -123,43 +143,59 @@ function ThumbStrip({
   active: number;
   onSelect: (i: number) => void;
 }) {
-  // Only display the first 4 instructors
-  const displayInstructors = INSTRUCTORS.slice(0, 4);
+  // Show a sliding window of up to 4 instructors that keeps the `active`
+  // instructor visible. Center the active one when possible.
+  const visibleCount = 4;
+  const total = INSTRUCTORS.length;
+
+  let start = 0;
+  if (total <= visibleCount) start = 0;
+  else if (active <= 1) start = 0;
+  else if (active >= total - 2) start = total - visibleCount;
+  else start = active - 1;
+
+  const displayInstructors = INSTRUCTORS.slice(
+    start,
+    Math.min(start + visibleCount, total),
+  );
 
   return (
     <div className="hidden lg:flex flex-col gap-3 flex-shrink-0">
-      {displayInstructors.map((inst, i) => (
-        <button
-          key={i}
-          onClick={() => onSelect(i)}
-          className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden flex-shrink-0 transition-all duration-300 group"
-          style={{
-            outline:
-              i === active
-                ? `2px solid ${inst.accent}`
-                : "2px solid transparent",
-            outlineOffset: 2,
-            opacity: i === active ? 1 : 0.38,
-            transform: i === active ? "scale(1.06)" : "scale(1)",
-          }}
-          aria-label={inst.name}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={inst.photo}
-            alt={inst.name}
-            className="w-full h-full object-cover"
-          />
-          {/* active overlay */}
-          {i === active && (
-            <motion.div
-              layoutId="thumb-glow"
-              className="absolute inset-0 rounded-2xl"
-              style={{ background: `${inst.accent}22` }}
+      {displayInstructors.map((inst, i) => {
+        const globalIndex = start + i;
+        return (
+          <button
+            key={globalIndex}
+            onClick={() => onSelect(globalIndex)}
+            className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden flex-shrink-0 transition-all duration-300 group"
+            style={{
+              outline:
+                globalIndex === active
+                  ? `2px solid ${inst.accent}`
+                  : "2px solid transparent",
+              outlineOffset: 2,
+              opacity: globalIndex === active ? 1 : 0.38,
+              transform: globalIndex === active ? "scale(1.06)" : "scale(1)",
+            }}
+            aria-label={inst.name}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={inst.photo}
+              alt={inst.name}
+              className="w-full h-full object-cover"
             />
-          )}
-        </button>
-      ))}
+            {/* active overlay */}
+            {globalIndex === active && (
+              <motion.div
+                layoutId="thumb-glow"
+                className="absolute inset-0 rounded-2xl"
+                style={{ background: `${inst.accent}22` }}
+              />
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -168,8 +204,25 @@ function ThumbStrip({
 export default function InstructorCarousel() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const isDark = useThemeMode();
+  const containerRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(containerRef, { once: false, margin: "-120px" });
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const total = INSTRUCTORS.length;
+
+  // Color rotation: blue → green → yellow
+  const COLOR_THEMES = [
+    { accent: "var(--brand-blue-light)", accentDark: "var(--brand-blue-dark)" },
+    {
+      accent: "var(--brand-green-light)",
+      accentDark: "var(--brand-green-dark)",
+    },
+    {
+      accent: "var(--brand-yellow-light)",
+      accentDark: "var(--brand-yellow-dark)",
+    },
+  ];
+  const [themeIndex, setThemeIndex] = useState(0);
 
   const advance = useCallback(
     (dir: 1 | -1) => setActive((i) => (i + dir + total) % total),
@@ -177,12 +230,19 @@ export default function InstructorCarousel() {
   );
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || !inView) return;
     timerRef.current = setInterval(() => advance(1), 5000);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [paused, advance]);
+  }, [paused, advance, inView]);
+
+  // Rotate theme colors as carousel advances
+  useEffect(() => {
+    if (inView) {
+      setThemeIndex(active % COLOR_THEMES.length);
+    }
+  }, [active, inView]);
 
   function select(i: number) {
     setActive(i);
@@ -197,11 +257,31 @@ export default function InstructorCarousel() {
   }
 
   const inst = INSTRUCTORS[active];
+  const theme = COLOR_THEMES[themeIndex];
+  // Overlay theme colors onto the instructor
+  const displayInst = {
+    ...inst,
+    accent: theme.accent,
+    accentDark: theme.accentDark,
+  };
 
   return (
     <section
       className="relative w-full overflow-hidden py-24"
-      style={{ background: "var(--bg-page)" }}
+      ref={containerRef}
+      style={{
+        background: isDark
+          ? `
+      linear-gradient(155deg, #030712 0%, #020617 45%, #000000 100%),
+      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.12), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.10), transparent 45%)
+    `
+          : `
+      linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%),
+      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.10), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.08), transparent 45%)
+    `,
+      }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -216,8 +296,8 @@ export default function InstructorCarousel() {
           className="absolute inset-0 -z-10 pointer-events-none"
           style={{
             background: `
-              radial-gradient(ellipse 70% 60% at 30% 50%, ${inst.accent}0d 0%, transparent 65%),
-              radial-gradient(ellipse 50% 40% at 75% 30%, ${inst.accentDark}12 0%, transparent 60%)
+              radial-gradient(ellipse 70% 60% at 30% 50%, ${displayInst.accent}0d 0%, transparent 65%),
+              radial-gradient(ellipse 50% 40% at 75% 30%, ${displayInst.accentDark}12 0%, transparent 60%)
             `,
           }}
         />
@@ -225,316 +305,332 @@ export default function InstructorCarousel() {
 
       {/* Dot-grid texture */}
       <div
-        className="absolute inset-0 -z-10 pointer-events-none"
+        className="absolute inset-0 -z-20 pointer-events-none"
         style={{
           backgroundImage: `radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)`,
           backgroundSize: "28px 28px",
-          opacity: 0.05,
+          opacity: 0.06,
+        }}
+      />
+
+      {/* Ambient glow behind content */}
+      <div
+        className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
+        style={{
+          background: `radial-gradient(circle at center, ${displayInst.accent}22 0%, transparent 60%)`,
         }}
       />
 
       <div className="max-w-7xl mx-auto px-6 md:px-14">
-        {/* ── Section header ── */}
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <motion.span
-              key={`pill-${active}`}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4"
-              style={{
-                background: `${inst.accent}14`,
-                borderColor: `${inst.accent}40`,
-                color: inst.accent,
-              }}
-            >
-              Meet the Mentors
-            </motion.span>
-            <h2
-              className="text-3xl md:text-[42px] font-black leading-[1.1] tracking-tight"
-              style={{ color: "var(--fg-primary)" }}
-            >
-              Learn from people who&apos;ve{" "}
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={`grad-${active}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
-                  style={{
-                    background: `linear-gradient(125deg, ${inst.accent}, ${inst.accentDark})`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  been there.
-                </motion.span>
-              </AnimatePresence>
-            </h2>
-          </div>
-
-          {/* Arrow controls */}
-          <div className="hidden sm:flex items-center gap-3">
-            <span
-              className="text-xs font-mono tracking-widest"
-              style={{ color: "var(--fg-muted)" }}
-            >
-              {String(active + 1).padStart(2, "0")} /{" "}
-              {String(total).padStart(2, "0")}
-            </span>
-            {[-1 as 1 | -1, 1 as 1 | -1].map((dir, di) => (
-              <button
-                key={di}
-                onClick={() => handleArrow(dir)}
-                aria-label={dir === -1 ? "Previous" : "Next"}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+        {/* Glass wrapper matching other sections */}
+        <div
+          className="relative rounded-[2rem] border p-6 md:p-8"
+          style={{
+            background: isDark
+              ? "rgba(255,255,255,0.04)"
+              : "rgba(255,255,255,0.75)",
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+            borderColor: "var(--border)",
+            boxShadow: isDark
+              ? "0 30px 100px rgba(0,0,0,0.6)"
+              : "0 30px 100px rgba(7,18,37,0.08)",
+          }}
+        >
+          {/* ── Section header ── */}
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <motion.span
+                key={`pill-${active}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4"
                 style={{
-                  background: "var(--bg-card)",
-                  border: `1px solid ${inst.accent}50`,
-                  color: inst.accent,
+                  background: `${displayInst.accent}14`,
+                  borderColor: `${displayInst.accent}40`,
+                  color: displayInst.accent,
                 }}
               >
-                {dir === -1 ? (
-                  <ChevronLeft size={15} strokeWidth={2.5} />
-                ) : (
-                  <ChevronRight size={15} strokeWidth={2.5} />
-                )}
-              </button>
-            ))}
+                Meet the Mentors
+              </motion.span>
+              <h2
+                className="text-3xl md:text-[42px] font-black leading-[1.1] tracking-tight"
+                style={{ color: "var(--fg-primary)" }}
+              >
+                Learn from people who&apos;ve{" "}
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={`grad-${active}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    style={{
+                      background: `linear-gradient(125deg, ${displayInst.accent}, ${displayInst.accentDark})`,
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    been there.
+                  </motion.span>
+                </AnimatePresence>
+              </h2>
+            </div>
+
+            {/* Arrow controls */}
+            <div className="hidden sm:flex items-center gap-3">
+              <span
+                className="text-xs font-mono tracking-widest"
+                style={{ color: "var(--fg-muted)" }}
+              >
+                {String(active + 1).padStart(2, "0")} /{" "}
+                {String(total).padStart(2, "0")}
+              </span>
+              {[-1 as 1 | -1, 1 as 1 | -1].map((dir, di) => (
+                <button
+                  key={di}
+                  onClick={() => handleArrow(dir)}
+                  aria-label={dir === -1 ? "Previous" : "Next"}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  style={{
+                    background: "var(--bg-card)",
+                    border: `1px solid ${displayInst.accent}50`,
+                    color: displayInst.accent,
+                  }}
+                >
+                  {dir === -1 ? (
+                    <ChevronLeft size={15} strokeWidth={2.5} />
+                  ) : (
+                    <ChevronRight size={15} strokeWidth={2.5} />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* ── Main content row ── */}
-        <div className="flex gap-6 items-start">
-          {/* Vertical thumb strip */}
-          <ThumbStrip active={active} onSelect={select} />
+          {/* ── Main content row ── */}
+          <div className="flex gap-6 items-start">
+            {/* Vertical thumb strip */}
+            <ThumbStrip active={active} onSelect={select} />
 
-          {/* Portrait — large, dominant */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`photo-${active}`}
-              initial={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex-shrink-0 rounded-3xl overflow-hidden"
-              style={{
-                width: "clamp(220px, 28vw, 360px)",
-                height: "clamp(280px, 35vw, 420px)",
-                boxShadow: `0 32px 80px ${inst.accent}28, 0 0 0 1px ${inst.accent}20`,
-              }}
-            >
-              {/* Photo */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={inst.photo}
-                alt={inst.name}
-                className="w-full h-full object-cover object-top"
-              />
-
-              {/* Gradient overlay — bottom fade */}
-              <div
-                className="absolute inset-0"
+            {/* Portrait — large, dominant */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`photo-${active}`}
+                initial={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                className="relative flex-shrink-0 rounded-3xl overflow-hidden"
                 style={{
-                  background: `linear-gradient(
+                  width: "clamp(220px, 28vw, 360px)",
+                  height: "clamp(280px, 35vw, 420px)",
+                  boxShadow: `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`,
+                }}
+              >
+                {/* Photo */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={inst.photo}
+                  alt={inst.name}
+                  className="w-full h-full object-cover object-top"
+                />
+
+                {/* Gradient overlay — bottom fade */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(
                     to top,
-                    ${inst.accentDark}ee 0%,
-                    ${inst.accent}08 45%,
+                    ${displayInst.accentDark}ee 0%,
+                    ${displayInst.accent}08 45%,
                     transparent 70%
                   )`,
-                }}
-              />
+                  }}
+                />
 
-              {/* Name overlay on photo */}
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div
-                  className="text-[10px] font-black tracking-[0.2em] uppercase mb-1"
-                  style={{ color: inst.accent }}
-                >
-                  {inst.company}
-                </div>
-                <div className="text-xl font-black text-white leading-tight">
-                  {inst.name}
-                </div>
-                <div className="text-xs mt-0.5 text-white/60">{inst.role}</div>
-              </div>
-
-              {/* Index badge — top right */}
-              <div
-                className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-black"
-                style={{
-                  background: `${inst.accent}22`,
-                  border: `1px solid ${inst.accent}55`,
-                  color: inst.accent,
-                  backdropFilter: "blur(8px)",
-                }}
-              >
-                {inst.index}
-              </div>
-
-              {/* Accent corner glow */}
-              <div
-                className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full pointer-events-none"
-                style={{
-                  background: inst.accent,
-                  filter: "blur(40px)",
-                  opacity: 0.3,
-                }}
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Info panel */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`info-${active}`}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 flex flex-col gap-6 min-w-0"
-            >
-              {/* Stats row */}
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: "Students", value: inst.students },
-                  { label: "Experience", value: inst.experience },
-                  { label: "Rating", value: inst.rating.toFixed(1) },
-                ].map(({ label, value }) => (
+                {/* Name overlay on photo */}
+                <div className="absolute bottom-0 left-0 right-0 p-6">
                   <div
-                    key={label}
-                    className="rounded-2xl px-4 py-3 flex flex-col gap-1"
-                    style={{
-                      background: `${inst.accent}0e`,
-                      border: `1px solid ${inst.accent}25`,
-                    }}
+                    className="text-[10px] font-black tracking-[0.2em] uppercase mb-1"
+                    style={{ color: displayInst.accent }}
                   >
-                    <span
-                      className="text-[22px] font-black leading-none"
-                      style={{ color: inst.accent }}
-                    >
-                      {value}
-                    </span>
-                    <span
-                      className="text-[10px] tracking-widest uppercase"
-                      style={{ color: "var(--fg-muted)" }}
-                    >
-                      {label}
-                    </span>
+                    {inst.company}
                   </div>
-                ))}
-              </div>
+                  <div className="text-xl font-black text-white leading-tight">
+                    {inst.name}
+                  </div>
+                  <div className="text-xs mt-0.5 text-white/60">
+                    {inst.role}
+                  </div>
+                </div>
 
-              {/* Bio */}
-              <div
-                className="rounded-2xl p-5"
-                style={{
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border)",
-                }}
-              >
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--fg-secondary)" }}
-                >
-                  {inst.bio}
-                </p>
-              </div>
-
-              {/* Expertise */}
-              <div>
+                {/* Index badge — top right */}
                 <div
-                  className="text-[10px] font-bold tracking-[0.15em] uppercase mb-2.5"
-                  style={{ color: "var(--fg-muted)" }}
-                >
-                  Expertise
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {inst.expertise.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1.5 rounded-full text-xs font-semibold"
-                      style={{
-                        background: `${inst.accent}14`,
-                        color: inst.accent,
-                        border: `1px solid ${inst.accent}30`,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Star rating + CTA */}
-              <div className="flex items-center justify-between flex-wrap gap-4 pt-2">
-                <div className="flex items-center gap-2">
-                  <Stars rating={inst.rating} color={inst.accent} />
-                  <span
-                    className="text-sm font-bold"
-                    style={{ color: inst.accent }}
-                  >
-                    {inst.rating.toFixed(1)}
-                  </span>
-                  <span
-                    className="text-xs"
-                    style={{ color: "var(--fg-muted)" }}
-                  >
-                    · {inst.students} students
-                  </span>
-                </div>
-                <a
-                  href="#"
-                  className="px-5 py-2.5 rounded-full text-xs font-bold text-white transition-all duration-200 hover:scale-105"
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-black"
                   style={{
-                    background: `linear-gradient(135deg, ${inst.accent}, ${inst.accentDark})`,
-                    boxShadow: `0 4px 20px ${inst.accent}44`,
+                    background: `${displayInst.accent}22`,
+                    border: `1px solid ${displayInst.accent}55`,
+                    color: displayInst.accent,
+                    backdropFilter: "blur(8px)",
                   }}
                 >
-                  Book a Session →
-                </a>
-              </div>
+                  {inst.index}
+                </div>
 
-              {/* Progress bar — autoplay indicator */}
-              <div
-                className="h-px w-full rounded-full overflow-hidden mt-auto"
-                style={{ background: "var(--border)" }}
+                {/* Accent corner glow */}
+                <div
+                  className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full pointer-events-none"
+                  style={{
+                    background: displayInst.accent,
+                    filter: "blur(40px)",
+                    opacity: 0.3,
+                  }}
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Info panel */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`info-${active}`}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="flex-1 flex flex-col gap-6 min-w-0"
               >
-                {!paused && (
-                  <motion.div
-                    key={`bar-${active}`}
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 5, ease: "linear" }}
-                    className="h-full rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${inst.accent}, ${inst.accentDark})`,
-                    }}
-                  />
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+                {/* Stats row */}
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { label: "Students", value: inst.students },
+                    { label: "Experience", value: inst.experience },
+                    { label: "Rating", value: inst.rating.toFixed(1) },
+                  ].map(({ label, value }) => (
+                    <div
+                      key={label}
+                      className="rounded-2xl px-4 py-3 flex flex-col gap-1"
+                      style={{
+                        background: `${displayInst.accent}0e`,
+                        border: `1px solid ${displayInst.accent}25`,
+                      }}
+                    >
+                      <span
+                        className="text-[22px] font-black leading-none"
+                        style={{ color: displayInst.accent }}
+                      >
+                        {value}
+                      </span>
+                      <span
+                        className="text-[10px] tracking-widest uppercase"
+                        style={{ color: "var(--fg-muted)" }}
+                      >
+                        {label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
 
-        {/* ── Mobile dot strip ── */}
-        <div className="flex items-center justify-center gap-2 mt-10 lg:hidden">
-          {INSTRUCTORS.map((inst, i) => (
-            <button
-              key={i}
-              onClick={() => select(i)}
-              aria-label={`Go to ${inst.name}`}
-              className="rounded-full transition-all duration-300"
-              style={{
-                height: 7,
-                width: i === active ? 24 : 7,
-                background: i === active ? inst.accent : "var(--border)",
-                opacity: i === active ? 1 : 0.4,
-              }}
-            />
-          ))}
+                {/* Bio */}
+                <div
+                  className="rounded-2xl p-5"
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "var(--fg-secondary)" }}
+                  >
+                    {inst.bio}
+                  </p>
+                </div>
+
+                {/* Expertise */}
+                <div>
+                  <div
+                    className="text-[10px] font-bold tracking-[0.15em] uppercase mb-2.5"
+                    style={{ color: "var(--fg-muted)" }}
+                  >
+                    Expertise
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {inst.expertise.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1.5 rounded-full text-xs font-semibold"
+                        style={{
+                          background: `${displayInst.accent}14`,
+                          color: displayInst.accent,
+                          border: `1px solid ${displayInst.accent}30`,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Star rating + CTA */}
+                <div className="flex items-center justify-between flex-wrap gap-4 pt-2">
+                  <div className="flex items-center gap-2">
+                    <Stars rating={inst.rating} color={displayInst.accent} />
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: displayInst.accent }}
+                    >
+                      {inst.rating.toFixed(1)}
+                    </span>
+                    <span
+                      className="text-xs"
+                      style={{ color: "var(--fg-muted)" }}
+                    >
+                      · {inst.students} students
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress bar — autoplay indicator */}
+                <div
+                  className="h-px w-full rounded-full overflow-hidden mt-auto"
+                  style={{ background: "var(--border)" }}
+                >
+                  {!paused && (
+                    <motion.div
+                      key={`bar-${active}`}
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 5, ease: "linear" }}
+                      className="h-full rounded-full"
+                      style={{
+                        background: `linear-gradient(90deg, ${displayInst.accent}, ${displayInst.accentDark})`,
+                      }}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* ── Mobile dot strip ── */}
+          <div className="flex items-center justify-center gap-2 mt-10 lg:hidden">
+            {INSTRUCTORS.map((inst, i) => (
+              <button
+                key={i}
+                onClick={() => select(i)}
+                aria-label={`Go to ${inst.name}`}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  height: 7,
+                  width: i === active ? 24 : 7,
+                  background: i === active ? inst.accent : "var(--border)",
+                  opacity: i === active ? 1 : 0.4,
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

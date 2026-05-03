@@ -75,7 +75,7 @@ function ComparisonCell({
   );
 }
 
-export default function WhySkillsXindia() {
+export default function WhyNobleManLearning() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -110,7 +110,7 @@ export default function WhySkillsXindia() {
         >
           Why{" "}
           <span style={{ color: "var(--brand-green-light)" }}>
-            SkillsXIndia
+            NobleMan Learning
           </span>
           ?
         </motion.h2>
@@ -136,7 +136,9 @@ export default function WhySkillsXindia() {
                 }}
               >
                 <th className="p-6 text-left">
-                  <span className="font-black text-white">SkillsXIndia</span>
+                  <span className="font-black text-white">
+                    NobleMan Learning
+                  </span>
                 </th>
                 <th className="p-6 text-center">
                   <span className="font-bold text-gray-400">
