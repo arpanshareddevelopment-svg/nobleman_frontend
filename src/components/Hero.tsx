@@ -1,562 +1,475 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BarChart3, Code2, Target } from "lucide-react";
 
-/* ─────────────────────────────────────────────────────────────
-   SLIDE DATA
-───────────────────────────────────────────────────────────── */
-const SLIDES = [
-  /* ── Slide 1: GREEN ─────────────────────────────────────── */
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import gsap from "gsap";
+import { ArrowRight, Sparkles } from "lucide-react";
+
+type OrbKey = "careers" | "support" | "partners";
+
+type Slide = {
+  id: string;
+  tag: string;
+  titleTop: string;
+  titleBottom: string;
+  summary: string;
+  cta: string;
+  gradient: [string, string];
+  highlight: OrbKey;
+};
+
+type Orb = {
+  key: OrbKey;
+  value: string;
+  label: string;
+  tone: string;
+  size: string;
+  position: CSSProperties;
+};
+
+function useThemeMode() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => {
+      const next = root.classList.contains("dark");
+      setIsDark((current) => (current === next ? current : next));
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
+
+const SLIDES: Slide[] = [
   {
-    tag: "AI-First Learning",
-    heading: ["Build Skills That", "Actually Get You Hired"],
-    /* heading[1] gradient stays in the green family */
-    headingGradient: ["var(--brand-green-light)", "var(--brand-green-dark)"],
-    sub: "Live mentor-led programs with real projects, placement support, and industry veterans from BCG, Amazon & Microsoft.",
-    cta: "Explore Programs",
-    accent: "var(--brand-green-light)",
-    accentDark: "var(--brand-green-dark)",
-    cardBg:
-      "linear-gradient(145deg, rgba(22, 163, 74, 0.1) 0%, var(--brand-green-dark) 55%, rgba(10, 26, 14, 0.8) 100%)",
-    card: {
-      icon: "chart",
-      badge: "Most Popular",
-      title: "Data Analyst Masterclass",
-      desc: "Job-ready in 3 months",
-    },
-    /*
-      Each chip:
-        from  — translate offset for the entrance animation (px)
-        style — final position glued to the card (absolute, relative to card's inset-0 wrapper)
-    */
-    stats: [
-      {
-        value: "12,000+",
-        label: "Careers",
-        color: "var(--brand-green-light)",
-        from: { x: 0, y: -80 },
-        style: { top: "-20px", left: "80%", transform: "translateX(-50%)" },
-      },
-      {
-        value: "100%",
-        label: "Placement",
-        color: "var(--brand-green-light)",
-        from: { x: -120, y: 0 },
-        style: { left: "-40%", top: "50%", transform: "translateY(-50%)" },
-      },
-      {
-        value: "400+",
-        label: "Partners",
-        color: "var(--brand-green-light)",
-        from: { x: 0, y: 80 },
-        style: { bottom: "-18px", left: "50%", transform: "translateX(-50%)" },
-      },
-    ],
+    id: "blue-green",
+    tag: "Blue × Green",
+    titleTop: "Build AI-first skills",
+    titleBottom: "that actually convert.",
+    summary:
+      "Live cohorts, real projects, and focused placement support for outcome-driven learners.",
+    cta: "Explore programs",
+    gradient: ["#62d9ff", "#57f0a2"],
+    highlight: "careers",
   },
-
-  /* ── Slide 2: BLUE ───────────────────────────────────────── */
   {
-    tag: "Live & Interactive",
-    heading: ["Learn from the Best,", "Land the Best"],
-    /* heading[1] gradient stays in the blue family */
-    headingGradient: ["var(--brand-blue-light)", "var(--brand-blue-dark)"],
-    sub: "Every session is live. Every mentor is a practitioner. Every project is portfolio-worthy. No recordings, no shortcuts.",
-    cta: "See Mentors",
-    accent: "var(--brand-blue-light)",
-    accentDark: "var(--brand-blue-dark)",
-    cardBg:
-      "linear-gradient(145deg, rgba(29, 78, 216, 0.1) 0%, var(--brand-blue-dark) 55%, rgba(10, 15, 30, 0.8) 100%)",
-    card: {
-      icon: "code",
-      badge: "Trending",
-      title: "Full-Stack Engineering",
-      desc: "Zero to deployed in 4 months",
-    },
-    stats: [
-      {
-        value: "50+",
-        label: "Expert Mentors",
-        color: "var(--brand-blue-light)",
-        from: { x: -120, y: -60 },
-        style: { top: "-18px", left: "-20px" },
-      },
-      {
-        value: "6 mo",
-        label: "Post-Placement Support",
-        color: "var(--brand-blue-light)",
-        from: { x: 120, y: 0 },
-        style: { right: "-60%", top: "50%", transform: "translateY(-50%)" },
-      },
-      {
-        value: "4.9★",
-        label: "Learner Rating",
-        color: "var(--brand-blue-light)",
-        from: { x: 100, y: 80 },
-        style: { bottom: "-18px", right: "16px" },
-      },
-    ],
+    id: "green-yellow",
+    tag: "Green × Yellow",
+    titleTop: "Mentorship that moves",
+    titleBottom: "at the pace of momentum.",
+    summary:
+      "Structured practice, direct feedback, and interview prep that keep progress visible.",
+    cta: "Meet mentors",
+    gradient: ["#7bf56f", "#ffd84d"],
+    highlight: "support",
   },
-
-  /* ── Slide 3: YELLOW ─────────────────────────────────────── */
   {
-    tag: "Outcome Focused",
-    heading: ["Your Next Role", "Starts Here"],
-    /* heading[1] gradient stays in the yellow/amber family */
-    headingGradient: ["var(--brand-yellow-light)", "var(--brand-yellow-dark)"],
-    sub: "We don't just teach — we place. Dedicated career coaches, mock interviews, and direct referrals to 400+ hiring partners.",
-    cta: "View Outcomes",
-    accent: "var(--brand-yellow-light)",
-    accentDark: "var(--brand-yellow-dark)",
-    cardBg:
-      "linear-gradient(145deg, rgba(202, 138, 4, 0.1) 0%, var(--brand-yellow-dark) 55%, rgba(15, 10, 0, 0.8) 100%)",
-    card: {
-      icon: "target",
-      badge: "High ROI",
-      title: "Product Management",
-      desc: "Think like a PM, ship like a pro",
-    },
-    stats: [
-      {
-        value: "8L+",
-        label: "Avg. Salary Hike",
-        color: "var(--brand-yellow-light)",
-        from: { x: 0, y: -80 },
-        style: { top: "-18px", left: "50%", transform: "translateX(-50%)" },
-      },
-      {
-        value: "90 days",
-        label: "Avg. Time to Offer",
-        color: "var(--brand-yellow-light)",
-        from: { x: -120, y: 60 },
-        style: { bottom: "-18px", left: "-8px" },
-      },
-      {
-        value: "3,200+",
-        label: "Active Alumni",
-        color: "var(--brand-yellow-light)",
-        from: { x: 120, y: -60 },
-        style: { top: "58%", left: "-50%" },
-      },
-    ],
+    id: "yellow-blue",
+    tag: "Yellow × Blue",
+    titleTop: "Hiring outcomes",
+    titleBottom: "with staying power.",
+    summary:
+      "Referrals, mock interviews, and partner access designed to keep the offer pipeline moving.",
+    cta: "See outcomes",
+    gradient: ["#ffd95c", "#55c9ff"],
+    highlight: "partners",
   },
 ];
 
-/* ── Card SVG icons ───────────────────────────────────────── */
-function CardIcon({ type, color }: { type: string; color: string }) {
-  if (type === "chart")
-    return <BarChart3 size={44} stroke={color} strokeWidth={1.6} fill="none" />;
-  if (type === "code")
-    return <Code2 size={44} stroke={color} strokeWidth={1.6} fill="none" />;
-  return <Target size={44} stroke={color} strokeWidth={1.6} fill="none" />;
-}
+const ORBS: Orb[] = [
+  {
+    key: "careers",
+    value: "12,000+",
+    label: "Careers transformed",
+    tone: "#57f0a2",
+    size: "clamp(7.8rem, 18vw, 11rem)",
+    position: {
+      top: "10%",
+      left: "8%",
+    },
+  },
+  {
+    key: "support",
+    value: "100%",
+    label: "Placement support",
+    tone: "#55c9ff",
+    size: "clamp(8rem, 18vw, 11.2rem)",
+    position: {
+      top: "6%",
+      right: "8%",
+    },
+  },
+  {
+    key: "partners",
+    value: "400+",
+    label: "Hiring partners",
+    tone: "#ffd84d",
+    size: "clamp(8.2rem, 19vw, 11.4rem)",
+    position: {
+      left: "50%",
+      bottom: "8%",
+      transform: "translateX(-50%)",
+    },
+  },
+];
 
-/* ── Stat chip ─────────────────────────────────────────────── */
-/*
-  `from`  — the x/y offset it starts at (off-screen/away from card)
-  `style` — the final CSS position (stuck to the card edge)
-*/
-type Stat = {
-  value: string;
-  label: string;
-  color: string;
-  from: { x: number; y: number };
-  style: React.CSSProperties;
-};
-
-function StatChip({
-  value,
-  label,
-  color,
-  from,
-  style,
-  delay,
-}: Stat & { delay: number }) {
+function FloatingOrb({
+  orb,
+  active,
+  gradient,
+  index,
+  registerRef,
+  isDark,
+}: {
+  orb: Orb;
+  active: boolean;
+  gradient: [string, string];
+  index: number;
+  registerRef: (node: HTMLDivElement | null, key: OrbKey) => void;
+  isDark: boolean;
+}) {
+  const activeColor = gradient[0];
   return (
-    <motion.div
-      initial={{ opacity: 0, x: from.x, y: from.y }}
-      animate={{ opacity: 1, x: 0, y: 0 }}
-      exit={{ opacity: 0, x: from.x, y: from.y }}
-      transition={{ duration: 0.55, delay, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      ref={(node) => registerRef(node, orb.key)}
       className="absolute"
-      style={style}
+      style={{
+        width: orb.size,
+        height: orb.size,
+        ...orb.position,
+      }}
     >
-      <div
-        className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap"
+      <motion.div
+        animate={{
+          scale: active ? [1, 1.06, 1] : [1, 1.02, 1],
+          opacity: active ? [0.96, 1, 0.96] : [0.9, 0.95, 0.9],
+        }}
+        transition={{
+          duration: active ? 2.8 : 5.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: index * 0.15,
+        }}
+        className="relative flex h-full w-full items-center justify-center rounded-full border text-center backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
         style={{
-          background: `${color}22`,
-          color,
-          border: `1px solid ${color}55`,
-          backdropFilter: "blur(8px)",
+          background: active
+            ? `linear-gradient(
+      135deg,
+      ${gradient[0]}55 0%,
+      ${gradient[1]}55 100%
+    )`
+            : isDark
+              ? "rgba(255,255,255,0.12)"
+              : "rgba(255,255,255,0.72)",
+          color: active
+            ? activeColor
+            : isDark
+              ? "rgb(255, 255, 255)"
+              : "var(--fg-primary)",
+          borderColor: active ? `${gradient[0]}88` : "rgba(255,255,255,0.56)",
+
+          boxShadow: active
+            ? `0 28px 80px ${gradient[0]}26, 0 0 0 1px ${gradient[0]}35`
+            : "0 18px 48px rgba(1, 7, 18, 0.16)",
         }}
       >
-        {value} • {label}
-      </div>
-    </motion.div>
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.55),transparent_42%)] opacity-80" />
+        <div className="relative z-10 flex flex-col items-center gap-1 px-4">
+          <span className="text-[clamp(1.4rem,2vw,2rem)] font-black tracking-tight">
+            {orb.value}
+          </span>
+          <span className="text-[0.62rem] font-bold uppercase tracking-[0.34em] text-[color:var(--fg-secondary)]">
+            {orb.label}
+          </span>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
-/* ── Hero ─────────────────────────────────────────────────── */
-export default function Hero() {
-  const [idx, setIdx] = useState(0);
-  const [auto, setAuto] = useState(true);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
+  const orbRefs = useRef<Record<OrbKey, HTMLDivElement | null>>({
+    careers: null,
+    support: null,
+    partners: null,
+  });
 
   useEffect(() => {
-    if (!auto) return;
-    timerRef.current = setInterval(
-      () => setIdx((i) => (i + 1) % SLIDES.length),
-      4400,
-    );
+    const tweens: gsap.core.Tween[] = [];
+    ORBS.forEach((orb, index) => {
+      const node = orbRefs.current[orb.key];
+      if (!node) return;
+
+      tweens.push(
+        gsap.to(node, {
+          y: index === 2 ? -12 : index === 1 ? 10 : -8,
+          x: index === 1 ? 7 : -6,
+          duration: 4.2 + index * 0.6,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: index * 0.18,
+        }),
+      );
+    });
+
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      tweens.forEach((tween) => tween.kill());
     };
-  }, [auto, idx]);
-
-  function goTo(i: number) {
-    if (i === idx) return;
-    if (timerRef.current) clearInterval(timerRef.current);
-    setIdx(i);
-    setAuto(false);
-    setTimeout(() => setAuto(true), 8000);
-  }
-
-  const slide = SLIDES[idx];
+  }, []);
 
   return (
-    <section
-      className="relative w-full min-h-[90vh] flex items-center overflow-hidden"
-      style={{ background: "var(--bg-page)" }}
-    >
-      {/* Dot-grid overlay */}
-      <div
-        className="absolute inset-0 -z-10"
+    <div className="relative mx-auto aspect-square w-[min(82vw,520px)]">
+      <motion.div
+        key={slide.id}
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-[12%] rounded-full blur-3xl"
         style={{
-          backgroundImage: `radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)`,
-          backgroundSize: "32px 32px",
-          opacity: 0.07,
+          background: `radial-gradient(circle at center, ${slide.gradient[0]}33 0%, ${slide.gradient[1]}24 38%, transparent 72%)`,
         }}
       />
 
-      {/* Accent glow — changes per slide */}
-      <AnimatePresence>
-        <motion.div
-          key={`glow-${idx}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.9 }}
-          className="absolute inset-0 -z-10 pointer-events-none"
-          style={{
-            background: `
-              radial-gradient(ellipse 55% 50% at 70% 50%, ${slide.accent}16 0%, transparent 70%),
-              radial-gradient(ellipse 40% 35% at 15% 60%, ${slide.accentDark}20 0%, transparent 65%)
-            `,
+      {/* OUTER + INNER CIRCLES */}
+      <div
+        className="absolute inset-[18%] rounded-full backdrop-blur-2xl"
+        style={{
+          background: isDark
+            ? "rgba(255,255,255,0.05)"
+            : "rgba(255,255,255,0.65)",
+
+          border: isDark
+            ? "1px solid rgba(255,255,255,0.12)"
+            : "1px solid rgba(0,0,0,0.08)",
+
+          boxShadow: isDark
+            ? "0 0 0 1px rgba(255,255,255,0.04) inset"
+            : "0 0 0 1px rgba(0,0,0,0.03) inset",
+        }}
+      />
+
+      <div
+        className="absolute inset-[24%] rounded-full"
+        style={{
+          border: isDark
+            ? "1px solid rgba(255,255,255,0.08)"
+            : `1px solid ${slide.gradient[0]}33`, // subtle colored ring in light
+
+          boxShadow: isDark
+            ? "0 0 0 1px rgba(255,255,255,0.03) inset"
+            : "0 0 20px rgba(0,0,0,0.04)",
+        }}
+      />
+      {ORBS.map((orb, index) => (
+        <FloatingOrb
+          key={orb.key}
+          orb={orb}
+          active={slide.highlight === orb.key}
+          gradient={slide.gradient}
+          index={index}
+          registerRef={(node, key) => {
+            orbRefs.current[key] = node;
           }}
+          isDark={isDark}
         />
-      </AnimatePresence>
+      ))}
+    </div>
+  );
+}
 
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-14 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* ════════════════ LEFT ════════════════ */}
-        <div className="flex flex-col gap-6">
-          {/* Tag + LIVE */}
+export default function Hero() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const isDark = useThemeMode();
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % SLIDES.length);
+    }, 5600);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const slide = SLIDES[activeIndex];
+
+  function goTo(index: number) {
+    setActiveIndex(index);
+  }
+
+  return (
+    <section
+      className="relative isolate overflow-hidden py-20 md:py-24 lg:py-28"
+      style={{
+        background: isDark
+          ? "linear-gradient(135deg, #06182b 0%, #02040a 52%, #000000 100%)"
+          : "linear-gradient(135deg, #f7fbff 0%, #eef4ff 46%, #ffffff 100%)",
+      }}
+    >
+      <div className="absolute inset-0 -z-20 dark:hidden bg-[radial-gradient(circle_at_top_left,rgba(85,201,255,0.16),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(87,240,162,0.14),transparent_24%)]" />
+      <div className="absolute inset-0 -z-20 hidden dark:block bg-[radial-gradient(circle_at_top_left,rgba(85,201,255,0.16),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(123,245,111,0.1),transparent_24%)]" />
+      <div
+        className="absolute inset-0 -z-10 opacity-[0.12] dark:opacity-[0.1]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+        }}
+      />
+      <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-white/70 to-transparent dark:from-transparent" />
+
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-6 md:px-10 lg:grid-cols-[1fr_1fr] lg:gap-8 xl:px-14">
+        <div className="relative w-full min-w-0">
+          <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-white/60 blur-2xl dark:bg-white/5" />
+
           <AnimatePresence mode="wait">
             <motion.div
-              key={`tag-${idx}`}
-              initial={{ opacity: 0, y: -12 }}
+              key={slide.id}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.28 }}
-              className="flex items-center gap-2 self-start"
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+              className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-[0_24px_90px_rgba(7,18,37,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-white/5 md:p-8 lg:p-9"
             >
-              <span
-                className="px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border"
-                style={{
-                  background: `${slide.accent}18`,
-                  borderColor: `${slide.accent}45`,
-                  color: slide.accent,
-                }}
-              >
-                {slide.tag}
-              </span>
-              <span
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11px] font-bold tracking-widest"
-                style={{
-                  background: "rgba(239,68,68,0.08)",
-                  borderColor: "rgba(239,68,68,0.25)",
-                  color: "#f87171",
-                }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
-                LIVE
-              </span>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Heading */}
-          <AnimatePresence mode="wait">
-            <motion.h1
-              key={`h1-${idx}`}
-              initial={{ opacity: 0, y: 22 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl md:text-5xl xl:text-[56px] font-black leading-[1.08] tracking-tight"
-              style={{ color: "var(--fg-primary)" }}
-            >
-              {slide.heading[0]}{" "}
-              {/* ── heading[1]: gradient uses only this slide's own accent colors ── */}
-              <span
-                style={{
-                  background: `linear-gradient(125deg, ${slide.headingGradient[0]}, ${slide.headingGradient[1]})`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                {slide.heading[1]}
-              </span>
-            </motion.h1>
-          </AnimatePresence>
-
-          {/* Sub-text */}
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={`sub-${idx}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, delay: 0.08 }}
-              className="text-sm md:text-[15px] max-w-[420px] leading-[1.75]"
-              style={{ color: "var(--fg-secondary)" }}
-            >
-              {slide.sub}
-            </motion.p>
-          </AnimatePresence>
-
-          {/* CTAs */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`cta-${idx}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.28, delay: 0.1 }}
-              className="flex flex-wrap gap-3"
-            >
-              <a
-                href="#programs"
-                className="btn-pill px-7 py-3 text-sm font-bold text-white"
-                style={{
-                  background: `linear-gradient(135deg, ${slide.accent}, ${slide.accentDark})`,
-                  boxShadow: `0 4px 20px ${slide.accent}44`,
-                }}
-              >
-                {slide.cta} &rarr;
-              </a>
-              <a
-                href="#"
-                className="btn-pill btn-ghost px-7 py-3 text-sm font-semibold"
-              >
-                Watch Demo
-              </a>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Social proof */}
-          <div
-            className="pt-5 mt-1 flex flex-col gap-2"
-            style={{ borderTop: "1px solid var(--border)" }}
-          >
-            <p className="text-sm" style={{ color: "var(--fg-secondary)" }}>
-              <span
-                className="font-bold"
-                style={{ color: "var(--fg-primary)" }}
-              >
-                12,000+ careers transformed.
-              </span>{" "}
-              Yours is next.
-            </p>
-            <p className="text-sm font-semibold relative inline-block w-fit">
-              <span
-                style={{
-                  backgroundImage: `linear-gradient(90deg, ${slide.accent}, var(--fg-primary))`,
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  color: "transparent",
-                }}
-              >
-                Ongoing mentor support for 6 months, even after placement.
-              </span>
-              <span
-                className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] rounded-full"
-                style={{
-                  background: `linear-gradient(90deg, ${slide.accent}, var(--fg-primary))`,
-                }}
-              />
-            </p>
-          </div>
-
-          {/* Slide dots */}
-          <div className="flex items-center gap-2">
-            {SLIDES.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                aria-label={`Slide ${i + 1}`}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  height: 7,
-                  width: i === idx ? 24 : 7,
-                  background: i === idx ? slide.accent : "var(--border)",
-                  opacity: i === idx ? 1 : 0.45,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* ════════════════ RIGHT ════════════════ */}
-        <div
-          className="relative flex items-center justify-center"
-          style={{ height: 460 }}
-        >
-          {/* Outer orbit ring */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              width: 420,
-              height: 420,
-              border: `2px dashed ${slide.accent}35`,
-            }}
-          />
-          {/* Inner orbit ring */}
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              width: 350,
-              height: 350,
-              border: `2px dashed ${slide.accent}20`,
-            }}
-          />
-
-          {/* Dashed connector lines */}
-          <svg
-            className="absolute pointer-events-none"
-            style={{
-              width: 320,
-              height: 320,
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%,-50%)",
-              overflow: "visible",
-            }}
-          >
-            {[
-              { x2: 310, y2: 40 },
-              { x2: 10, y2: 160 },
-              { x2: 160, y2: 310 },
-            ].map((p, i) => (
-              <line
-                key={i}
-                x1={160}
-                y1={160}
-                x2={p.x2}
-                y2={p.y2}
-                stroke={`${slide.accent}22`}
-                strokeWidth={1}
-                strokeDasharray="5 5"
-              />
-            ))}
-          </svg>
-
-          {/* ── Program card ─────────────────────────────────── */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`card-${idx}`}
-              initial={{ opacity: 0, scale: 0.82, y: 24 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: -16 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              /*
-                `relative` + known dimensions so chips positioned with
-                absolute offsets land exactly on the card edges.
-              */
-              className="relative overflow-visible shadow-2xl"
-              style={{
-                width: 300,
-                height: 300,
-                background: slide.cardBg,
-                borderRadius: 28,
-                border: `1px solid ${slide.accent}30`,
-                boxShadow: `0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px ${slide.accent}18`,
-              }}
-            >
-              {/* Glow blob inside card */}
-              <div
-                className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
-                style={{
-                  background: slide.accent,
-                  filter: "blur(40px)",
-                  opacity: 0.28,
-                }}
-              />
-
-              {/* Card content */}
-              <div className="relative z-10 flex flex-col items-center text-center px-7 py-9">
-                <div
-                  className="mb-4 p-3 rounded-2xl"
-                  style={{
-                    background: `${slide.accent}18`,
-                    border: `1px solid ${slide.accent}30`,
-                  }}
-                >
-                  <CardIcon type={slide.card.icon} color={slide.accent} />
-                </div>
-                <span
-                  className="px-3 py-0.5 rounded-full text-[10px] font-black tracking-widest mb-3"
-                  style={{
-                    background: `${slide.accent}22`,
-                    color: slide.accent,
-                    border: `1px solid ${slide.accent}40`,
-                  }}
-                >
-                  {slide.card.badge}
+              <div className="flex flex-wrap items-center gap-2 ">
+                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[11px] font-semibold tracking-[0.28em] text-[var(--fg-secondary)] uppercase">
+                  Live cohorts
                 </span>
-                <div className="text-[18px] font-black text-white leading-snug">
-                  {slide.card.title}
-                </div>
-                <div
-                  className="text-[11px] mt-2"
-                  style={{ color: "rgba(255,255,255,0.55)" }}
-                >
-                  {slide.card.desc}
-                </div>
               </div>
 
-              {/* ── Stat chips — positioned relative to the card ── */}
-              <AnimatePresence mode="wait">
-                <motion.div key={`chips-${idx}`}>
-                  {slide.stats.map((b, i) => (
-                    <StatChip
-                      key={i}
-                      value={b.value}
-                      label={b.label}
-                      color={b.color}
-                      from={b.from}
-                      style={b.style}
-                      delay={0.25 + i * 0.15}
-                    />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
+              <motion.h1
+                key={`${slide.id}-title`}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4, delay: 0.04 }}
+                className="mt-6 font-black leading-[1.05] tracking-tight text-[color:var(--fg-primary)] text-[clamp(2rem,3.2vw,4.5rem)]"
+              >
+                <span className="">{slide.titleTop}</span>
+                &nbsp;
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: `linear-gradient(120deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 42%, var(--fg-primary) 120%)`,
+                  }}
+                >
+                  {slide.titleBottom}
+                </span>
+              </motion.h1>
+              <p
+                className="mt-5 text-sm font-semibold md:text-lg"
+                style={{ color: "var(--fg-secondary)" }}
+              >
+                <span
+                  style={{
+                    backgroundImage: `linear-gradient(90deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 48%, var(--fg-primary) 112%)`,
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  * Ongoing mentor support for 6 months, even after placement.
+                </span>
+              </p>
+              <motion.p
+                key={`${slide.id}-summary`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, delay: 0.08 }}
+                className="mt-5 max-w-[34rem] text-base leading-8 text-[color:var(--fg-secondary)] md:text-[1.05rem]"
+              >
+                {slide.summary}
+              </motion.p>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="#programs"
+                  className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-black transition-transform duration-200 hover:-translate-y-0.5"
+                  style={{
+                    background: `linear-gradient(135deg, ${slide.gradient[0]}, ${slide.gradient[1]})`,
+                    boxShadow: `0 18px 38px ${slide.gradient[0]}33`,
+                  }}
+                >
+                  {slide.cta}
+                  <ArrowRight size={16} />
+                </a>
+                <a
+                  href="#programs"
+                  className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-transparent px-6 py-3 text-sm font-semibold text-[var(--fg-primary)] transition-colors duration-200 hover:bg-black/5 dark:hover:bg-white/5"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setActiveIndex((index) => (index + 1) % SLIDES.length);
+                  }}
+                >
+                  View all slides
+                </a>
+              </div>
+
+              <div className="mt-8 flex items-center gap-2">
+                {SLIDES.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-label={`Go to slide ${index + 1}`}
+                    onClick={() => goTo(index)}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width: index === activeIndex ? 24 : 8,
+                      height: 8,
+                      background:
+                        index === activeIndex
+                          ? `linear-gradient(135deg, ${slide.gradient[0]}, ${slide.gradient[1]})`
+                          : "var(--border)",
+                      opacity: index === activeIndex ? 1 : 0.55,
+                    }}
+                  />
+                ))}
+              </div>
             </motion.div>
           </AnimatePresence>
+        </div>
+
+        <div className="relative flex items-center justify-center">
+          <div
+            className="absolute inset-8 -z-10 rounded-[2.5rem] blur-3xl"
+            style={{
+              background: isDark
+                ? "radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 68%)"
+                : `radial-gradient(
+          circle at center,
+          ${slide.gradient[0]}22 0%,
+          ${slide.gradient[1]}18 35%,
+          rgba(0,0,0,0.03) 70%,
+          transparent 100%
+        )`,
+            }}
+          />
+
+          <motion.div
+            key={`${slide.id}-halo`}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 rounded-[2.5rem]"
+            style={{
+              background: isDark
+                ? `radial-gradient(circle at center, ${slide.gradient[0]}18 0%, ${slide.gradient[1]}10 42%, transparent 72%)`
+                : `radial-gradient(circle at center, ${slide.gradient[0]}30 0%, ${slide.gradient[1]}20 45%, transparent 75%)`,
+            }}
+          />
+
+          <div className="relative w-full max-w-[540px] aspect-square rounded-[2.5rem] border border-white/40 bg-white/40 p-4 shadow-[0_26px_90px_rgba(7,18,37,0.1)] backdrop-blur-2xl dark:border-white/10 dark:bg-white/5 sm:p-6">
+            <div className="absolute inset-0 rounded-[2.5rem] bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.25),transparent_60%)]" />
+            <OrbCluster slide={slide} isDark={isDark} />
+          </div>
         </div>
       </div>
     </section>

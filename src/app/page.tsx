@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import PremiumNavbar from "../components/PremiumNavbar";
+import Navbar from "../components/Navbar";
 import Avatar from "../components/Avatar";
 import Hero from "../components/Hero";
 import MissionStatement from "../components/MissionStatement";
@@ -45,13 +45,13 @@ export default function Home() {
 
   return (
     <div className="page-bg min-h-screen">
-      <PremiumNavbar collapsed={collapsed} hasScrolled={hasScrolled} />
+      <Navbar />
       <Avatar hidden={false} />
 
       <main>
         <Hero />
-
         <MissionStatement />
+        <ValuesSection />
         <InstructorCarousel />
 
         <ProgramsShowcase />
@@ -60,7 +60,6 @@ export default function Home() {
         <PlacementStats />
         <WhySkillsXindia />
         <Testimonials />
-        <ValuesSection />
       </main>
 
       <Footer />

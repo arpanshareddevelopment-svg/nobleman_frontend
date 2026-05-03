@@ -9,83 +9,85 @@ export default function MissionStatement() {
   return (
     <section
       ref={ref}
-      className="relative w-full overflow-hidden py-28"
+      className="relative isolate overflow-hidden py-24 md:py-28"
       style={{ background: "var(--bg-page)" }}
     >
-      {/* Subtle dot grid */}
+      {/* GRID */}
       <div
-        className="absolute inset-0 -z-10 pointer-events-none"
+        className="absolute inset-0 -z-20 opacity-[0.08]"
         style={{
-          backgroundImage: `radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)`,
-          backgroundSize: "32px 32px",
-          opacity: 0.05,
+          backgroundImage:
+            "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
         }}
       />
 
-      {/* Green ambient glow */}
+      {/* AMBIENT GLOW */}
       <div
-        className="absolute -z-10 pointer-events-none"
+        className="absolute inset-0 -z-10 blur-3xl"
         style={{
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          background: "var(--brand-green-glow)",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          background: `radial-gradient(circle at center,
+            var(--brand-green-glow) 0%,
+            transparent 65%)`,
         }}
       />
 
-      <div className="max-w-4xl mx-auto px-6 text-center flex flex-col items-center gap-8">
-        {/* Eyebrow */}
-        <motion.span
-          initial={{ opacity: 0, y: -10 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.4 }}
-          className="px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border"
-          style={{
-            background: "var(--brand-green-glow)",
-            borderColor: "rgba(34, 197, 94, 0.30)",
-            color: "var(--brand-green-light)",
-          }}
-        >
-          Our Promise
-        </motion.span>
-
-        {/* Headline */}
-        <motion.h2
+      <div className="mx-auto max-w-5xl px-6 md:px-10">
+        <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="text-4xl md:text-5xl xl:text-[52px] font-black leading-[1.1] tracking-tight"
-          style={{ color: "var(--fg-primary)" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="relative rounded-[2rem] border border-white/60 bg-white/70 p-8 md:p-10 shadow-[0_30px_100px_rgba(7,18,37,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-white/5"
         >
-          Your aspirational career{" "}
-          <span
+          {/* subtle glass highlight */}
+          <div className="absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_60%)] pointer-events-none" />
+
+          {/* EYEBROW */}
+          <motion.span
+            initial={{ opacity: 0, y: -10 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center rounded-full border px-4 py-1.5 text-[11px] font-bold tracking-[0.28em] uppercase"
             style={{
-              background:
-                "linear-gradient(125deg, var(--brand-green-light), var(--brand-green-dark))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
+              background: "var(--brand-green-glow)",
+              borderColor: "rgba(34,197,94,0.25)",
+              color: "var(--brand-green-light)",
             }}
           >
-            is our mission.
-          </span>
-        </motion.h2>
+            Our Promise
+          </motion.span>
 
-        {/* Body copy */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.18 }}
-          className="text-base md:text-lg max-w-2xl leading-[1.85]"
-          style={{ color: "var(--fg-secondary)" }}
-        >
-          Our support doesn&apos;t end with your certificate. Our mentors stay
-          with you — every step of the way — through your first interview, your
-          first offer, and every milestone that follows.
-        </motion.p>
+          {/* HEADLINE */}
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="mt-6 font-black leading-[1.05] tracking-tight text-[clamp(2.2rem,3.8vw,3.8rem)] text-[color:var(--fg-primary)]"
+          >
+            Your aspirational career{" "}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(120deg, var(--brand-green-light), var(--brand-green-dark))",
+              }}
+            >
+              is our mission.
+            </span>
+          </motion.h2>
+
+          {/* BODY */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.18 }}
+            className="mt-5 max-w-full text-base md:text-xl leading-[1.8] text-[color:var(--fg-secondary)]"
+          >
+            Our support doesn&apos;t end with your certificate. Our mentors stay
+            with you — through your first interview, your first offer, and every
+            milestone that follows.
+          </motion.p>
+        </motion.div>
       </div>
     </section>
   );
