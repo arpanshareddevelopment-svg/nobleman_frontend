@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Award, BookOpen, Briefcase } from "lucide-react";
 
@@ -33,38 +33,67 @@ const CERTIFICATIONS = [
   },
 ];
 
+function useThemeMode() {
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const update = () => {
+      setIsDark(root.classList.contains("dark"));
+    };
+
+    update();
+    setMounted(true);
+
+    const observer = new MutationObserver(update);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return { isDark, mounted };
+}
+
 export default function CertificationsShowcase() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const isDark = useThemeMode();
 
   return (
     <section
       ref={ref}
       className="relative w-full overflow-hidden py-28"
-      style={{ background: "var(--bg-page)" }}
+      style={{
+        background: isDark
+          ? "linear-gradient(155deg, #010b27ff 0%, #00090489 45%, #000000 100%)"
+          : "linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
+      }}
     >
-      {/* Ambient glows */}
+      {/* Dot-grid texture */}
       <div
-        className="absolute -z-10 pointer-events-none"
+        className="absolute inset-0 -z-20 pointer-events-none"
         style={{
-          width: 400,
-          height: 400,
-          borderRadius: "50%",
-          background: "var(--brand-blue-glow)",
-          top: "-10%",
-          left: "10%",
+          backgroundImage:
+            "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+          opacity: isDark ? 0.08 : 0.1,
         }}
       />
+
+      {/* Ambient glows */}
       <div
-        className="absolute -z-10 pointer-events-none"
+        className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
         style={{
-          width: 400,
-          height: 400,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(250,204,21,0.08) 0%, transparent 70%)",
-          bottom: "-5%",
-          right: "15%",
+          background: `
+            radial-gradient(circle at 15% 25%, var(--brand-blue-glow), transparent 40%),
+            radial-gradient(circle at 85% 75%, var(--brand-yellow-glow), transparent 45%),
+            radial-gradient(circle at 50% 50%, var(--brand-green-glow), transparent 55%)
+          `,
         }}
       />
 
@@ -119,16 +148,22 @@ export default function CertificationsShowcase() {
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
                 className="group rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer"
                 style={{
-                  background: "var(--bg-card)",
+                  background: isDark
+                    ? "rgba(255,255,255,0.04)"
+                    : "rgba(255,255,255,0.75)",
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
                   border: `1px solid var(--border)`,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                  boxShadow: isDark
+                    ? "0 4px 24px rgba(0,0,0,0.4)"
+                    : "0 4px 24px rgba(7,18,37,0.07)",
                 }}
               >
                 {/* Gradient overlay on hover */}
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 -z-10"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 rounded-2xl"
                   style={{
-                    background: `linear-gradient(135deg, ${cert.color}, transparent)`,
+                    background: `radial-gradient(circle at 30% 30%, ${cert.color}18, transparent 65%)`,
                   }}
                 />
 
@@ -198,7 +233,7 @@ export default function CertificationsShowcase() {
               boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)",
             }}
           >
-            View Programs →
+            View Programs
           </button>
         </motion.div>
       </div>

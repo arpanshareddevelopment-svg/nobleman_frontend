@@ -56,11 +56,12 @@ export default function Navbar() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [hovered, setHovered] = useState(false);
   const [clickedOpen, setClickedOpen] = useState(false);
-  const [isDark, setIsDark] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      document.documentElement.classList.contains("dark"),
-  );
+const [isDark, setIsDark] = useState(false);
+
+  // Sync state with the class applied by the inline layout script on mount
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
   const linksRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -82,6 +83,9 @@ export default function Navbar() {
   function toggleTheme() {
     const nowDark = document.documentElement.classList.toggle("dark");
     setIsDark(nowDark);
+    try {
+      localStorage.setItem("theme", nowDark ? "dark" : "light");
+    } catch (e) {}
   }
 
   const hasAnimated = useRef(false);

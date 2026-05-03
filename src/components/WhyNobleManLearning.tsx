@@ -13,7 +13,7 @@ const COMPARISON_DATA = [
   {
     feature: "Courses start from ₹999",
     skillxindia: true,
-    typical: "Varies (₹5k-₹80k)",
+    typical: "₹5k – ₹80k",
     coaching: true,
   },
   {
@@ -36,43 +36,15 @@ const COMPARISON_DATA = [
   },
 ];
 
-function ComparisonCell({
-  value,
-  type = "text",
-}: {
-  value: boolean | string;
-  type?: "text" | "check";
-}) {
-  if (type === "check") {
-    if (value === true)
-      return (
-        <div className="flex justify-center">
-          <Check size={24} style={{ color: "var(--brand-green-light)" }} />
-        </div>
-      );
-    if (value === false)
-      return (
-        <div className="flex justify-center">
-          <X size={24} style={{ color: "var(--color-error)" }} />
-        </div>
-      );
-  }
+function ComparisonCell({ value }: { value: boolean | string }) {
+  if (value === true)
+    return (
+      <Check size={20} className="text-[var(--brand-green-light)] mx-auto" />
+    );
 
-  return (
-    <span
-      className="text-sm"
-      style={{
-        color:
-          value === true
-            ? "var(--brand-green-light)"
-            : value === false
-              ? "var(--color-error)"
-              : "var(--fg-secondary)",
-      }}
-    >
-      {value === true ? "✓" : value === false ? "✗" : value}
-    </span>
-  );
+  if (value === false) return <X size={20} className="text-red-400 mx-auto" />;
+
+  return <span className="text-sm text-[var(--fg-secondary)]">{value}</span>;
 }
 
 export default function WhyNobleManLearning() {
@@ -80,106 +52,87 @@ export default function WhyNobleManLearning() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section
-      ref={ref}
-      className="relative w-full overflow-hidden py-28"
-      style={{ background: "var(--bg-page)" }}
-    >
-      {/* Ambient glow */}
+    <section ref={ref} className="relative isolate py-28 overflow-hidden">
+      {/* DOT PATTERN — same as Hero */}
       <div
-        className="absolute -z-10 pointer-events-none"
+        className="absolute inset-0 -z-10 opacity-[0.6]"
         style={{
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)",
-          bottom: "-10%",
-          right: "10%",
+          backgroundImage:
+            "radial-gradient(circle, rgba(255, 235, 120, 0.26) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
         }}
       />
 
-      <div className="max-w-6xl mx-auto px-6 md:px-14">
-        {/* Header */}
+      {/* GLOW BLOBS — same as Hero */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          background: `radial-gradient(circle at 18% 20%, rgba(255, 220, 80, 0.15), transparent 25%),
+                   radial-gradient(circle at 75% 70%, rgba(255,165,0,0.18), transparent 42%)`,
+        }}
+      />
+
+      {/* rest of your JSX... */}
+      <div className="max-w-6xl mx-auto px-6">
+        {/* HEADER */}
         <motion.h2
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center text-4xl md:text-5xl font-black mb-16"
-          style={{ color: "var(--fg-primary)" }}
+          className="text-center text-4xl md:text-5xl font-black mb-16 text-white"
         >
           Why{" "}
-          <span style={{ color: "var(--brand-green-light)" }}>
+          <span className="text-[var(--brand-yellow-light)]">
             NobleMan Learning
           </span>
-          ?
         </motion.h2>
 
-        {/* Comparison table */}
+        {/* 🔥 TABLE CARD */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.6 }}
-          className="overflow-x-auto rounded-2xl border"
-          style={{
-            background: "var(--bg-card)",
-            borderColor: "var(--border)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-          }}
+          className="rounded-2xl border backdrop-blur-2xl overflow-hidden
+          bg-white/5 border-white/10"
         >
           <table className="w-full">
+            {/* HEADER */}
             <thead>
-              <tr
-                style={{
-                  background: "var(--fg-primary)",
-                  borderBottom: "1px solid var(--border)",
-                }}
-              >
-                <th className="p-6 text-left">
-                  <span className="font-black text-white">
-                    NobleMan Learning
-                  </span>
+              <tr className="border-b border-white/10 bg-white/5">
+                <th className="p-5 text-left text-sm text-white font-bold">
+                  Features
                 </th>
-                <th className="p-6 text-center">
-                  <span className="font-bold text-gray-400">
-                    Typical Online Courses
-                  </span>
+                <th className="p-5 text-center text-sm text-[var(--brand-blue-light)] font-bold">
+                  NobleMan
                 </th>
-                <th className="p-6 text-center">
-                  <span className="font-bold text-gray-400">
-                    Coaching Institutes
-                  </span>
+                <th className="p-5 text-center text-sm text-white/60">
+                  Online Courses
+                </th>
+                <th className="p-5 text-center text-sm text-white/60">
+                  Coaching
                 </th>
               </tr>
             </thead>
+
+            {/* BODY */}
             <tbody>
               {COMPARISON_DATA.map((row, i) => (
                 <motion.tr
                   key={i}
                   initial={{ opacity: 0, x: -10 }}
                   animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  style={{
-                    borderBottom: "1px solid var(--border)",
-                    background:
-                      i % 2 === 0 ? "transparent" : "rgba(0,0,0,0.02)",
-                  }}
+                  transition={{ delay: i * 0.05 }}
+                  className="border-b border-white/5 hover:bg-white/5 transition"
                 >
-                  <td className="p-6">
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--fg-primary)" }}
-                    >
-                      {row.feature}
-                    </span>
+                  <td className="p-5 text-white font-medium">{row.feature}</td>
+
+                  <td className="p-5 text-center">
+                    <ComparisonCell value={row.skillxindia} />
                   </td>
-                  <td className="p-6 text-center">
-                    <ComparisonCell value={row.skillxindia} type="check" />
-                  </td>
-                  <td className="p-6 text-center">
+
+                  <td className="p-5 text-center">
                     <ComparisonCell value={row.typical} />
                   </td>
-                  <td className="p-6 text-center">
+
+                  <td className="p-5 text-center">
                     <ComparisonCell value={row.coaching} />
                   </td>
                 </motion.tr>
@@ -192,18 +145,13 @@ export default function WhyNobleManLearning() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-12"
+          className="text-center mt-14"
         >
           <button
-            className="px-8 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--brand-green-light), var(--brand-green-dark))",
-              boxShadow: "0 8px 24px rgba(34,197,94,0.4)",
-            }}
+            className="px-8 py-3 rounded-xl font-bold text-black 
+            bg-[var(--brand-yellow-light)] hover:scale-105 transition"
           >
-            Start Your Journey →
+            Start Your Journey
           </button>
         </motion.div>
       </div>

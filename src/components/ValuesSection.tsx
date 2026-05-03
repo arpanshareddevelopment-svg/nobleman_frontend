@@ -41,19 +41,20 @@ const VALUES = [
   },
 ];
 function useThemeMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
 
-    const observer = new MutationObserver(() => {
-      const next = root.classList.contains("dark");
-      setIsDark((current) => (current === next ? current : next));
-    });
+    const update = () => {
+      setIsDark(root.classList.contains("dark"));
+    };
 
+    update();
+    setMounted(true);
+
+    const observer = new MutationObserver(update);
     observer.observe(root, {
       attributes: true,
       attributeFilter: ["class"],
@@ -62,13 +63,14 @@ function useThemeMode() {
     return () => observer.disconnect();
   }, []);
 
-  return isDark;
+  return { isDark, mounted };
 }
 export default function ValuesSection() {
-  const isDark = useThemeMode();
+  const { isDark, mounted } = useThemeMode();
+ 
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
+  const inView = useInView(ref, { once: true });
+ if (!mounted) return null;
   return (
     <section
       ref={ref}
@@ -113,7 +115,7 @@ export default function ValuesSection() {
         {/* HEADER */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
           transition={{ duration: 0.5 }}
           className="text-center font-black leading-[1.05] tracking-tight text-[clamp(2.2rem,3.8vw,3.8rem)] text-[color:var(--fg-primary)]"
         >
@@ -139,7 +141,7 @@ export default function ValuesSection() {
               <motion.div
                 key={value.id}
                 initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
+                animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group relative rounded-[1.5rem] border p-6 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1"
                 style={{

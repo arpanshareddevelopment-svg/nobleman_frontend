@@ -28,23 +28,26 @@ type Orb = {
 };
 
 function useThemeMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
-    const observer = new MutationObserver(() => {
-      const next = root.classList.contains("dark");
-      setIsDark((current) => (current === next ? current : next));
-    });
 
+    const update = () => {
+      setIsDark(root.classList.contains("dark"));
+    };
+
+    update();
+    setMounted(true);
+
+    const observer = new MutationObserver(update);
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+
     return () => observer.disconnect();
   }, []);
 
-  return isDark;
+  return mounted ? isDark : false;
 }
 
 const SLIDES: Slide[] = [
@@ -289,6 +292,11 @@ function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
   const isDark = useThemeMode();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -297,6 +305,7 @@ export default function Hero() {
 
     return () => window.clearInterval(interval);
   }, []);
+  if (!mounted) return null;
 
   const slide = SLIDES[activeIndex];
 

@@ -10,8 +10,7 @@ const INSTRUCTORS = [
     role: "Senior Data Scientist",
     company: "Amazon",
     expertise: ["Python", "ML", "SQL"],
-    accent: "var(--brand-green-light)",
-    accentDark: "var(--brand-green-dark)",
+
     /* Replace with real portrait URLs */
     photo:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80",
@@ -26,8 +25,7 @@ const INSTRUCTORS = [
     role: "Principal Engineer",
     company: "Microsoft",
     expertise: ["React", "Node.js", "System Design"],
-    accent: "var(--brand-blue-light)",
-    accentDark: "var(--brand-blue-dark)",
+
     photo:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80",
     bio: "Led full-stack teams at Microsoft for 10 years. Passionate about turning beginners into senior engineers.",
@@ -41,8 +39,7 @@ const INSTRUCTORS = [
     role: "Product Lead",
     company: "BCG Digital",
     expertise: ["Product Strategy", "Agile", "Analytics"],
-    accent: "var(--brand-yellow-light)",
-    accentDark: "var(--brand-yellow-dark)",
+
     photo:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80",
     bio: "Shipped 30+ products across fintech and healthtech. Mentors aspiring PMs on strategy and execution.",
@@ -56,8 +53,7 @@ const INSTRUCTORS = [
     role: "ML Engineer",
     company: "Google DeepMind",
     expertise: ["Deep Learning", "NLP", "PyTorch"],
-    accent: "var(--brand-purple-light)",
-    accentDark: "var(--brand-purple-dark)",
+
     photo:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80",
     bio: "Researcher turned engineer. Specialises in LLMs and making cutting-edge AI accessible to everyone.",
@@ -71,8 +67,7 @@ const INSTRUCTORS = [
     role: "UX Design Lead",
     company: "Flipkart",
     expertise: ["Figma", "Design Systems", "Research"],
-    accent: "var(--brand-pink-light)",
-    accentDark: "var(--brand-pink-dark)",
+
     photo:
       "https://images.unsplash.com/photo-1614644147724-2d4785d69962?w=600&q=80",
     bio: "Designed experiences used by 300M+ users. Teaches design thinking with a product-first mindset.",
@@ -86,8 +81,7 @@ const INSTRUCTORS = [
     role: "DevOps Architect",
     company: "Infosys",
     expertise: ["Kubernetes", "AWS", "CI/CD"],
-    accent: "var(--brand-orange-light)",
-    accentDark: "var(--brand-orange-dark)",
+
     photo:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
     bio: "Scaled infrastructure for Fortune 500 clients. Demystifies cloud and DevOps for working engineers.",
@@ -97,7 +91,18 @@ const INSTRUCTORS = [
     index: "06",
   },
 ];
-
+// Color rotation: blue → green → yellow
+const COLOR_THEMES = [
+  { accent: "var(--brand-blue-light)", accentDark: "var(--brand-blue-dark)" },
+  {
+    accent: "var(--brand-green-light)",
+    accentDark: "var(--brand-green-dark)",
+  },
+  {
+    accent: "var(--brand-yellow-light)",
+    accentDark: "var(--brand-yellow-dark)",
+  },
+];
 /* ─── Star rating ──────────────────────────────────────────── */
 function Stars({ rating, color }: { rating: number; color: string }) {
   return (
@@ -116,23 +121,29 @@ function Stars({ rating, color }: { rating: number; color: string }) {
 }
 
 function useThemeMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
-    const observer = new MutationObserver(() => {
-      const next = root.classList.contains("dark");
-      setIsDark((current) => (current === next ? current : next));
+
+    const update = () => {
+      setIsDark(root.classList.contains("dark"));
+    };
+
+    update();
+    setMounted(true);
+
+    const observer = new MutationObserver(update);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
     });
 
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  return isDark;
+  return { isDark, mounted };
 }
 
 /* ─── Vertical thumb strip ─────────────────────────────────── */
@@ -163,6 +174,7 @@ function ThumbStrip({
     <div className="hidden lg:flex flex-col gap-3 flex-shrink-0">
       {displayInstructors.map((inst, i) => {
         const globalIndex = start + i;
+        const theme = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
         return (
           <button
             key={globalIndex}
@@ -171,7 +183,7 @@ function ThumbStrip({
             style={{
               outline:
                 globalIndex === active
-                  ? `2px solid ${inst.accent}`
+                  ? `2px solid ${theme.accent}`
                   : "2px solid transparent",
               outlineOffset: 2,
               opacity: globalIndex === active ? 1 : 0.38,
@@ -190,7 +202,7 @@ function ThumbStrip({
               <motion.div
                 layoutId="thumb-glow"
                 className="absolute inset-0 rounded-2xl"
-                style={{ background: `${inst.accent}22` }}
+                style={{ background: `${theme.accent}22` }}
               />
             )}
           </button>
@@ -210,19 +222,7 @@ export default function InstructorCarousel() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const total = INSTRUCTORS.length;
 
-  // Color rotation: blue → green → yellow
-  const COLOR_THEMES = [
-    { accent: "var(--brand-blue-light)", accentDark: "var(--brand-blue-dark)" },
-    {
-      accent: "var(--brand-green-light)",
-      accentDark: "var(--brand-green-dark)",
-    },
-    {
-      accent: "var(--brand-yellow-light)",
-      accentDark: "var(--brand-yellow-dark)",
-    },
-  ];
-  const [themeIndex, setThemeIndex] = useState(0);
+  const theme = COLOR_THEMES[active % COLOR_THEMES.length];
 
   const advance = useCallback(
     (dir: 1 | -1) => setActive((i) => (i + dir + total) % total),
@@ -230,34 +230,29 @@ export default function InstructorCarousel() {
   );
 
   useEffect(() => {
-    if (paused || !inView) return;
-    timerRef.current = setInterval(() => advance(1), 5000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [paused, advance, inView]);
+    if (!inView) return;
 
-  // Rotate theme colors as carousel advances
-  useEffect(() => {
-    if (inView) {
-      setThemeIndex(active % COLOR_THEMES.length);
-    }
-  }, [active, inView]);
+    const id = setInterval(() => {
+      if (!paused) advance(1);
+    }, 5000);
+
+    return () => clearInterval(id);
+  }, [paused, advance, inView]);
 
   function select(i: number) {
     setActive(i);
     setPaused(true);
-    setTimeout(() => setPaused(false), 8000);
+    setTimeout(() => setPaused(false), 2500);
   }
 
   function handleArrow(dir: 1 | -1) {
     advance(dir);
     setPaused(true);
-    setTimeout(() => setPaused(false), 8000);
+    setTimeout(() => setPaused(false), 2500);
   }
 
   const inst = INSTRUCTORS[active];
-  const theme = COLOR_THEMES[themeIndex];
+
   // Overlay theme colors onto the instructor
   const displayInst = {
     ...inst,
@@ -271,21 +266,25 @@ export default function InstructorCarousel() {
       ref={containerRef}
       style={{
         background: isDark
-          ? `
-      linear-gradient(155deg, #030712 0%, #020617 45%, #000000 100%),
-      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.12), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.10), transparent 45%)
-    `
-          : `
-      linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%),
-      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.10), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.08), transparent 45%)
-    `,
+          ? "linear-gradient(155deg, #030712 0%, #191d013c 45%, #000000 100%)"
+          : "linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
       }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
     >
-      {/* ── Animated ambient background ── */}
+      {/* ── Three-colour static blobs ── */}
+      <div
+        className="absolute inset-0 -z-20 pointer-events-none blur-3xl"
+        style={{
+          background: isDark
+            ? `radial-gradient(ellipse 55% 50% at 10% 20%,  rgba(0,196,255,0.18)  0%, transparent 60%),
+               radial-gradient(ellipse 45% 40% at 90% 15%,  rgba(200,255,0,0.14)  0%, transparent 55%),
+               radial-gradient(ellipse 50% 45% at 50% 90%,  rgba(255,230,0,0.12)  0%, transparent 58%)`
+            : `radial-gradient(ellipse 55% 50% at 10% 20%,  rgba(0,196,255,0.12)  0%, transparent 60%),
+               radial-gradient(ellipse 45% 40% at 90% 15%,  rgba(200,255,0,0.10)  0%, transparent 55%),
+               radial-gradient(ellipse 50% 45% at 50% 90%,  rgba(255,230,0,0.09)  0%, transparent 58%)`,
+        }}
+      />
+
+      {/* ── Animated per-instructor accent glow ── */}
       <AnimatePresence>
         <motion.div
           key={`bg-${active}`}
@@ -425,7 +424,7 @@ export default function InstructorCarousel() {
                 className="relative flex-shrink-0 rounded-3xl overflow-hidden"
                 style={{
                   width: "clamp(220px, 28vw, 360px)",
-                  height: "clamp(280px, 35vw, 420px)",
+                  height: "clamp(260px, 30vw, 340px)",
                   boxShadow: `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`,
                 }}
               >
@@ -625,7 +624,10 @@ export default function InstructorCarousel() {
                 style={{
                   height: 7,
                   width: i === active ? 24 : 7,
-                  background: i === active ? inst.accent : "var(--border)",
+                  background:
+                    i === active
+                      ? COLOR_THEMES[i % COLOR_THEMES.length].accent
+                      : "var(--border)",
                   opacity: i === active ? 1 : 0.4,
                 }}
               />
