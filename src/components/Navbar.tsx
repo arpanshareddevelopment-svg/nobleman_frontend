@@ -18,37 +18,28 @@ function BrandLogo({ isOpen, isDark }: { isOpen: boolean; isDark: boolean }) {
 
   return (
     <div
-      className={`relative flex items-center justify-center rounded-full transition-all duration-300 ${
-        isOpen ? "border border-[var(--border)] px-3" : "p-0"
-      }`}
+      className={`
+        relative flex items-center justify-center
+        transition-all duration-300
+        rounded-full overflow-hidden
+      `}
       style={{
-        height: isOpen ? 52 : 52,
+        height: 52,
         width: isOpen ? 180 : 52,
-        background: isDark ? "#000" : "#fff",
+        background: "transparent",
       }}
     >
-      {isOpen ? (
-        <Image
-          src={src}
-          alt="Brand"
-          fill
-          sizes="180px"
-          className="object-contain px-2"
-          priority
-        />
-      ) : (
-        <Image
-          src={src}
-          alt="Brand"
-          fill
-          sizes="52px"
-          className="object-contain scale-110"
-          style={{
-            transformOrigin: "center",
-          }}
-          priority
-        />
-      )}
+      <Image
+        src={src}
+        alt="Brand"
+        fill
+        sizes={isOpen ? "180px" : "52px"}
+        className={`
+          object-contain
+          ${!isOpen ? "scale-110" : ""}
+        `}
+        priority
+      />
     </div>
   );
 }
