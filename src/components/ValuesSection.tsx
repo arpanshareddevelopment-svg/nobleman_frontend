@@ -71,21 +71,14 @@ export default function ValuesSection() {
 
   return (
     <section
-      className="relative isolate overflow-hidden py-24 md:py-28"
-      style={{
-        background: isDark
-          ? `
-      linear-gradient(155deg, #030712 0%, #020617 45%, #000000 100%),
-      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.12), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.10), transparent 45%)
-    `
-          : `
-      linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%),
-      radial-gradient(circle at 20% 30%, rgba(0,196,255,0.10), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(200,255,0,0.08), transparent 45%)
-    `,
-      }}
-    >
+  className="relative isolate overflow-hidden py-24 md:py-28"
+  style={{
+    background: isDark
+      ? "linear-gradient(180deg, #000000 0%, #030712 40%, #020617 100%)"
+      : "linear-gradient(180deg, #ffffff 0%, #f8fbff 40%, #eef4ff 100%)",
+  }}
+>{/* ── seamless blend from MissionStatement above ── */}
+<div className="absolute inset-x-0 top-0 h-40 -z-10 bg-gradient-to-b from-black/70 to-transparent dark:from-black/80 pointer-events-none" />
       {/* GRID BG */}
       <div
         className="absolute inset-0 -z-20 opacity-[0.08]"
@@ -100,7 +93,7 @@ export default function ValuesSection() {
 
       {/* GLOW */}
       <div
-        className="absolute inset-0 -z-10 blur-3xl"
+        className="absolute inset-0 top-10 -z-10 blur-3xl"
         style={{
           background: `
             radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),

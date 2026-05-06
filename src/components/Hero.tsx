@@ -15,6 +15,7 @@ type Slide = {
   summary: string;
   cta: string;
   gradient: [string, string];
+  solid: string;
   highlight: OrbKey;
 };
 
@@ -52,36 +53,39 @@ function useThemeMode() {
 
 const SLIDES: Slide[] = [
   {
-    id: "blue-green",
-    tag: "Blue × Green",
+    id: "blue",
+    tag: "Blue",
     titleTop: "Build AI-first skills",
     titleBottom: "that actually convert.",
     summary:
       "Live cohorts, real projects, and focused placement support for outcome-driven learners.",
     cta: "Explore programs",
-    gradient: ["#62d9ff", "#57f0a2"],
+    gradient: ["#2ea8ff", "#7ed8ff"],
+    solid: "#2ea8ff",
     highlight: "careers",
   },
   {
-    id: "green-yellow",
-    tag: "Green × Yellow",
+    id: "green",
+    tag: "Green",
     titleTop: "Mentorship that moves",
     titleBottom: "at the pace of momentum.",
     summary:
       "Structured practice, direct feedback, and interview prep that keep progress visible.",
     cta: "Meet mentors",
-    gradient: ["#7bf56f", "#ffd84d"],
+    gradient: ["#84ff3d", "#c8ff74"],
+    solid: "#84ff3d",
     highlight: "support",
   },
   {
-    id: "yellow-blue",
-    tag: "Yellow × Blue",
+    id: "yellow",
+    tag: "Yellow",
     titleTop: "Hiring outcomes",
     titleBottom: "with staying power.",
     summary:
       "Referrals, mock interviews, and partner access designed to keep the offer pipeline moving.",
     cta: "See outcomes",
-    gradient: ["#ffd95c", "#55c9ff"],
+    gradient: ["#ffcf33", "#ffe98a"],
+    solid: "#ffcf33",
     highlight: "partners",
   },
 ];
@@ -165,7 +169,7 @@ function FloatingOrb({
           background: active
             ? `linear-gradient(
       135deg,
-      ${gradient[0]}55 0%,
+      ${gradient[0]}60 0%,
       ${gradient[1]}55 100%
     )`
             : isDark
@@ -229,7 +233,7 @@ function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
   }, []);
 
   return (
-    <div className="relative mx-auto aspect-square w-[min(82vw,520px)]">
+    <div className="relative mx-auto aspect-square w-[min(60vw,500px)]">
       <motion.div
         key={slide.id}
         initial={{ opacity: 0, scale: 0.96 }}
@@ -242,36 +246,21 @@ function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
         }}
       />
 
-      {/* OUTER + INNER CIRCLES */}
+      {/* OUTER  */}
       <div
         className="absolute inset-[18%] rounded-full backdrop-blur-2xl"
         style={{
-          background: isDark
-            ? "rgba(255,255,255,0.05)"
-            : "rgba(255,255,255,0.65)",
+
 
           border: isDark
-            ? "1px solid rgba(255,255,255,0.12)"
-            : "1px solid rgba(0,0,0,0.08)",
+            ? "1px dashed rgba(255, 255, 255, 0.25)"
+            : "1px dashed  rgba(0,0,0,0.08)",
 
-          boxShadow: isDark
-            ? "0 0 0 1px rgba(255,255,255,0.04) inset"
-            : "0 0 0 1px rgba(0,0,0,0.03) inset",
+
         }}
       />
 
-      <div
-        className="absolute inset-[24%] rounded-full"
-        style={{
-          border: isDark
-            ? "1px solid rgba(255,255,255,0.08)"
-            : `1px solid ${slide.gradient[0]}33`, // subtle colored ring in light
 
-          boxShadow: isDark
-            ? "0 0 0 1px rgba(255,255,255,0.03) inset"
-            : "0 0 20px rgba(0,0,0,0.04)",
-        }}
-      />
       {ORBS.map((orb, index) => (
         <FloatingOrb
           key={orb.key}
@@ -308,6 +297,28 @@ export default function Hero() {
   if (!mounted) return null;
 
   const slide = SLIDES[activeIndex];
+  const mentorAccent = {
+    blue: {
+      text: "var(--brand-yellow)",
+      bg: "var(--brand-yellow-glow)",
+      border: "var(--brand-yellow-dark)",
+      glow: "var(--brand-yellow-glow)",
+    },
+
+    green: {
+      text: "var(--brand-blue)",
+      bg: "var(--brand-blue-glow)",
+      border: "var(--brand-blue-dark)",
+      glow: "var(--brand-blue-glow)",
+    },
+
+    yellow: {
+      text: "var(--brand-green)",
+      bg: "var(--brand-green-glow)",
+      border: "var(--brand-green-dark)",
+      glow: "var(--brand-green-glow)",
+    },
+  }[slide.id as "blue" | "green" | "yellow"];
 
   function goTo(index: number) {
     setActiveIndex(index);
@@ -315,7 +326,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative isolate overflow-hidden py-20 md:py-24 lg:py-28"
+      className="relative isolate overflow-hidden py-10 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
       style={{
         background: isDark
           ? "linear-gradient(135deg, #06182b 0%, #02040a 52%, #000000 100%)"
@@ -325,18 +336,25 @@ export default function Hero() {
       <div className="absolute inset-0 -z-20 dark:hidden bg-[radial-gradient(circle_at_top_left,rgba(85,201,255,0.16),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(87,240,162,0.14),transparent_24%)]" />
       <div className="absolute inset-0 -z-20 hidden dark:block bg-[radial-gradient(circle_at_top_left,rgba(85,201,255,0.16),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(123,245,111,0.1),transparent_24%)]" />
       <div
-        className="absolute inset-0 -z-10 opacity-[0.12] dark:opacity-[0.1]"
+        className="absolute inset-0 -z-10"
         style={{
           backgroundImage:
             "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
+          maskImage:
+            "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, black 30%, transparent 80%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, black 30%, transparent 80%)",
+          opacity: isDark ? 0.5 : 0.18,
         }}
       />
       <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-white/70 to-transparent dark:from-transparent" />
 
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-6 md:px-10 lg:grid-cols-[1fr_1fr] lg:gap-8 xl:px-14">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-6 md:px-10 lg:grid-cols-[1.4fr_0.6fr] lg:gap-6 xl:px-14">
+        {/* left col */}
         <div className="relative w-full min-w-0">
-          <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-white/60 blur-2xl dark:bg-white/5" />
+
+          <div className="absolute -inset-4 -z-10 rounded-[2rem]" />
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -345,10 +363,10 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-[0_24px_90px_rgba(7,18,37,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-white/5 md:p-8 lg:p-9"
+              className="rounded-[2rem]   p-6  md:p-8 lg:p-9 xl:py-10"
             >
               <div className="flex flex-wrap items-center gap-2 ">
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[11px] font-semibold tracking-[0.28em] text-[var(--fg-secondary)] uppercase">
+                <span className="rounded-full border border-[var(--border)] px-3 py-1 mt-16 text-[11px] font-semibold tracking-[0.28em] text-[var(--fg-secondary)] uppercase">
                   Live cohorts
                 </span>
               </div>
@@ -366,27 +384,64 @@ export default function Hero() {
                 <span
                   className="bg-clip-text text-transparent"
                   style={{
-                    backgroundImage: `linear-gradient(120deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 42%, var(--fg-primary) 120%)`,
+                    backgroundImage: `linear-gradient(
+  135deg,
+  ${slide.gradient[0]} 0%,
+  ${slide.gradient[1]} 100%
+)`,
                   }}
                 >
                   {slide.titleBottom}
                 </span>
               </motion.h1>
-              <p
-                className="mt-5 text-sm font-semibold md:text-lg"
-                style={{ color: "var(--fg-secondary)" }}
+              <div
+                className="relative mt-6 inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-500 overflow-hidden"
+                style={{
+                  border: `1px solid ${mentorAccent.text}99`,
+                  background: isDark
+                    ? "rgba(255,255,255,0.06)"
+                    : "rgba(255,255,255,0.85)",
+                  backdropFilter: "blur(16px)",
+                  boxShadow: `
+      0 0 0 1px ${mentorAccent.text}18,
+      0 4px 28px ${mentorAccent.text}40,
+      inset 0 1px 0 rgba(255,255,255,0.12)
+    `,
+                }}
               >
-                <span
+                {/* top shimmer line */}
+                <div
+                  className="absolute inset-x-0 top-0 h-px"
                   style={{
-                    backgroundImage: `linear-gradient(90deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 48%, var(--fg-primary) 112%)`,
+                    background: `linear-gradient(90deg, transparent 10%, ${mentorAccent.text}99 50%, transparent 90%)`,
+                  }}
+                />
+
+                <Sparkles
+                  size={18}
+                  style={{
+                    color: mentorAccent.text,
+                    filter: `drop-shadow(0 0 6px ${mentorAccent.text})`,
+                    flexShrink: 0,
+                  }}
+                />
+
+                <span
+                  className="text-sm font-semibold md:text-[1.02rem] bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage:
+                      slide.id === "blue"
+                        ? "linear-gradient(135deg,var(--brand-yellow),var(--brand-yellow-light))"
+                        : slide.id === "green"
+                          ? "linear-gradient(135deg,var(--brand-blue),var(--brand-blue-light))"
+                          : "linear-gradient(135deg,var(--brand-green),var(--brand-green-light))",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
                   }}
                 >
-                  * Ongoing mentor support for 6 months, even after placement.
+                  Ongoing mentor support for 6 months, even after placement.
                 </span>
-              </p>
+              </div>
               <motion.p
                 key={`${slide.id}-summary`}
                 initial={{ opacity: 0 }}
@@ -403,23 +458,18 @@ export default function Hero() {
                   href="#programs"
                   className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-black transition-transform duration-200 hover:-translate-y-0.5"
                   style={{
-                    background: `linear-gradient(135deg, ${slide.gradient[0]}, ${slide.gradient[1]})`,
+                    background: `linear-gradient(
+  135deg,
+  ${slide.gradient[0]} 0%,
+  ${slide.gradient[1]} 100%
+)`,
                     boxShadow: `0 18px 38px ${slide.gradient[0]}33`,
                   }}
                 >
                   {slide.cta}
                   <ArrowRight size={16} />
                 </a>
-                <a
-                  href="#programs"
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-transparent px-6 py-3 text-sm font-semibold text-[var(--fg-primary)] transition-colors duration-200 hover:bg-black/5 dark:hover:bg-white/5"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setActiveIndex((index) => (index + 1) % SLIDES.length);
-                  }}
-                >
-                  View all slides
-                </a>
+
               </div>
 
               <div className="mt-8 flex items-center gap-2">
@@ -435,9 +485,17 @@ export default function Hero() {
                       height: 8,
                       background:
                         index === activeIndex
-                          ? `linear-gradient(135deg, ${slide.gradient[0]}, ${slide.gradient[1]})`
-                          : "var(--border)",
-                      opacity: index === activeIndex ? 1 : 0.55,
+                          ? `linear-gradient(
+        135deg,
+        ${slide.gradient[0]} 0%,
+        ${slide.gradient[1]} 100%
+      )`
+                          : "rgba(255,255,255,0.18)",
+                      boxShadow:
+                        index === activeIndex
+                          ? `0 0 18px ${slide.gradient[0]}66`
+                          : "none",
+                      opacity: index === activeIndex ? 1 : 0.38,
                     }}
                   />
                 ))}
@@ -445,10 +503,10 @@ export default function Hero() {
             </motion.div>
           </AnimatePresence>
         </div>
-
-        <div className="relative flex items-center justify-center">
+        {/* right col */}
+        <div className="relative flex items-center justify-center ">
           <div
-            className="absolute inset-8 -z-10 rounded-[2.5rem] blur-3xl"
+            className="absolute inset- -z-10 rounded-[2.5rem] "
             style={{
               background: isDark
                 ? "radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 68%)"
@@ -467,7 +525,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="absolute inset-0 rounded-[2.5rem]"
+            className="absolute inset-0 rounded-[2.5rem] "
             style={{
               background: isDark
                 ? `radial-gradient(circle at center, ${slide.gradient[0]}18 0%, ${slide.gradient[1]}10 42%, transparent 72%)`
@@ -475,12 +533,14 @@ export default function Hero() {
             }}
           />
 
-          <div className="relative w-full max-w-[540px] aspect-square rounded-[2.5rem] border border-white/40 bg-white/40 p-4 shadow-[0_26px_90px_rgba(7,18,37,0.1)] backdrop-blur-2xl dark:border-white/10 dark:bg-white/5 sm:p-6">
-            <div className="absolute inset-0 rounded-[2.5rem] bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.25),transparent_60%)]" />
+          <div className="relative w-full max-w-[540px] aspect-square rounded-[2.5rem]  p-4  sm:p-6">
+            <div className="absolute inset-0 rounded-[2.5rem] " />
             <OrbCluster slide={slide} isDark={isDark} />
           </div>
         </div>
       </div>
+
+      <div className="absolute inset-x-0 bottom-0 h-32 -z-10 bg-gradient-to-t from-black to-transparent dark:from-black from-white dark:from-black" />
     </section>
   );
 }
