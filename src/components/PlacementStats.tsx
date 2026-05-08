@@ -107,58 +107,210 @@ const COMPANIES: Company[] = [
 ];
 
 function CircularProgress({ trigger }: { trigger: boolean }) {
-  const radius = 70;
+  const radius = 102;
   const circumference = 2 * Math.PI * radius;
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (!trigger) return;
-
     const startTime = performance.now();
-
     const animate = (time: number) => {
-      const t = Math.min((time - startTime) / 1400, 1);
+      const t = Math.min((time - startTime) / 1800, 1);
       const eased = 1 - Math.pow(1 - t, 3);
       setProgress(Math.round(91 * eased));
-
       if (t < 1) requestAnimationFrame(animate);
     };
-
     requestAnimationFrame(animate);
   }, [trigger]);
 
+  const filled = (progress / 100) * circumference;
+  const gap = circumference - filled;
+
   return (
-    <div className="relative flex items-center justify-center">
-      <svg width="180" height="180" className="-rotate-90">
+    <div
+      className="relative flex items-center justify-center"
+      style={{ width: 260, height: 260 }}
+    >
+      {/* ambient bg glow */}
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(0,229,255,0.14) 0%, rgba(0,255,136,0.07) 55%, transparent 75%)",
+          filter: "blur(18px)",
+        }}
+      />
+
+      <svg
+        width="260"
+        height="260"
+        viewBox="0 0 260 260"
+        className="-rotate-90"
+      >
+        <defs>
+          <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00ffcc" />
+            <stop offset="30%" stopColor="#00e5ff" />
+            <stop offset="65%" stopColor="#00aaff" />
+            <stop offset="100%" stopColor="#00ff88" />
+          </linearGradient>
+          <linearGradient id="arcHL" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#90ffee" />
+            <stop offset="100%" stopColor="#70ddff" />
+          </linearGradient>
+          <filter id="glowF" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* depth shadow */}
         <circle
-          cx="90"
-          cy="90"
+          cx="130"
+          cy="133"
           r={radius}
-          stroke="rgba(255,255,255,0.1)"
-          strokeWidth="10"
           fill="none"
+          stroke="#000"
+          strokeWidth="30"
+          strokeOpacity="0.75"
         />
 
+        {/* dark track */}
         <circle
-          cx="90"
-          cy="90"
+          cx="130"
+          cy="130"
           r={radius}
-          stroke="var(--brand-blue-light)"
-          strokeWidth="10"
           fill="none"
+          stroke="#0e1e20"
+          strokeWidth="24"
+        />
+
+        {/* outer track rims */}
+        <circle
+          cx="130"
+          cy="130"
+          r={radius - 11}
+          fill="none"
+          stroke="#0d1e1e"
+          strokeWidth="0.8"
+          strokeOpacity="0.7"
+        />
+        <circle
+          cx="130"
+          cy="130"
+          r={radius + 11}
+          fill="none"
+          stroke="#0d1e1e"
+          strokeWidth="0.8"
+          strokeOpacity="0.5"
+        />
+
+        {/* wide halo glow */}
+        <circle
+          cx="130"
+          cy="130"
+          r={radius}
+          fill="none"
+          stroke="#00ccff"
+          strokeWidth="42"
+          strokeOpacity="0.08"
+          strokeDasharray={`${filled} ${gap}`}
           strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference - (progress / 100) * circumference}
+          style={{ filter: "blur(10px)" }}
+        />
+
+        {/* mid glow */}
+        <circle
+          cx="130"
+          cy="130"
+          r={radius}
+          fill="none"
+          stroke="#00e5ff"
+          strokeWidth="30"
+          strokeOpacity="0.15"
+          strokeDasharray={`${filled} ${gap}`}
+          strokeLinecap="round"
+          style={{ filter: "blur(5px)" }}
+        />
+
+        {/* main arc */}
+        <circle
+          cx="130"
+          cy="130"
+          r={radius}
+          fill="none"
+          stroke="url(#arcGrad)"
+          strokeWidth="22"
+          strokeDasharray={`${filled} ${gap}`}
+          strokeLinecap="round"
+          filter="url(#glowF)"
+        />
+
+        {/* highlight ribbon */}
+        <circle
+          cx="130"
+          cy="130"
+          r={radius}
+          fill="none"
+          stroke="url(#arcHL)"
+          strokeWidth="5"
+          strokeOpacity="0.8"
+          strokeDasharray={`${filled} ${gap}`}
+          strokeLinecap="round"
         />
       </svg>
 
-      <div className="absolute text-4xl font-black text-[var(--brand-blue-light)]">
-        {progress}%
+      {/* inner dark well */}
+      <div
+        className="absolute rounded-full flex flex-col items-center justify-center"
+        style={{
+          width: 176,
+          height: 176,
+          background: "#05090b",
+          border: "1px solid rgba(0,229,255,0.2)",
+          boxShadow: "inset 0 0 30px rgba(0,180,255,0.05)",
+        }}
+      >
+        <span
+          className="font-black leading-none"
+          style={{
+            fontSize: 48,
+            color: "#60eeff",
+            textShadow:
+              "0 0 18px rgba(0,220,255,0.7), 0 0 40px rgba(0,180,255,0.35)",
+          }}
+        >
+          {progress}%
+        </span>
+        <span
+          style={{
+            fontSize: 11,
+            letterSpacing: 3,
+            marginTop: 4,
+            color: "#3ab8cc",
+            fontFamily: "'Space Grotesk', sans-serif",
+          }}
+        >
+          PLACED
+        </span>
       </div>
+
+      {/* floor reflection */}
+      <div
+        className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded-full"
+        style={{
+          width: 130,
+          height: 12,
+          background: "rgba(0,170,255,0.1)",
+          filter: "blur(8px)",
+        }}
+      />
     </div>
   );
 }
-
 export default function PlacementSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { margin: "-100px" });
@@ -171,31 +323,35 @@ export default function PlacementSection() {
   });
 
   return (
-    <section ref={ref} className="relative py-28 overflow-hidden isolate">
-      {/* BASE GRADIENT — deep blue */}
+    <section
+      id="placement"
+      ref={ref}
+      className="relative py-12 md:py-28 overflow-hidden isolate"
+    >
+      {/* blobs */}
       <div
-        className="absolute inset-0 z-0"
-       
-      />
-
-      {/* FLOATING BLOBS — yellow · green · blue */}
-      <div
-        className="absolute inset-0 z-[1] pointer-events-none"
+        className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          filter: "blur(80px)",
+          filter: "blur(90px)",
           background: `
-            radial-gradient(ellipse 50% 45% at 8%  15%,  rgba(255,230,0,0.15)   0%, transparent 55%),
-            radial-gradient(ellipse 45% 40% at 92% 12%,  rgba(160,255,0,0.14)   0%, transparent 52%),
-            radial-gradient(ellipse 55% 50% at 50% 92%,  rgba(0,196,255,0.18)   0%, transparent 58%),
-            radial-gradient(ellipse 35% 30% at 75% 45%,  rgba(255,230,0,0.08)   0%, transparent 48%)
+            radial-gradient(ellipse 50% 45% at 8% 15%,  rgba(255,230,0,0.13)  0%, transparent 55%),
+            radial-gradient(ellipse 45% 40% at 92% 12%, rgba(160,255,0,0.11)  0%, transparent 52%),
+            radial-gradient(ellipse 55% 50% at 50% 92%, rgba(0,196,255,0.15)  0%, transparent 58%)
           `,
         }}
       />
-
-     
+      {/* grid */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
 
       <div className="relative z-[2] max-w-6xl mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-14 mb-20">
+        <div className="flex flex-col lg:flex-row items-center gap-14 mb-10">
           <CircularProgress trigger={inView} />
 
           <div className="max-w-lg">
@@ -225,7 +381,7 @@ export default function PlacementSection() {
             [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
           />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[400px]">
+          <div className="hidden md:grid grid-cols-4 gap-4 h-[400px]">
             {columns.map((columnItems, colIndex) => (
               <div key={colIndex} className="relative overflow-hidden">
                 <motion.div
@@ -266,6 +422,54 @@ export default function PlacementSection() {
                 </motion.div>
               </div>
             ))}
+          </div>
+          <div className="md:hidden flex flex-col gap-3 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, rowIndex) => {
+              const rowItems = COMPANIES.slice(rowIndex * 5, rowIndex * 5 + 5);
+
+              return (
+                <div key={rowIndex} className="relative overflow-hidden">
+                  <motion.div
+                    animate={{
+                      x: rowIndex % 2 === 0 ? ["0%", "-50%"] : ["-50%", "0%"],
+                    }}
+                    transition={{
+                      duration: 20 + rowIndex * 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="flex w-max gap-3"
+                  >
+                    {[0, 1].map((group) => (
+                      <div key={group} className="flex gap-3">
+                        {rowItems.map((c, i) => (
+                          <div
+                            key={`${group}-${i}`}
+                            className="flex w-[220px] flex-shrink-0 items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                          >
+                            <Image
+                              src={c.logo}
+                              alt={`${c.name} logo`}
+                              width={32}
+                              height={32}
+                              className="h-8 w-8 object-contain"
+                            />
+
+                            <div>
+                              <p className="text-sm font-semibold text-white">
+                                {c.name}
+                              </p>
+
+                              <p className="text-xs text-white/50">{c.role}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </motion.div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

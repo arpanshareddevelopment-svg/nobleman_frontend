@@ -262,28 +262,15 @@ export default function InstructorCarousel() {
 
   return (
     <section
-      className="relative w-full overflow-hidden py-24"
+      id="instructors"
+      className="relative w-full overflow-hidden py-12 md:py-24"
       ref={containerRef}
       style={{
         background: isDark
-          ? "linear-gradient(155deg, #030712 0%, #191d013c 45%, #000000 100%)"
-          : "linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
+          ? "linear-gradient(180deg, #020617 0%, #030712 30%, #000000 70%, #020617 100%)"
+          : "linear-gradient(180deg, #eef4ff 0%, #f8fbff 20%, #eef4ff 80%, #ffffff 100%)",
       }}
     >
-      {/* ── Three-colour static blobs ── */}
-      <div
-        className="absolute inset-0 -z-20 pointer-events-none blur-3xl"
-        style={{
-          background: isDark
-            ? `radial-gradient(ellipse 55% 50% at 10% 20%,  rgba(0,196,255,0.18)  0%, transparent 60%),
-               radial-gradient(ellipse 45% 40% at 90% 15%,  rgba(200,255,0,0.14)  0%, transparent 55%),
-               radial-gradient(ellipse 50% 45% at 50% 90%,  rgba(255,230,0,0.12)  0%, transparent 58%)`
-            : `radial-gradient(ellipse 55% 50% at 10% 20%,  rgba(0,196,255,0.12)  0%, transparent 60%),
-               radial-gradient(ellipse 45% 40% at 90% 15%,  rgba(200,255,0,0.10)  0%, transparent 55%),
-               radial-gradient(ellipse 50% 45% at 50% 90%,  rgba(255,230,0,0.09)  0%, transparent 58%)`,
-        }}
-      />
-
       {/* ── Animated per-instructor accent glow ── */}
       <AnimatePresence>
         <motion.div
@@ -301,7 +288,6 @@ export default function InstructorCarousel() {
           }}
         />
       </AnimatePresence>
-
       {/* Dot-grid texture */}
       <div
         className="absolute inset-0 -z-20 pointer-events-none"
@@ -311,7 +297,6 @@ export default function InstructorCarousel() {
           opacity: 0.06,
         }}
       />
-
       {/* Ambient glow behind content */}
       <div
         className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
@@ -319,11 +304,10 @@ export default function InstructorCarousel() {
           background: `radial-gradient(circle at center, ${displayInst.accent}22 0%, transparent 60%)`,
         }}
       />
-
-      <div className="max-w-7xl mx-auto px-6 md:px-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-14">
         {/* Glass wrapper matching other sections */}
         <div
-          className="relative rounded-[2rem] border p-6 md:p-8"
+          className="relative rounded-[2rem] border p-4 sm:p-6 md:p-8 overflow-hidden"
           style={{
             background: isDark
               ? "rgba(255,255,255,0.04)"
@@ -339,11 +323,8 @@ export default function InstructorCarousel() {
           {/* ── Section header ── */}
           <div className="flex items-end justify-between mb-12">
             <div>
-              <motion.span
-                key={`pill-${active}`}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4"
+              <span
+                className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 transition-colors duration-500"
                 style={{
                   background: `${displayInst.accent}14`,
                   borderColor: `${displayInst.accent}40`,
@@ -351,9 +332,9 @@ export default function InstructorCarousel() {
                 }}
               >
                 Meet the Mentors
-              </motion.span>
+              </span>
               <h2
-                className="text-3xl md:text-[42px] font-black leading-[1.1] tracking-tight"
+                className="text-[2rem] sm:text-[2.4rem] md:text-[42px] font-black leading-[1.05] tracking-tight "
                 style={{ color: "var(--fg-primary)" }}
               >
                 Learn from people who&apos;ve{" "}
@@ -409,7 +390,7 @@ export default function InstructorCarousel() {
           </div>
 
           {/* ── Main content row ── */}
-          <div className="flex gap-6 items-start">
+          <div className="flex flex-col lg:flex-row gap-6 items-stretch lg:items-start">
             {/* Vertical thumb strip */}
             <ThumbStrip active={active} onSelect={select} />
 
@@ -421,10 +402,11 @@ export default function InstructorCarousel() {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
                 transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex-shrink-0 rounded-3xl overflow-hidden"
+                className="relative w-full lg:flex-shrink-0 rounded-3xl overflow-hidden"
                 style={{
-                  width: "clamp(220px, 28vw, 360px)",
-                  height: "clamp(260px, 30vw, 340px)",
+                  width: "100%",
+                  maxWidth: "360px",
+                  height: "clamp(280px, 60vw, 420px)",
                   boxShadow: `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`,
                 }}
               >
@@ -498,10 +480,10 @@ export default function InstructorCarousel() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 flex flex-col gap-6 min-w-0"
+                className="flex-1 flex flex-col gap-5 min-w-0 w-full"
               >
                 {/* Stats row */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3  gap-3">
                   {[
                     { label: "Students", value: inst.students },
                     { label: "Experience", value: inst.experience },

@@ -66,8 +66,9 @@ export default function CertificationsShowcase() {
 
   return (
     <section
+      id="certifications"
       ref={ref}
-      className="relative w-full overflow-hidden py-28"
+      className="relative w-full overflow-hidden py-12 md:py-28"
       style={{
         background: isDark
           ? "linear-gradient(155deg, #010b27ff 0%, #00090489 45%, #000000 100%)"

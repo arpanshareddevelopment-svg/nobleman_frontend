@@ -7,6 +7,19 @@ import Link from "next/link";
 import { Sun, Moon } from "lucide-react";
 import Image from "next/image";
 
+// One color per page section (in scroll order)
+const SECTION_COLORS: { id: string; color: string; glow: string }[] = [
+  { id: "home",               color: "#00c4ff", glow: "rgba(0,196,255,0.25)" },   // Hero – blue
+  { id: "mission",            color: "#c8ff00", glow: "rgba(200,255,0,0.25)" },   // Mission – green
+  { id: "values",             color: "#ff6b6b", glow: "rgba(255,107,107,0.25)" }, // Values – coral
+  { id: "instructors",        color: "#ffe600", glow: "rgba(255,230,0,0.25)" },   // Instructors – yellow
+  { id: "programs",           color: "#a78bfa", glow: "rgba(167,139,250,0.25)" }, // Programs – violet
+  { id: "certifications",     color: "#34d399", glow: "rgba(52,211,153,0.25)" },  // Certs – emerald
+  { id: "placement",          color: "#fb923c", glow: "rgba(251,146,60,0.25)" },  // Placement – orange
+  { id: "why",                color: "#f472b6", glow: "rgba(244,114,182,0.25)" }, // Why – pink
+  { id: "testimonials",       color: "#38bdf8", glow: "rgba(56,189,248,0.25)" },  // Testimonials – sky
+];
+
 function BrandLogo({ isOpen, isDark }: { isOpen: boolean; isDark: boolean }) {
   const src = isOpen
     ? isDark
@@ -47,7 +60,8 @@ export default function Navbar() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [hovered, setHovered] = useState(false);
   const [clickedOpen, setClickedOpen] = useState(false);
-const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+  const [sectionColor, setSectionColor] = useState(SECTION_COLORS[0]);
 
   // Sync state with the class applied by the inline layout script on mount
   useEffect(() => {
@@ -56,9 +70,27 @@ const [isDark, setIsDark] = useState(false);
   const linksRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => setIsAtTop(window.scrollY < 10);
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsAtTop(scrollY < 10);
+
+      // Find which section is currently most visible
+      let active = SECTION_COLORS[0];
+      for (const section of SECTION_COLORS) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Section is "active" when its top has passed the middle of the viewport
+          if (rect.top <= window.innerHeight * 0.5) {
+            active = section;
+          }
+        }
+      }
+      setSectionColor(active);
+    };
+
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -119,17 +151,23 @@ const [isDark, setIsDark] = useState(false);
           height: isOpen ? 64 : 52,
         }}
         transition={{ type: "spring", stiffness: 280, damping: 30 }}
-        className="relative flex items-center justify-center h-[52px] rounded-full border border-[var(--border)]"
+        className="relative flex items-center justify-center h-[52px] rounded-full border"
         style={{
-          background: "var(--bg-nav)",
+          background: isOpen
+            ? `color-mix(in srgb, ${sectionColor.color} 8%, var(--bg-nav))`
+            : "var(--bg-nav)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
-          boxShadow: "var(--shadow-nav)",
+          boxShadow: isOpen
+            ? `0 0 0 1px ${sectionColor.color}40, var(--shadow-nav)`
+            : `0 0 0 1px ${sectionColor.color}, 0 0 16px ${sectionColor.glow}, var(--shadow-nav)`,
+          borderColor: isOpen ? `${sectionColor.color}40` : sectionColor.color,
           // overflow must be visible to avoid Y-clip on the logo
           overflow: "visible",
           paddingLeft: isOpen ? 8 : 0,
           paddingRight: isOpen ? 8 : 0,
           cursor: !isAtTop ? "pointer" : "default",
+          transition: "border-color 0.6s ease, box-shadow 0.6s ease",
         }}
       >
         {/* Clip only on X axis using a wrapper that is overflow-hidden but tall enough */}
@@ -140,7 +178,19 @@ const [isDark, setIsDark] = useState(false);
               type="button"
               aria-label="Back to top"
               onClick={handleBrandClick}
-              className="flex items-center justify-center rounded-full  overflow-hidden"
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+              className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
+              style={
+                !isOpen
+                  ? {
+                      boxShadow: hovered
+                        ? `0 0 0 2px ${sectionColor.color}, 0 0 20px ${sectionColor.glow}`
+                        : "none",
+                      background: hovered ? sectionColor.glow : "transparent",
+                    }
+                  : {}
+              }
             >
               <BrandLogo isOpen={isOpen} isDark={isDark} />
             </button>
@@ -187,7 +237,13 @@ const [isDark, setIsDark] = useState(false);
                   }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="cursor-pointer ml-4 flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-[var(--border)] text-[var(--fg-primary)]"
+                  className="cursor-pointer ml-4 flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full transition-all duration-300"
+                  style={{
+                    background: sectionColor.glow,
+                    border: `1px solid ${sectionColor.color}`,
+                    color: sectionColor.color,
+                    boxShadow: `0 0 8px ${sectionColor.glow}`,
+                  }}
                 >
                   {isDark ? <Sun size={16} /> : <Moon size={16} />}
                 </motion.button>

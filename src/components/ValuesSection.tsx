@@ -71,14 +71,16 @@ export default function ValuesSection() {
 
   return (
     <section
-  className="relative isolate overflow-hidden py-24 md:py-28"
-  style={{
-    background: isDark
-      ? "linear-gradient(180deg, #000000 0%, #030712 40%, #020617 100%)"
-      : "linear-gradient(180deg, #ffffff 0%, #f8fbff 40%, #eef4ff 100%)",
-  }}
->{/* ── seamless blend from MissionStatement above ── */}
-<div className="absolute inset-x-0 top-0 h-40 -z-10 bg-gradient-to-b from-black/70 to-transparent dark:from-black/80 pointer-events-none" />
+      id="values"
+      className="relative isolate overflow-hidden py-12 md:py-28"
+      style={{
+        background: isDark
+          ? "linear-gradient(180deg, #000000 0%, #030712 40%, #020617 100%)"
+          : "linear-gradient(180deg, #ffffff 0%, #f8fbff 40%, #eef4ff 100%)",
+      }}
+    >
+      {/* ── seamless blend from MissionStatement above ── */}
+      <div className="absolute inset-x-0 top-0 h-40 -z-10 bg-gradient-to-b from-black/70 to-transparent dark:from-black/80 pointer-events-none" />
       {/* GRID BG */}
       <div
         className="absolute inset-0 -z-20 opacity-[0.08]"
@@ -103,7 +105,7 @@ export default function ValuesSection() {
       />
 
       <div className="mx-auto max-w-7xl px-6 md:px-10 xl:px-14">
-        {/* 🔥 HEADER */}
+        {/* HEADER */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

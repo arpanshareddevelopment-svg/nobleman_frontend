@@ -8,11 +8,9 @@ export default function MissionStatement() {
 
   return (
     <section
+      id="mission"
       ref={ref}
-      className="relative isolate overflow-hidden py-24 md:py-28"
-      style={{
-        background: "var(--bg-page)",
-      }}
+      className="relative isolate overflow-hidden py-12 md:py-28"
     >
       {/* ── seamless blend from hero above ── */}
       <div className="absolute inset-x-0 top-0 h-40 -z-10 bg-gradient-to-b from-black/80 to-transparent dark:from-black/90 pointer-events-none" />

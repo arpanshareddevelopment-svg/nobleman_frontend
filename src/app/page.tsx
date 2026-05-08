@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import Avatar from "../components/Avatar";
 import Hero from "../components/Hero";
@@ -14,37 +13,8 @@ import ValuesSection from "../components/ValuesSection";
 import Footer from "../components/Footer";
 
 export default function Home() {
-  const [collapsed, setCollapsed] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    let raf = 0;
-    function onScroll() {
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY || window.pageYOffset;
-        const delta = y - lastY.current;
-        if (y > 10) {
-          setHasScrolled(true);
-        }
-        if (delta > 8 && y > 80) {
-          setCollapsed(true);
-        } else if (delta < -8 || y < 60) {
-          setCollapsed(false);
-        }
-        lastY.current = y;
-      });
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll as EventListener);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-
   return (
-    <div className="page-bg min-h-screen">
+    <div id="home" className="page-bg min-h-screen">
       <Navbar />
       <Avatar hidden={false} />
 

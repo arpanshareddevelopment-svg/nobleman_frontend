@@ -20,8 +20,8 @@ const FOOTER_SECTIONS = [
     links: ["About", "Careers", "Blog", "Contact"],
   },
   {
-    title: "Legal",
-    links: ["Privacy", "Terms", "Refund", "Cookies"],
+    title: "Resources",
+    links: ["Community", "Mentors", "Placements", "Scholarships"],
   },
 ];
 
@@ -31,6 +31,50 @@ const SOCIAL = [
   { icon: Twitter, href: "#" },
   { icon: Mail, href: "#" },
 ];
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: string[];
+}) {
+  return (
+    <div>
+      <h5 className="mb-5 text-sm font-bold uppercase tracking-[0.14em] text-white">
+        {title}
+      </h5>
+
+      <ul className="space-y-3">
+        {links.map((link) => (
+          <li key={link}>
+            <button className="cursor-pointer text-left text-sm text-white/55 transition hover:text-white">
+              {link}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SocialButton({
+  icon: Icon,
+  href,
+}: {
+  icon: React.ComponentType<{ size?: number }>;
+  href: string;
+}) {
+  return (
+    <motion.a
+      href={href}
+      whileHover={{ y: -3 }}
+      className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white/70 transition hover:border-[var(--brand-blue-light)] hover:bg-[var(--brand-blue-light)]/10 hover:text-[var(--brand-blue-light)]"
+    >
+      <Icon size={18} />
+    </motion.a>
+  );
+}
 
 export default function Footer() {
   const [isDark, setIsDark] = useState(false);
@@ -42,6 +86,7 @@ export default function Footer() {
     checkTheme();
 
     const observer = new MutationObserver(checkTheme);
+
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
@@ -51,101 +96,92 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative w-full overflow-hidden isolate">
-      {/* BASE GRADIENT */}
+    <footer className="relative isolate overflow-hidden border-t border-white/10 bg-[#020617]">
       <div
         className="absolute inset-0 z-0"
         style={{
           background:
-            "linear-gradient(180deg, #020617 0%, #07142a 50%, #000000 100%)",
+            "linear-gradient(180deg, rgba(2,6,23,0) 0%, #020617 18%, #000 100%)",
         }}
       />
 
-      {/* GRID PATTERN */}
       <div
-        className="absolute inset-0 z-[1] opacity-[0.07]"
+        className="absolute inset-0 z-[1] opacity-[0.05]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
+            "linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
         }}
       />
 
-      {/* FLOATING BLOBS — yellow · green · blue */}
       <div
-        className="absolute inset-0 z-[1] pointer-events-none"
+        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          filter: "blur(80px)",
+          filter: "blur(90px)",
           background: `
-            radial-gradient(ellipse 50% 45% at 5%  10%,  rgba(255,230,0,0.28)   0%, transparent 55%),
-            radial-gradient(ellipse 45% 40% at 95% 8%,   rgba(160,255,0,0.22)   0%, transparent 52%),
-            radial-gradient(ellipse 55% 50% at 70% 85%,  rgba(0,196,255,0.26)   0%, transparent 58%),
-            radial-gradient(ellipse 35% 30% at 30% 75%,  rgba(255,200,0,0.18)   0%, transparent 48%)
+            radial-gradient(circle at 10% 10%, rgba(255,220,0,0.18), transparent 30%),
+            radial-gradient(circle at 90% 20%, rgba(0,180,255,0.16), transparent 35%),
+            radial-gradient(circle at 50% 100%, rgba(0,255,180,0.12), transparent 45%)
           `,
         }}
       />
 
-      {/* CONTENT */}
-      <div className="relative z-[2] max-w-7xl mx-auto px-6 md:px-14 py-16">
-        {/* TOP */}
-        <div className="grid md:grid-cols-2 gap-12 mb-16">
+      <div className="relative z-[2] mx-auto max-w-7xl px-4 sm:px-6 md:px-10 lg:px-14">
+        <div className="grid grid-cols-1 gap-14 py-14 md:grid-cols-[1.2fr_1fr] lg:grid-cols-[1.4fr_1fr]">
           <div>
-            <Image
-              src={
-                isDark
-                  ? "/branding/brand_light.png"
-                  : "/branding/brand_dark.png"
-              }
-              alt="brand"
-              width={160}
-              height={40}
-              priority
-            />
-            <p className="text-white/60 mt-4 max-w-sm">
-              Transforming careers through live mentor-led programs with
-              real-world outcomes.
+            <a href="#home" className="inline-flex" aria-label="Go to home">
+              <Image
+                src={
+                  isDark
+                    ? "/branding/brand_light.png"
+                    : "/branding/brand_dark.png"
+                }
+                alt="brand"
+                width={170}
+                height={40}
+                priority
+              />
+            </a>
+
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">
+              NobleMan Learning helps students and professionals break into
+              high-growth careers through immersive learning and mentorship from
+              industry experts.
             </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              {SOCIAL.map(({ icon, href }, i) => (
+                <SocialButton key={`${href}-${i}`} icon={icon} href={href} />
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+            {FOOTER_SECTIONS.map((section) => (
+              <FooterColumn
+                key={section.title}
+                title={section.title}
+                links={section.links}
+              />
+            ))}
           </div>
         </div>
 
-        {/* LINKS */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {FOOTER_SECTIONS.map((section, i) => (
-            <div key={i}>
-              <h5 className="text-white font-bold mb-4">{section.title}</h5>
-              <ul className="space-y-2 text-white/60">
-                {section.links.map((link, j) => (
-                  <li
-                    key={j}
-                    className="hover:text-white transition cursor-pointer"
-                  >
-                    {link}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <div className="flex flex-col items-start justify-between gap-4 border-t border-white/10 py-6 text-sm text-white/40 sm:flex-row sm:items-center">
+          <p>© 2026 NobleMan Learning. All rights reserved.</p>
 
-        {/* BOTTOM */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-t border-white/10 pt-8">
-          <p className="text-white/50 text-sm">© 2026 NobleMan Learning.</p>
+          <div className="flex flex-wrap items-center gap-5">
+            <button className="cursor-pointer transition hover:text-white">
+              Privacy Policy
+            </button>
 
-          <div className="flex gap-4">
-            {SOCIAL.map((s, i) => {
-              const Icon = s.icon;
-              return (
-                <motion.a
-                  key={i}
-                  href={s.href}
-                  whileHover={{ scale: 1.1 }}
-                  className="w-10 h-10 flex items-center justify-center rounded-full 
-                  bg-white/5 border border-white/10 text-white"
-                >
-                  <Icon size={18} />
-                </motion.a>
-              );
-            })}
+            <button className="cursor-pointer transition hover:text-white">
+              Terms
+            </button>
+
+            <button className="cursor-pointer transition hover:text-white">
+              Cookies
+            </button>
           </div>
         </div>
       </div>

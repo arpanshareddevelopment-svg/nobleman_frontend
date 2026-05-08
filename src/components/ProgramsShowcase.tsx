@@ -77,20 +77,22 @@ export default function ProgramsShowcase() {
   const [progress, setProgress] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const clearTimers = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (progressRef.current) clearInterval(progressRef.current);
   };
 
-  // Always-on autoplay — no hover pause whatsoever
   const startTimers = useCallback(() => {
     clearTimers();
-    setProgress(0);
+
     const step = 100 / (INTERVAL / 40);
+
     progressRef.current = setInterval(() => {
       setProgress((p) => Math.min(p + step, 100));
     }, 40);
+
     timerRef.current = setInterval(() => {
       setActive((prev) => (prev + 1) % PROGRAMS.length);
       setProgress(0);
@@ -101,6 +103,23 @@ export default function ProgramsShowcase() {
     startTimers();
     return clearTimers;
   }, [startTimers]);
+const navRef = useRef<HTMLElement | null>(null);
+ useEffect(() => {
+   if (!window.matchMedia("(max-width: 767px)").matches) return;
+
+   const container = navRef.current;
+   const tab = tabRefs.current[active];
+
+   if (!container || !tab) return;
+
+   const left =
+     tab.offsetLeft - container.clientWidth / 2 + tab.clientWidth / 2;
+
+   container.scrollTo({
+     left,
+     behavior: "smooth",
+   });
+ }, [active]);
 
   const goTo = (i: number) => {
     setActive(i);
@@ -114,107 +133,93 @@ export default function ProgramsShowcase() {
   const p = PROGRAMS[active];
 
   return (
-    <>
-      {/*
-        Font import — remove if DM Serif Display & Manrope are already
-        loaded in your layout.tsx or globals.css.
-        Space Grotesk is already imported in your globals.css.
-      */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@200..800&display=swap');
-
-        .prog-tab-line { transform: scaleX(0); transition: transform 0.25s ease; }
-        .prog-tab-active .prog-tab-line { transform: scaleX(1); }
-        .prog-arrow:hover {
-          background: var(--brand-green-glow) !important;
-          border-color: var(--brand-green) !important;
-          color: var(--brand-green-dark) !important;
-        }
-        .prog-enroll:hover {
-          background: var(--brand-green-dark) !important;
-          color: #fff !important;
-        }
-      `}</style>
-
-      <section
-        className="relative overflow-hidden py-16 lg:py-20"
+    <section
+      id="programs"
+      className="relative overflow-hidden py-12 lg:py-20 text-[var(--fg-primary)] [font-family:'Space_Grotesk',sans-serif]"
+      style={{ background: "var(--bg-page)" }}
+    >
+      <div
+        className="absolute inset-x-0 top-0 h-24 -z-10 pointer-events-none"
         style={{
-          background: "var(--bg-page)",
-          color: "var(--fg-primary)",
-          fontFamily: "'Space Grotesk', sans-serif",
+          background:
+            "linear-gradient(to bottom, var(--bg-page) 0%, transparent 100%)",
         }}
-      >
-        {/* Ruled grid background */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "linear-gradient(var(--border) 1px, transparent 1px), " +
-              "linear-gradient(90deg, var(--border) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-        />
+      />
 
-        {/* Brand-green ambient glow */}
-        <div
-          className="pointer-events-none absolute -right-24 -top-24 h-[520px] w-[520px] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, var(--brand-green-glow) 0%, transparent 70%)",
-          }}
-        />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--border) 1px, transparent 1px), " +
+            "linear-gradient(90deg, var(--border) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
 
-        {/* ── Inner wrapper ── */}
-        <div className="relative mx-auto max-w-[1060px] px-6 lg:px-9">
-          {/* Eyebrow */}
-          <div
-            className="mb-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.2em]"
-            style={{ color: "var(--brand-green-dark)" }}
+      <div
+        className="pointer-events-none absolute -right-24 -top-24 h-[520px] w-[520px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, var(--brand-green-glow) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-[1060px] px-4 sm:px-6 lg:px-9">
+        {/* Eyebrow */}
+        <div
+          className="mb-5 flex items-center gap-3 text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] uppercase tracking-[0.2em]"
+          style={{ color: "var(--brand-green-dark)" }}
+        >
+          <span
+            className="h-[1.5px] w-6 flex-shrink-0"
+            style={{ background: "var(--brand-green)" }}
+          />
+          Career Accelerators
+        </div>
+
+        {/* Header */}
+        <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end md:gap-5">
+          <h2
+            className="font-normal leading-[1.08] tracking-[-0.02em]"
+            style={{
+              fontSize: "clamp(1.75rem, 4vw, 3rem)",
+              color: "var(--fg-primary)",
+            }}
           >
-            <span
-              className="h-[1.5px] w-6 flex-shrink-0"
-              style={{ background: "var(--brand-green)" }}
-            />
-            Career Accelerators
-          </div>
+            Programs built to &nbsp;
+            <span style={{ color: "var(--brand-green-dark)" }}>
+              set you apart
+            </span>
+          </h2>
 
-          {/* Header */}
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-5">
-            <h2
-              className="font-normal leading-[1.08] tracking-[-0.02em]"
-              style={{
-                fontSize: "clamp(28px, 4vw, 48px)",
-                color: "var(--fg-primary)",
-              }}
-            >
-              Programs built to &nbsp;
-              <span style={{ color: "var(--brand-green-dark)" }}>
-                set you apart
-              </span>
-            </h2>
-            <p
-              className="max-w-[200px] text-right text-[12px] leading-[1.7]"
-              style={{ color: "var(--fg-muted)" }}
-            >
-              Learn from industry veterans. Earn credentials that open doors.
-            </p>
-          </div>
+          <p
+            className="max-w-full text-left text-lg leading-[1.7] md:text-right"
+            style={{ color: "var(--fg-muted)" }}
+          >
+            Learn from industry veterans. Earn credentials that open doors.
+          </p>
+        </div>
 
-          {/* Tab nav */}
+        {/* Tabs */}
+        <div className="relative">
           <nav
-            className="mb-9 flex overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            ref={navRef}
+            className="program-tabs mb-9 flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{
               borderTop: "1px solid var(--border)",
               borderBottom: "1px solid var(--border)",
             }}
           >
+            {" "}
+            <div className="w-[35vw] flex-shrink-0 md:hidden" />
             {SHORT_NAMES.map((name, i) => (
               <button
                 key={i}
+                ref={(node) => {
+                  tabRefs.current[i] = node;
+                }}
                 onClick={() => goTo(i)}
-                className={`relative flex-shrink-0 border-none bg-transparent px-5 pb-[11px] pt-[13px] text-[10px] uppercase tracking-[0.12em] transition-colors duration-200 ${
-                  i === active ? "prog-tab-active" : ""
-                }`}
+                className="relative flex-shrink-0 snap-center border-none bg-transparent px-4 sm:px-5 pb-[11px] pt-[13px] text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] uppercase tracking-[0.12em] transition-colors duration-200"
                 style={{
                   borderRight: "1px solid var(--border)",
                   color:
@@ -226,208 +231,189 @@ export default function ProgramsShowcase() {
                 }}
               >
                 {name}
+
                 <span
-                  className="prog-tab-line absolute bottom-[-1px] left-0 right-0 block h-[2px]"
+                  className={`absolute bottom-[-1px] left-0 right-0 block h-[2px] origin-left transition-transform duration-200 ${
+                    i === active ? "scale-x-100" : "scale-x-0"
+                  }`}
                   style={{ background: "var(--brand-green)" }}
                 />
               </button>
             ))}
+            <div className="w-[35vw] flex-shrink-0 md:hidden" />
           </nav>
-
-          {/* ── Card grid ── */}
+        </div>
+        {/* Grid */}
+        <div
+          className="grid overflow-hidden rounded-2xl grid-cols-1 lg:grid-cols-2"
+          style={{
+            gap: "1px",
+            background: "var(--border)",
+            border: "1px solid var(--border)",
+            boxShadow: "var(--shadow-card)",
+          }}
+        >
+          {/* Cell 1 */}
           <div
-            className="overflow-hidden rounded-2xl"
+            className="p-7 sm:p-8 lg:col-start-1 lg:row-start-1 lg:p-10"
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1px",
-              background: "var(--border)",
-              border: "1px solid var(--border)",
-              boxShadow: "var(--shadow-card)",
+              background: "var(--bg-page)",
             }}
           >
-            {/* Cell 1 — Title + description */}
-            <div
-              className="p-9 lg:p-10"
-              style={{
-                background: "var(--bg-page)",
-                gridColumn: 1,
-                gridRow: 1,
-              }}
-            >
-              <p
-                className="mb-3 text-[10px] tracking-[0.1em]"
-                style={{ color: "var(--fg-muted)" }}
-              >
-                {p.id} / 06
-              </p>
-              <h3
-                className="mb-3 font-normal leading-[1.12] tracking-[-0.01em]"
-                style={{
-                  fontFamily: "'DM Serif Display', Georgia, serif",
-                  fontSize: "28px",
-                  color: "var(--fg-primary)",
-                }}
-              >
-                {p.name}
-              </h3>
-              <p
-                className="max-w-[320px] text-[12.5px] leading-[1.8]"
-                style={{ color: "var(--fg-secondary)" }}
-              >
-                {p.desc}
-              </p>
-            </div>
-
-            {/* Cell 2 — Stats + CTA (spans rows 1–3) */}
-            <div
-              className="flex flex-col justify-between p-7 lg:p-9"
-              style={{
-                background: "var(--bg-card)",
-                borderLeft: "1px solid var(--border)",
-                gridColumn: 2,
-                gridRow: "1 / 4",
-              }}
-            >
-              {/* Stats with vertical dividers */}
-              <div className="flex items-stretch">
-                {[
-                  { label: "Duration", value: p.duration, unit: "months" },
-                  { label: "Placed", value: p.students, unit: "students" },
-                  { label: "Avg hike", value: p.hike, unit: "salary increase" },
-                ].map((s, idx) => (
-                  <div key={s.label} className="flex items-stretch">
-                    {/* Vertical divider between stats */}
-                    {idx > 0 && (
-                      <div
-                        className="mx-4 w-px flex-shrink-0 self-stretch"
-                        style={{ background: "var(--border)" }}
-                      />
-                    )}
-                    <div className="flex flex-col">
-                      <span
-                        className="mb-1.5 text-[9px] uppercase tracking-[0.16em]"
-                        style={{ color: "var(--fg-muted)" }}
-                      >
-                        {s.label}
-                      </span>
-                      <span
-                        className="text-[26px] font-extrabold leading-none tracking-[-0.02em]"
-                        style={{
-                          fontFamily: "'Manrope', sans-serif",
-                          color: "var(--brand-green-dark)",
-                        }}
-                      >
-                        {s.value}
-                      </span>
-                      <span
-                        className="mt-1 text-[10px] tracking-[0.04em]"
-                        style={{ color: "var(--fg-muted)" }}
-                      >
-                        {s.unit}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA button */}
-              <button
-                className="prog-enroll w-full cursor-pointer rounded-lg border-none px-5 py-[11px] text-[10px] font-bold uppercase tracking-[0.16em] transition-colors duration-200"
-                style={{
-                  background: "var(--brand-green)",
-                  color: "#0d1117", // dark text on lime — works in both modes
-                  fontFamily: "inherit",
-                }}
-              >
-                Explore Program →
-              </button>
-            </div>
-
-            {/* Cell 3 — Curriculum stack pills */}
-            <div
-              className="px-9 py-[22px]"
-              style={{
-                background: "var(--bg-card)",
-                borderTop: "1px solid var(--border)",
-                gridColumn: 1,
-                gridRow: 2,
-              }}
-            >
-              <p
-                className="mb-3 text-[9px] uppercase tracking-[0.18em]"
-                style={{ color: "var(--fg-muted)" }}
-              >
-                Curriculum stack
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {p.stack.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-md px-3 py-[5px] text-[10px] tracking-[0.04em]"
-                    style={{
-                      border: "1px solid var(--border)",
-                      color: "var(--fg-secondary)",
-                      background: "var(--bg-page)",
-                    }}
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Footer — counter + progress bar + arrows */}
-          <div
-            className="mt-7 flex items-center justify-between gap-4 pt-5"
-            style={{ borderTop: "1px solid var(--border)" }}
-          >
-            <span
-              className="flex-shrink-0 text-[10px] tracking-[0.1em]"
+            <p
+              className="mb-3 text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] tracking-[0.1em]"
               style={{ color: "var(--fg-muted)" }}
             >
-              {String(active + 1).padStart(2, "0")} / 06
-            </span>
+              {p.id} / 06
+            </p>
 
-            {/* Progress bar */}
-            <div
-              className="h-[2px] flex-1 overflow-hidden rounded-full"
-              style={{ background: "var(--border)" }}
+            <h3
+              className="mb-3 font-normal leading-[1.12] tracking-[-0.01em] text-[clamp(1.35rem,2.4vw,1.75rem)]"
+              style={{
+                fontFamily: "'DM Serif Display', Georgia, serif",
+                color: "var(--fg-primary)",
+              }}
             >
-              <div
-                className="h-full rounded-full transition-[width] duration-[40ms] ease-linear"
-                style={{
-                  width: `${progress}%`,
-                  background: "var(--brand-green)",
-                }}
-              />
+              {p.name}
+            </h3>
+
+            <p
+              className="max-w-full text-[12.5px] leading-[1.8] sm:max-w-[320px]"
+              style={{ color: "var(--fg-secondary)" }}
+            >
+              {p.desc}
+            </p>
+          </div>
+
+          {/* Cell 2 */}
+          <div
+            className="flex flex-col justify-between p-6 sm:p-7 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:border-l lg:border-t-0 lg:p-9 border-t border-[var(--border)]"
+            style={{
+              background: "var(--bg-card)",
+            }}
+          >
+            <div className="flex flex-row items-stretch gap-3 sm:gap-0">
+              {[
+                { label: "Duration", value: p.duration, unit: "months" },
+                { label: "Placed", value: p.students, unit: "students" },
+                { label: "Avg hike", value: p.hike, unit: "salary increase" },
+              ].map((s, idx) => (
+                <div
+                  key={s.label}
+                  className="flex min-w-0 flex-1 items-stretch"
+                >
+                  {idx > 0 && (
+                    <div className="mx-3 w-px flex-shrink-0 self-stretch bg-[var(--border)] sm:mx-4" />
+                  )}
+
+                  <div className="flex flex-col">
+                    <span
+                      className="mb-1.5 text-[clamp(0.6rem,0.75vw,0.7rem)] uppercase tracking-[0.16em]"
+                      style={{ color: "var(--fg-muted)" }}
+                    >
+                      {s.label}
+                    </span>
+
+                    <span className="text-[clamp(1.35rem,2vw,1.65rem)] font-extrabold leading-none tracking-[-0.02em] text-[var(--brand-green-dark)]">
+                      {s.value}
+                    </span>
+
+                    <span
+                      className="mt-1 text-[clamp(0.6rem,0.75vw,0.7rem)] tracking-[0.04em]"
+                      style={{ color: "var(--fg-muted)" }}
+                    >
+                      {s.unit}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Arrow buttons */}
-            <div className="flex flex-shrink-0 gap-2">
-              {[
-                { label: "←", fn: prev, aria: "Previous program" },
-                { label: "→", fn: next, aria: "Next program" },
-              ].map(({ label, fn, aria }) => (
-                <button
-                  key={label}
-                  onClick={fn}
-                  aria-label={aria}
-                  className="prog-arrow flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border text-sm transition-all duration-200"
+            <button
+              className="mt-8 w-full cursor-pointer rounded-lg border-none px-5 py-[11px] text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] font-bold uppercase tracking-[0.16em] transition-colors duration-200 bg-[var(--brand-green)] text-[#0d1117] hover:bg-[var(--brand-green-dark)] hover:text-white"
+              style={{
+                fontFamily: "inherit",
+              }}
+            >
+              Explore Program →
+            </button>
+          </div>
+
+          {/* Cell 3 */}
+          <div
+            className="px-7 py-6 sm:px-9 sm:py-[22px] lg:col-start-1 lg:row-start-2"
+            style={{
+              background: "var(--bg-card)",
+            }}
+          >
+            <p
+              className="mb-3 text-[clamp(0.6rem,0.75vw,0.7rem)] uppercase tracking-[0.18em]"
+              style={{ color: "var(--fg-muted)" }}
+            >
+              Curriculum stack
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {p.stack.map((t) => (
+                <span
+                  key={t}
+                  className="rounded-md px-3 py-[5px] text-[10px] sm:text-[clamp(0.6rem,0.75vw,0.7rem)] tracking-[0.04em]"
                   style={{
-                    background: "var(--bg-card)",
-                    borderColor: "var(--border)",
-                    color: "var(--fg-muted)",
+                    border: "1px solid var(--border)",
+                    color: "var(--fg-secondary)",
+                    background: "var(--bg-page)",
                   }}
                 >
-                  {label}
-                </button>
+                  {t}
+                </span>
               ))}
             </div>
           </div>
         </div>
-      </section>
-    </>
+
+        {/* Footer */}
+        <div
+          className="mt-7 flex flex-wrap items-center justify-between gap-4 pt-5"
+          style={{ borderTop: "1px solid var(--border)" }}
+        >
+          <span
+            className="flex-shrink-0 text-[clamp(0.65rem,0.75vw,0.75rem)] tracking-[0.1em]"
+            style={{ color: "var(--fg-muted)" }}
+          >
+            {String(active + 1).padStart(2, "0")} / 06
+          </span>
+
+          <div
+            className="h-[2px] flex-1 overflow-hidden rounded-full"
+            style={{ background: "var(--border)" }}
+          >
+            <div
+              className="h-full rounded-full transition-[width] duration-[40ms] ease-linear"
+              style={{
+                width: `${progress}%`,
+                background: "var(--brand-green)",
+              }}
+            />
+          </div>
+
+          <div className="flex flex-shrink-0 gap-2">
+            <button
+              onClick={prev}
+              aria-label="Previous program"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border text-sm transition-all duration-200 bg-[var(--bg-card)] border-[var(--border)] text-[var(--fg-muted)] hover:bg-[var(--brand-green-glow)] hover:border-[var(--brand-green)] hover:text-[var(--brand-green-dark)]"
+            >
+              ←
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next program"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border text-sm transition-all duration-200 bg-[var(--bg-card)] border-[var(--border)] text-[var(--fg-muted)] hover:bg-[var(--brand-green-glow)] hover:border-[var(--brand-green)] hover:text-[var(--brand-green-dark)]"
+            >
+              →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

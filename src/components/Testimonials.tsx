@@ -39,7 +39,7 @@ export default function Testimonials() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="relative py-28 overflow-hidden isolate">
+    <section id="testimonials" ref={ref} className="relative py-12 md:py-28 overflow-hidden isolate">
       {/* BASE GRADIENT */}
       <div
         className="absolute inset-0 z-0"
