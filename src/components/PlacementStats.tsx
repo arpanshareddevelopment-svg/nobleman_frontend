@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
+
 type Company = {
   name: string;
   role: string;
@@ -106,7 +107,25 @@ const COMPANIES: Company[] = [
   },
 ];
 
-function CircularProgress({ trigger }: { trigger: boolean }) {
+function useThemeMode() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const update = () => setIsDark(root.classList.contains("dark"));
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
+
+function CircularProgress({ trigger, isDark }: { trigger: boolean; isDark: boolean }) {
   const radius = 102;
   const circumference = 2 * Math.PI * radius;
   const [progress, setProgress] = useState(0);
@@ -173,18 +192,18 @@ function CircularProgress({ trigger }: { trigger: boolean }) {
           cy="133"
           r={radius}
           fill="none"
-          stroke="#000"
+          stroke={isDark ? "#000" : "#bfefff"}
           strokeWidth="30"
-          strokeOpacity="0.75"
+          strokeOpacity={isDark ? 0.75 : 0.35}
         />
 
-        {/* dark track */}
+        {/* track */}
         <circle
           cx="130"
           cy="130"
           r={radius}
           fill="none"
-          stroke="#0e1e20"
+          stroke={isDark ? "#0e1e20" : "#dff8ff"}
           strokeWidth="24"
         />
 
@@ -194,20 +213,20 @@ function CircularProgress({ trigger }: { trigger: boolean }) {
           cy="130"
           r={radius - 11}
           fill="none"
-          stroke="#0d1e1e"
+          stroke={isDark ? "#0d1e1e" : "#b7ecff"}
           strokeWidth="0.8"
-          strokeOpacity="0.7"
+          strokeOpacity={isDark ? 0.7 : 0.5}
         />
+
         <circle
           cx="130"
           cy="130"
           r={radius + 11}
           fill="none"
-          stroke="#0d1e1e"
+          stroke={isDark ? "#0d1e1e" : "#b7ecff"}
           strokeWidth="0.8"
-          strokeOpacity="0.5"
+          strokeOpacity={isDark ? 0.5 : 0.35}
         />
-
         {/* wide halo glow */}
         <circle
           cx="130"
@@ -263,24 +282,29 @@ function CircularProgress({ trigger }: { trigger: boolean }) {
         />
       </svg>
 
-      {/* inner dark well */}
+      {/* inner well */}
       <div
         className="absolute rounded-full flex flex-col items-center justify-center"
         style={{
           width: 176,
           height: 176,
-          background: "#05090b",
-          border: "1px solid rgba(0,229,255,0.2)",
-          boxShadow: "inset 0 0 30px rgba(0,180,255,0.05)",
+          background: isDark ? "#05090b" : "#ffffff",
+          border: isDark
+            ? "1px solid rgba(0,229,255,0.2)"
+            : "1px solid rgba(2,6,23,0.06)",
+          boxShadow: isDark
+            ? "inset 0 0 30px rgba(0,180,255,0.05)"
+            : "inset 0 6px 18px rgba(7,18,37,0.04)",
         }}
       >
         <span
           className="font-black leading-none"
           style={{
             fontSize: 48,
-            color: "#60eeff",
-            textShadow:
-              "0 0 18px rgba(0,220,255,0.7), 0 0 40px rgba(0,180,255,0.35)",
+            color: "#00e5ff" ,
+            textShadow: isDark
+              ? "0 0 18px rgba(0,220,255,0.7), 0 0 40px rgba(0,180,255,0.35)"
+              : "0 0 8px rgba(82,216,79,0.06)",
           }}
         >
           {progress}%
@@ -290,7 +314,7 @@ function CircularProgress({ trigger }: { trigger: boolean }) {
             fontSize: 11,
             letterSpacing: 3,
             marginTop: 4,
-            color: "#3ab8cc",
+            color: isDark ? "#3ab8cc" : "var(--fg-muted)",
             fontFamily: "'Space Grotesk', sans-serif",
           }}
         >
@@ -314,8 +338,9 @@ function CircularProgress({ trigger }: { trigger: boolean }) {
 export default function PlacementSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { margin: "-100px" });
+  const isDark = useThemeMode();
 
-  /* ✅ FIX: columns logic OUTSIDE map */
+  /*  columns logic OUTSIDE map */
   const columns: Company[][] = Array.from({ length: 4 }, () => []);
 
   COMPANIES.forEach((item, index) => {
@@ -333,43 +358,59 @@ export default function PlacementSection() {
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
           filter: "blur(90px)",
-          background: `
+          background: isDark
+            ? `
             radial-gradient(ellipse 50% 45% at 8% 15%,  rgba(255,230,0,0.13)  0%, transparent 55%),
             radial-gradient(ellipse 45% 40% at 92% 12%, rgba(160,255,0,0.11)  0%, transparent 52%),
             radial-gradient(ellipse 55% 50% at 50% 92%, rgba(0,196,255,0.15)  0%, transparent 58%)
+          `
+            : `
+            radial-gradient(ellipse 50% 45% at 8% 15%,  rgba(255,230,0,0.08)  0%, transparent 55%),
+            radial-gradient(ellipse 45% 40% at 92% 12%, rgba(160,255,0,0.07)  0%, transparent 52%),
+            radial-gradient(ellipse 55% 50% at 50% 92%, rgba(0,196,255,0.08)  0%, transparent 58%)
           `,
         }}
       />
       {/* grid */}
       <div
-        className="absolute inset-0 z-0 pointer-events-none opacity-[0.04]"
+        className="absolute inset-0 z-0 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)",
+            "linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
+          opacity: isDark ? 0.04 : 0.06,
         }}
       />
 
       <div className="relative z-[2] max-w-6xl mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-14 mb-10">
-          <CircularProgress trigger={inView} />
+        <div className="flex flex-col lg:flex-row items-center gap-14 ">
+          <CircularProgress trigger={inView} isDark={isDark} />
 
           <div className="max-w-lg">
-            <h3 className="text-3xl md:text-4xl font-black leading-tight text-white">
+            <h3
+              className="text-3xl md:text-4xl font-black leading-tight text-white"
+              style={{ color: "var(--fg-primary)" }}
+            >
               91% of our graduates <br />
               <span className="text-[var(--brand-blue-light)]">
                 are placed at top companies
               </span>
             </h3>
 
-            <p className="mt-4 text-white/60">
+            <p
+              className="mt-4 text-white/60"
+              style={{ color: "var(--fg-secondary)" }}
+            >
               Join a network of 400+ hiring partners across industries.
             </p>
           </div>
         </div>
 
         <div className="text-center mb-10">
-          <h4 className="text-2xl font-black text-white">
+          <h4
+            className="text-2xl font-black "
+            style={{ color: "var(--fg-secondary)" }}
+          >
             <span className="text-[var(--brand-blue-light)]">Top teams</span>{" "}
             are hiring
           </h4>
@@ -410,10 +451,18 @@ export default function PlacementSection() {
                             className="w-8 h-8 object-contain"
                           />
                           <div>
-                            <p className="text-sm font-semibold text-white">
+                            <p
+                              className="text-sm font-semibold "
+                              style={{ color: "var(--fg-primary)" }}
+                            >
                               {c.name}
                             </p>
-                            <p className="text-xs text-white/50">{c.role}</p>
+                            <p
+                              className="text-xs"
+                              style={{ color: "var(--fg-secondary)" }}
+                            >
+                              {c.role}
+                            </p>
                           </div>
                         </div>
                       ))}

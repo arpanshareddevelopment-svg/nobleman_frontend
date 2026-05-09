@@ -1,5 +1,6 @@
 "use client";
-import { useRef } from "react";
+
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star } from "lucide-react";
 
@@ -38,51 +39,160 @@ export default function Testimonials() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const update = () => {
+      setIsDark(root.classList.contains("dark"));
+    };
+
+    update();
+
+    const observer = new MutationObserver(update);
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="testimonials" ref={ref} className="relative py-12 md:py-28 overflow-hidden isolate">
-      {/* BASE GRADIENT */}
+    <section
+      id="testimonials"
+      ref={ref}
+      className="relative overflow-hidden isolate py-14 md:py-28"
+    >
+      {/* MAIN BG */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background:
-            "linear-gradient(160deg, #020617 0%, #07142a 40%, #000000 100%)",
+          background: isDark
+            ? `
+              linear-gradient(
+                160deg,
+                #06040f 0%,
+                #071220 45%,
+                #080e1a 75%,
+                #060a12 100%
+              )
+            `
+            : `
+              linear-gradient(
+                160deg,
+                #f8fbff 0%,
+                #f4f8ff 35%,
+                #ffffff 100%
+              )
+            `,
         }}
       />
 
-    
-
-      {/* FLOATING BLOBS — yellow · blue · green */}
+      {/* LIGHT THEME PREMIUM BLOBS */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
-          filter: "blur(80px)",
-          background: `
-            radial-gradient(ellipse 55% 45% at 12% 18%,  rgba(255,230,0,0.16)   0%, transparent 60%),
-            radial-gradient(ellipse 50% 40% at 88% 22%,  rgba(0,196,255,0.1)   0%, transparent 58%),
-            radial-gradient(ellipse 45% 50% at 50% 88%,  rgba(160,255,0,0.05)   0%, transparent 55%)
-          `,
+          filter: isDark ? "blur(90px)" : "blur(110px)",
+          opacity: isDark ? 1 : 0.95,
+          background: isDark
+            ? `
+              radial-gradient(
+                ellipse 55% 45% at 12% 18%,
+                rgba(255,230,0,0.16) 0%,
+                transparent 60%
+              ),
+
+              radial-gradient(
+                ellipse 50% 40% at 88% 22%,
+                rgba(0,196,255,0.12) 0%,
+                transparent 58%
+              ),
+
+              radial-gradient(
+                ellipse 45% 50% at 50% 88%,
+                rgba(160,255,0,0.07) 0%,
+                transparent 55%
+              )
+            `
+            : `
+              radial-gradient(
+                ellipse 50% 45% at 10% 15%,
+                rgba(255,230,0,0.18) 0%,
+                transparent 58%
+              ),
+
+              radial-gradient(
+                ellipse 50% 40% at 90% 18%,
+                rgba(0,196,255,0.14) 0%,
+                transparent 56%
+              ),
+
+              radial-gradient(
+                ellipse 40% 45% at 50% 85%,
+                rgba(200,255,0,0.12) 0%,
+                transparent 54%
+              )
+            `,
         }}
       />
 
-      <div className="relative z-[2] max-w-6xl mx-auto px-6">
+      {/* GRID GLOW */}
+      {!isDark && (
+        <div
+          className="absolute inset-0 z-[1] opacity-[0.04]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(15,23,42,0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(15,23,42,0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: "80px 80px",
+          }}
+        />
+      )}
+
+      <div className="relative z-[2] mx-auto max-w-6xl px-6">
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-20"
+          className="mb-20 text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <h2
+            className="text-4xl md:text-5xl font-black mb-5"
+            style={{
+              color: isDark ? "white" : "#0f172a",
+            }}
+          >
             Loved by{" "}
-            <span className="text-[var(--brand-blue-light)]">
+            <span
+              style={{
+                background:
+                  "linear-gradient(90deg, #00c4ff 0%, #5fdfff 40%, #c8ff00 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               12,000+ learners
             </span>
           </h2>
-          <p className="text-white/60">
+
+          <p
+            className="max-w-2xl mx-auto text-base md:text-lg"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.6)" : "rgba(15,23,42,0.65)",
+            }}
+          >
             Real stories from people who actually changed their careers.
           </p>
         </motion.div>
 
-        {/* 🔥 DIFFERENT CARD STYLE */}
+        {/* CARDS */}
         <div className="grid md:grid-cols-2 gap-6">
           {TESTIMONIALS.map((t, i) => (
             <motion.div
@@ -90,42 +200,104 @@ export default function Testimonials() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.08 }}
-              className="relative p-8 rounded-2xl 
-              bg-white/5 backdrop-blur-xl border border-white/10 
-              hover:border-[var(--brand-blue-light)] transition-all duration-300"
+              whileHover={{
+                y: -6,
+              }}
+              className="group relative overflow-hidden rounded-3xl p-8 transition-all duration-500"
+              style={{
+                background: isDark
+                  ? "rgba(255,255,255,0.04)"
+                  : "rgba(255,255,255,0.72)",
+
+                border: isDark
+                  ? "1px solid rgba(255,255,255,0.08)"
+                  : "1px solid rgba(15,23,42,0.08)",
+
+                backdropFilter: "blur(18px)",
+
+                boxShadow: isDark
+                  ? "0 10px 30px rgba(0,0,0,0.28)"
+                  : `
+                    0 10px 40px rgba(15,23,42,0.06),
+                    0 2px 12px rgba(15,23,42,0.04)
+                  `,
+              }}
             >
-              {/* QUOTE MARK */}
-              <span className="absolute text-6xl top-4 right-6 opacity-10 text-white font-serif">
+              {/* TOP GLOW */}
+              <div
+                className="absolute inset-x-0 top-0 h-[2px]"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, #00c4ff, #c8ff00, transparent)",
+                  opacity: isDark ? 0.6 : 0.9,
+                }}
+              />
+
+              {/* QUOTE */}
+              <span
+                className="absolute top-4 right-6 text-7xl font-serif pointer-events-none"
+                style={{
+                  color: isDark
+                    ? "rgba(255,255,255,0.06)"
+                    : "rgba(15,23,42,0.06)",
+                }}
+              >
                 “
               </span>
 
               {/* TEXT */}
-              <p className="text-lg text-white/80 leading-relaxed mb-6">
+              <p
+                className="relative text-lg leading-relaxed mb-7"
+                style={{
+                  color: isDark ? "white" : "#0f172a",
+                }}
+              >
                 {t.text}
               </p>
 
-              {/* RATING */}
-              <div className="flex gap-1 mb-5">
-                {[...Array(t.rating)].map((_, i) => (
+              {/* STARS */}
+              <div className="flex gap-1 mb-6">
+                {[...Array(t.rating)].map((_, idx) => (
                   <Star
-                    key={i}
-                    size={16}
-                    fill="var(--brand-yellow-light)"
-                    className="text-[var(--brand-yellow-light)]"
+                    key={idx}
+                    size={17}
+                    fill="var(--brand-yellow)"
+                    className="text-[var(--brand-yellow)]"
                   />
                 ))}
               </div>
 
-              {/* NAME ONLY */}
+              {/* USER */}
               <div>
-                <p className="font-bold text-white">{t.name}</p>
-                <p className="text-sm text-white/50">{t.role}</p>
+                <p
+                  className="font-bold text-lg"
+                  style={{
+                    color: isDark ? "white" : "#0f172a",
+                  }}
+                >
+                  {t.name}
+                </p>
+
+                <p
+                  className="text-sm"
+                  style={{
+                    color: isDark
+                      ? "rgba(255,255,255,0.5)"
+                      : "rgba(15,23,42,0.5)",
+                  }}
+                >
+                  {t.role}
+                </p>
               </div>
 
-              {/* subtle accent line */}
+              {/* HOVER ORB */}
               <div
-                className="absolute bottom-0 left-0 w-full h-[2px] 
-                bg-gradient-to-r from-[var(--brand-blue-light)] to-transparent opacity-40"
+                className="absolute -bottom-20 -right-20 w-52 h-52 rounded-full transition-all duration-500 group-hover:scale-110"
+                style={{
+                  background: isDark
+                    ? "radial-gradient(circle, rgba(0,196,255,0.08), transparent 70%)"
+                    : "radial-gradient(circle, rgba(0,196,255,0.10), transparent 70%)",
+                }}
               />
             </motion.div>
           ))}

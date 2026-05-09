@@ -80,16 +80,25 @@ export default function ValuesSection() {
       }}
     >
       {/* ── seamless blend from MissionStatement above ── */}
-      <div className="absolute inset-x-0 top-0 h-40 -z-10 bg-gradient-to-b from-black/70 to-transparent dark:from-black/80 pointer-events-none" />
+      <div
+        className="absolute inset-x-0 top-0 h-40 -z-10 pointer-events-none"
+        style={{
+          background: isDark
+            ? "linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)"
+            : "linear-gradient(to bottom, rgba(248,251,255,1), transparent)",
+        }}
+      />
+
       {/* GRID BG */}
       <div
-        className="absolute inset-0 -z-20 opacity-[0.08]"
+        className="absolute inset-0 -z-20"
         style={{
           backgroundImage: `
             linear-gradient(var(--fg-muted) 1px, transparent 1px),
             linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
           `,
           backgroundSize: "40px 40px",
+          opacity: isDark ? 0.08 : 0.12,
         }}
       />
 
@@ -101,6 +110,7 @@ export default function ValuesSection() {
             radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),
             radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 50%)
           `,
+          opacity: isDark ? 0.9 : 0.85,
         }}
       />
 

@@ -91,18 +91,41 @@ const INSTRUCTORS = [
     index: "06",
   },
 ];
+
 // Color rotation: blue → green → yellow
 const COLOR_THEMES = [
-  { accent: "var(--brand-blue-light)", accentDark: "var(--brand-blue-dark)" },
   {
-    accent: "var(--brand-green-light)",
-    accentDark: "var(--brand-green-dark)",
+    light: {
+      accent: "var(--brand-blue-dark)",
+      accentDark: "var(--brand-blue-dark)",
+    },
+    dark: {
+      accent: "var(--brand-blue-light)",
+      accentDark: "var(--brand-blue-dark)",
+    },
   },
   {
-    accent: "var(--brand-yellow-light)",
-    accentDark: "var(--brand-yellow-dark)",
+    light: {
+      accent: "var(--brand-green-dark)",
+      accentDark: "var(--brand-green-dark)",
+    },
+    dark: {
+      accent: "var(--brand-green-light)",
+      accentDark: "var(--brand-green-dark)",
+    },
+  },
+  {
+    light: {
+      accent: "var(--brand-yellow-dark)",
+      accentDark: "var(--brand-yellow-dark)",
+    },
+    dark: {
+      accent: "var(--brand-yellow-light)",
+      accentDark: "var(--brand-yellow-dark)",
+    },
   },
 ];
+
 /* ─── Star rating ──────────────────────────────────────────── */
 function Stars({ rating, color }: { rating: number; color: string }) {
   return (
@@ -126,20 +149,11 @@ function useThemeMode() {
 
   useEffect(() => {
     const root = document.documentElement;
-
-    const update = () => {
-      setIsDark(root.classList.contains("dark"));
-    };
-
+    const update = () => setIsDark(root.classList.contains("dark"));
     update();
     setMounted(true);
-
     const observer = new MutationObserver(update);
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
@@ -150,10 +164,21 @@ function useThemeMode() {
 function ThumbStrip({
   active,
   onSelect,
+  isDark,
+  mounted,
 }: {
   active: number;
   onSelect: (i: number) => void;
+  isDark: boolean;
+  mounted: boolean;
 }) {
+  // Don't render until mounted
+  if (!mounted) {
+    return (
+      <div className="hidden lg:flex flex-col justify-between h-[380px] flex-shrink-0" />
+    );
+  }
+
   // Show a sliding window of up to 4 instructors that keeps the `active`
   // instructor visible. Center the active one when possible.
   const visibleCount = 4;
@@ -171,10 +196,12 @@ function ThumbStrip({
   );
 
   return (
-    <div className="hidden lg:flex flex-col gap-3 flex-shrink-0">
+    <div className="hidden lg:flex flex-col justify-between h-[380px] flex-shrink-0">
       {displayInstructors.map((inst, i) => {
         const globalIndex = start + i;
-        const theme = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
+        const themeSet = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
+        const theme = isDark ? themeSet.dark : themeSet.light;
+
         return (
           <button
             key={globalIndex}
@@ -216,28 +243,30 @@ function ThumbStrip({
 export default function InstructorCarousel() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const isDark = useThemeMode();
+  const { isDark, mounted } = useThemeMode();
   const containerRef = useRef<HTMLElement | null>(null);
   const inView = useInView(containerRef, { once: false, margin: "-120px" });
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const total = INSTRUCTORS.length;
 
-  const theme = COLOR_THEMES[active % COLOR_THEMES.length];
+  const themeSet = COLOR_THEMES[active % COLOR_THEMES.length];
+  const theme = isDark ? themeSet.dark : themeSet.light;
 
   const advance = useCallback(
     (dir: 1 | -1) => setActive((i) => (i + dir + total) % total),
     [total],
   );
 
-  useEffect(() => {
-    if (!inView) return;
+useEffect(() => {
+  // Only start if mounted
+  if (!mounted) return;
 
-    const id = setInterval(() => {
-      if (!paused) advance(1);
-    }, 5000);
+  const id = setInterval(() => {
+    if (!paused) advance(1);
+  }, 5000);
 
-    return () => clearInterval(id);
-  }, [paused, advance, inView]);
+  return () => clearInterval(id);
+}, [paused, advance, mounted]);
 
   function select(i: number) {
     setActive(i);
@@ -259,6 +288,22 @@ export default function InstructorCarousel() {
     accent: theme.accent,
     accentDark: theme.accentDark,
   };
+
+  // Don't render anything until client hydration is done
+  if (!mounted) {
+    return (
+      <section
+        id="instructors"
+        className="relative w-full overflow-hidden py-12 md:py-24"
+        style={{
+          background:
+            "linear-gradient(180deg, #eef4ff 0%, #f8fbff 20%, #eef4ff 80%, #ffffff 100%)",
+        }}
+      >
+        {/* Empty placeholder - no theme-dependent content */}
+      </section>
+    );
+  }
 
   return (
     <section
@@ -288,22 +333,26 @@ export default function InstructorCarousel() {
           }}
         />
       </AnimatePresence>
+
       {/* Dot-grid texture */}
       <div
         className="absolute inset-0 -z-20 pointer-events-none"
         style={{
           backgroundImage: `radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)`,
           backgroundSize: "28px 28px",
-          opacity: 0.06,
+          opacity: isDark ? 0.06 : 0.14,
         }}
       />
+
       {/* Ambient glow behind content */}
       <div
         className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
         style={{
           background: `radial-gradient(circle at center, ${displayInst.accent}22 0%, transparent 60%)`,
+          opacity: isDark ? 1 : 0.92,
         }}
       />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-14">
         {/* Glass wrapper matching other sections */}
         <div
@@ -346,10 +395,21 @@ export default function InstructorCarousel() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4 }}
                     style={{
-                      background: `linear-gradient(125deg, ${displayInst.accent}, ${displayInst.accentDark})`,
+                      backgroundImage: isDark
+                        ? `linear-gradient(
+          125deg,
+          ${displayInst.accent},
+          ${displayInst.accentDark}
+        )`
+                        : `linear-gradient(
+          125deg,
+          ${themeSet.dark.accent},
+          ${themeSet.dark.accentDark}
+        )`,
                       WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      color: "transparent",
                     }}
                   >
                     been there.
@@ -367,7 +427,7 @@ export default function InstructorCarousel() {
                 {String(active + 1).padStart(2, "0")} /{" "}
                 {String(total).padStart(2, "0")}
               </span>
-              {[-1 as 1 | -1, 1 as 1 | -1].map((dir, di) => (
+              {([-1, 1] as const).map((dir, di) => (
                 <button
                   key={di}
                   onClick={() => handleArrow(dir)}
@@ -390,9 +450,14 @@ export default function InstructorCarousel() {
           </div>
 
           {/* ── Main content row ── */}
-          <div className="flex flex-col lg:flex-row gap-6 items-stretch lg:items-start">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* Vertical thumb strip */}
-            <ThumbStrip active={active} onSelect={select} />
+            <ThumbStrip
+              active={active}
+              onSelect={select}
+              isDark={isDark}
+              mounted={mounted}
+            />
 
             {/* Portrait — large, dominant */}
             <AnimatePresence mode="wait">
@@ -402,12 +467,14 @@ export default function InstructorCarousel() {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
                 transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full lg:flex-shrink-0 rounded-3xl overflow-hidden"
+                className="relative w-full lg:flex-shrink-0 rounded-3xl overflow-hidden self-stretch"
                 style={{
                   width: "100%",
                   maxWidth: "360px",
-                  height: "clamp(280px, 60vw, 420px)",
-                  boxShadow: `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`,
+                  height: "380px",
+                  boxShadow: isDark
+                    ? `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`
+                    : `0 20px 60px rgba(7,18,37,0.06), 0 0 0 1px ${displayInst.accent}14`,
                 }}
               >
                 {/* Photo */}
@@ -483,7 +550,7 @@ export default function InstructorCarousel() {
                 className="flex-1 flex flex-col gap-5 min-w-0 w-full"
               >
                 {/* Stats row */}
-                <div className="grid grid-cols-3  gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   {[
                     { label: "Students", value: inst.students },
                     { label: "Experience", value: inst.experience },
@@ -597,23 +664,26 @@ export default function InstructorCarousel() {
 
           {/* ── Mobile dot strip ── */}
           <div className="flex items-center justify-center gap-2 mt-10 lg:hidden">
-            {INSTRUCTORS.map((inst, i) => (
-              <button
-                key={i}
-                onClick={() => select(i)}
-                aria-label={`Go to ${inst.name}`}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  height: 7,
-                  width: i === active ? 24 : 7,
-                  background:
-                    i === active
-                      ? COLOR_THEMES[i % COLOR_THEMES.length].accent
-                      : "var(--border)",
-                  opacity: i === active ? 1 : 0.4,
-                }}
-              />
-            ))}
+            {INSTRUCTORS.map((inst, i) => {
+              const themeSet = COLOR_THEMES[i % COLOR_THEMES.length];
+              const mobileTheme = isDark ? themeSet.dark : themeSet.light;
+
+              return (
+                <button
+                  key={i}
+                  onClick={() => select(i)}
+                  aria-label={`Go to ${inst.name}`}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    height: 7,
+                    width: i === active ? 24 : 7,
+                    background:
+                      i === active ? mobileTheme.accent : "var(--border)",
+                    opacity: i === active ? 1 : 0.4,
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

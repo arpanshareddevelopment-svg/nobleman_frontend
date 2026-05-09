@@ -8,17 +8,18 @@ const TABLE_COLUMNS = [
   {
     key: "skillxindia",
     label: "NobleMan",
-    className: "text-[var(--brand-blue-light)] font-bold",
+    labelClass:
+      "text-[var(--brand-blue-light)] font-bold dark:text-[var(--brand-blue-light)]",
   },
   {
     key: "typical",
     label: "Online Courses",
-    className: "text-white/60",
+    labelClass: "text-[var(--fg-secondary)]",
   },
   {
     key: "coaching",
     label: "Coaching",
-    className: "text-white/60",
+    labelClass: "text-[var(--fg-secondary)]",
   },
 ];
 
@@ -58,16 +59,14 @@ const COMPARISON_DATA = [
 function ComparisonCell({ value }: { value: boolean | string }) {
   if (value === true) {
     return (
-      <Check size={20} className="mx-auto text-[var(--brand-green-light)]" />
+      <Check size={20} className="mx-auto text-[var(--brand-green-dark)]" />
     );
   }
-
   if (value === false) {
-    return <X size={20} className="mx-auto text-red-400" />;
+    return <X size={20} className="mx-auto text-red-500 dark:text-red-400" />;
   }
-
   return (
-    <span className="text-xs sm:text-sm text-[var(--fg-secondary)]">
+    <span className="rounded-full border border-[var(--border)] bg-black/5 px-3 py-0.5 text-xs text-[var(--fg-secondary)] dark:bg-white/10 sm:text-sm">
       {value}
     </span>
   );
@@ -89,10 +88,10 @@ export default function WhyNobleManLearning() {
     >
       {/* DOT PATTERN */}
       <div
-        className="absolute inset-0 -z-10 opacity-[0.6]"
+        className="absolute inset-0 -z-10 opacity-40 dark:opacity-60"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(255, 235, 120, 0.26) 1px, transparent 1px)",
+            "radial-gradient(circle, rgba(255, 200, 0, 0.3) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
         }}
       />
@@ -102,8 +101,8 @@ export default function WhyNobleManLearning() {
         className="absolute inset-0 -z-10"
         style={{
           background: `
-            radial-gradient(circle at 18% 20%, rgba(255, 220, 80, 0.15), transparent 25%),
-            radial-gradient(circle at 75% 70%, rgba(255,165,0,0.18), transparent 42%)
+            radial-gradient(circle at 18% 20%, rgba(255, 220, 80, 0.08), transparent 25%),
+            radial-gradient(circle at 75% 70%, rgba(255,165,0,0.10), transparent 42%)
           `,
         }}
       />
@@ -114,10 +113,10 @@ export default function WhyNobleManLearning() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.45 }}
-          className="mb-10 text-center text-3xl sm:text-4xl md:mb-16 md:text-5xl font-black leading-tight text-white"
+          className="mb-10 text-center text-3xl font-black leading-tight text-[var(--fg-primary)] sm:text-4xl md:mb-16 md:text-5xl"
         >
           Why{" "}
-          <span className="text-[var(--brand-yellow-light)]">
+          <span className="text-amber-500 dark:text-[var(--brand-yellow-light)]">
             NobleMan Learning
           </span>
         </motion.h2>
@@ -127,20 +126,25 @@ export default function WhyNobleManLearning() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.45 }}
-          className="hidden overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-2xl md:block"
+          className="hidden overflow-hidden rounded-2xl md:block"
+          style={{
+            border: "1px solid var(--border)",
+            background: "var(--bg-card)",
+          }}
         >
           <table className="w-full">
-            {/* HEADER */}
             <thead>
-              <tr className="border-b border-white/10 bg-white/5">
-                <th className="p-5 text-left text-sm font-bold text-white">
+              <tr
+                className="border-b border-[var(--border)]"
+                style={{ background: "var(--bg-card)" }}
+              >
+                <th className="p-5 text-left text-sm font-bold text-[var(--fg-secondary)]">
                   Features
                 </th>
-
                 {TABLE_COLUMNS.map((col) => (
                   <th
                     key={col.key}
-                    className={`p-5 text-center text-sm ${col.className}`}
+                    className={`p-5 text-center text-sm ${col.labelClass}`}
                   >
                     {col.label}
                   </th>
@@ -148,7 +152,6 @@ export default function WhyNobleManLearning() {
               </tr>
             </thead>
 
-            {/* BODY */}
             <tbody>
               {COMPARISON_DATA.map((row, i) => (
                 <motion.tr
@@ -156,10 +159,11 @@ export default function WhyNobleManLearning() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={inView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: i * 0.05 }}
-                  className="border-b border-white/5 transition hover:bg-white/5"
+                  className="border-b border-[var(--border)] transition last:border-0 hover:bg-black/[0.03] dark:hover:bg-white/5"
                 >
-                  <td className="p-5 font-medium text-white">{row.feature}</td>
-
+                  <td className="p-5 font-medium text-[var(--fg-primary)]">
+                    {row.feature}
+                  </td>
                   {TABLE_COLUMNS.map((col) => (
                     <td key={col.key} className="p-5 text-center">
                       <ComparisonCell
@@ -183,10 +187,14 @@ export default function WhyNobleManLearning() {
               initial={{ opacity: 0, y: 14 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.05 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
+              className="rounded-2xl p-5"
+              style={{
+                border: "1px solid var(--border)",
+                background: "var(--bg-card)",
+              }}
             >
               {/* FEATURE */}
-              <h3 className="mb-5 text-base font-semibold leading-relaxed text-white">
+              <h3 className="mb-5 text-base font-semibold leading-relaxed text-[var(--fg-primary)]">
                 {row.feature}
               </h3>
 
@@ -195,12 +203,11 @@ export default function WhyNobleManLearning() {
                 {TABLE_COLUMNS.map((col) => (
                   <div
                     key={col.key}
-                    className="flex items-center justify-between gap-4"
+                    className="flex items-center justify-between gap-4 border-b border-[var(--border)] pb-3 last:border-0 last:pb-0"
                   >
-                    <span className={`text-sm ${col.className}`}>
+                    <span className={`text-sm ${col.labelClass}`}>
                       {col.label}
                     </span>
-
                     <ComparisonCell
                       value={
                         row[col.key as keyof typeof row] as boolean | string
@@ -220,7 +227,7 @@ export default function WhyNobleManLearning() {
           transition={{ duration: 0.45 }}
           className="mt-12 text-center md:mt-14"
         >
-          <button className="rounded-xl bg-[var(--brand-yellow-light)] px-6 py-3 text-sm font-bold text-black transition hover:scale-105 sm:px-8">
+          <button className="rounded-xl bg-amber-500 px-6 py-3 text-sm font-bold text-white transition hover:scale-105 hover:bg-amber-600 dark:bg-[var(--brand-yellow-light)] dark:text-black dark:hover:bg-[var(--brand-yellow)] sm:px-8">
             Start Your Journey
           </button>
         </motion.div>

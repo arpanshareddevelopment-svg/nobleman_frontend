@@ -34,29 +34,21 @@ const CERTIFICATIONS = [
 ];
 
 function useThemeMode() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
 
   useEffect(() => {
     const root = document.documentElement;
-
-    const update = () => {
-      setIsDark(root.classList.contains("dark"));
-    };
-
+    const update = () => setIsDark(root.classList.contains("dark"));
     update();
-    setMounted(true);
-
     const observer = new MutationObserver(update);
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  return { isDark, mounted };
+  return isDark;
 }
 
 export default function CertificationsShowcase() {
@@ -82,7 +74,7 @@ export default function CertificationsShowcase() {
           backgroundImage:
             "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
-          opacity: isDark ? 0.08 : 0.1,
+          opacity: isDark ? 0.08 : 0.14,
         }}
       />
 
@@ -95,6 +87,7 @@ export default function CertificationsShowcase() {
             radial-gradient(circle at 85% 75%, var(--brand-yellow-glow), transparent 45%),
             radial-gradient(circle at 50% 50%, var(--brand-green-glow), transparent 55%)
           `,
+          opacity: isDark ? 1 : 0.92,
         }}
       />
 

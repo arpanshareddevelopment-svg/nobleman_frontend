@@ -34,6 +34,7 @@ type Slide = {
   summary: string;
   cta: string;
   gradient: [string, string];
+  lightGradient: [string, string];
   solid: string;
   highlight: OrbKey;
 };
@@ -62,7 +63,7 @@ function useThemeMode() {
     return () => observer.disconnect();
   }, []);
 
-  return mounted ? isDark : false;
+  return { isDark, mounted };
 }
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -75,10 +76,16 @@ const SLIDES: Slide[] = [
     summary:
       "Live cohorts, real projects, and focused placement support for outcome-driven learners.",
     cta: "Explore programs",
+
     gradient: ["#2ea8ff", "#7ed8ff"],
+
+    // LIGHT MODE
+    lightGradient: ["#1da1ff", "#5ecbff"],
+
     solid: "#2ea8ff",
     highlight: "careers",
   },
+
   {
     id: "green",
     tag: "Green",
@@ -87,10 +94,16 @@ const SLIDES: Slide[] = [
     summary:
       "Structured practice, direct feedback, and interview prep that keep progress visible.",
     cta: "Meet mentors",
+
     gradient: ["#84ff3d", "#c8ff74"],
+
+    // LIGHT MODE
+    lightGradient: ["#52e05f", "#9cff57"],
+
     solid: "#84ff3d",
     highlight: "support",
   },
+
   {
     id: "yellow",
     tag: "Yellow",
@@ -99,7 +112,12 @@ const SLIDES: Slide[] = [
     summary:
       "Referrals, mock interviews, and partner access designed to keep the offer pipeline moving.",
     cta: "See outcomes",
+
     gradient: ["#ffcf33", "#ffe98a"],
+
+    // LIGHT MODE
+    lightGradient: ["#ffbf1f", "#fff06a"],
+
     solid: "#ffcf33",
     highlight: "partners",
   },
@@ -133,26 +151,49 @@ const ORBS: Orb[] = [
 ];
 
 // ─── Mentor accent map ────────────────────────────────────────────────────────
-const MENTOR_ACCENT: Record<
-  "blue" | "green" | "yellow",
-  { text: string; border: string; gradient: string }
-> = {
+const MENTOR_ACCENT = {
   blue: {
-    text: BRAND.yellow,
-    border: `${BRAND.yellow}99`,
-    gradient: `linear-gradient(135deg, ${BRAND.yellow}, ${BRAND.yellowLight})`,
+    dark: {
+      text: "#ffcf33",
+      border: "#ffcf3399",
+      gradient: "linear-gradient(135deg, #ffcf33, #ffe98a)",
+    },
+
+    light: {
+      text: "#ffb800",
+      border: "#ffd54a88",
+      gradient: "linear-gradient(135deg, #ffb800, #ffd84d)",
+    },
   },
+
   green: {
-    text: BRAND.blue,
-    border: `${BRAND.blue}99`,
-    gradient: `linear-gradient(135deg, ${BRAND.blue}, ${BRAND.blueLight})`,
+    dark: {
+      text: "#2ea8ff",
+      border: "#2ea8ff99",
+      gradient: "linear-gradient(135deg, #2ea8ff, #7ed8ff)",
+    },
+
+    light: {
+      text: "#1b8fff",
+      border: "#66b8ff88",
+      gradient: "linear-gradient(135deg, #1b8fff, #64c7ff)",
+    },
   },
+
   yellow: {
-    text: BRAND.green,
-    border: `${BRAND.green}99`,
-    gradient: `linear-gradient(135deg, ${BRAND.green}, ${BRAND.greenLight})`,
+    dark: {
+      text: "#84ff3d",
+      border: "#84ff3d99",
+      gradient: "linear-gradient(135deg, #84ff3d, #c8ff74)",
+    },
+
+    light: {
+      text: "#4fd14f",
+      border: "#8df58d88",
+      gradient: "linear-gradient(135deg, #4fd14f, #8cff66)",
+    },
   },
-};
+} as const;
 
 // ─── FloatingOrb ─────────────────────────────────────────────────────────────
 function FloatingOrb({
@@ -162,6 +203,7 @@ function FloatingOrb({
   index,
   registerRef,
   isDark,
+  mounted,
 }: {
   orb: Orb;
   active: boolean;
@@ -169,7 +211,18 @@ function FloatingOrb({
   index: number;
   registerRef: (node: HTMLDivElement | null, key: OrbKey) => void;
   isDark: boolean;
+  mounted: boolean;
 }) {
+  // Don't render until mounted
+  if (!mounted) {
+    return (
+      <div
+        className="absolute"
+        style={{ width: orb.size, height: orb.size, ...orb.position }}
+      />
+    );
+  }
+
   const [g0, g1] = gradient;
 
   // ── Active orb: colored 3-D sphere
@@ -363,7 +416,15 @@ function FloatingOrb({
 }
 
 // ─── OrbCluster ───────────────────────────────────────────────────────────────
-function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
+function OrbCluster({
+  slide,
+  isDark,
+  mounted,
+}: {
+  slide: Slide;
+  isDark: boolean;
+  mounted: boolean;
+}) {
   const orbRefs = useRef<Record<OrbKey, HTMLDivElement | null>>({
     careers: null,
     support: null,
@@ -393,22 +454,24 @@ function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
   return (
     <div className="relative mx-auto aspect-square w-[clamp(16rem,82vw,500px)] sm:w-[min(62vw,500px)]">
       {/* Ambient centre glow */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={slide.id}
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-[12%] rounded-full blur-3xl"
-          style={{
-            background: `radial-gradient(circle at center,
+      {mounted && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-[12%] rounded-full blur-3xl"
+            style={{
+              background: `radial-gradient(circle at center,
               ${slide.gradient[0]}${isDark ? "33" : "44"} 0%,
               ${slide.gradient[1]}${isDark ? "22" : "30"} 38%,
               transparent 72%)`,
-          }}
-        />
-      </AnimatePresence>
+            }}
+          />
+        </AnimatePresence>
+      )}
 
       {/* Dashed orbit ring */}
       <div
@@ -431,6 +494,7 @@ function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
             orbRefs.current[key] = node;
           }}
           isDark={isDark}
+          mounted={mounted}
         />
       ))}
     </div>
@@ -440,12 +504,7 @@ function OrbCluster({ slide, isDark }: { slide: Slide; isDark: boolean }) {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const isDark = useThemeMode();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { isDark, mounted } = useThemeMode();
 
   useEffect(() => {
     const id = window.setInterval(
@@ -455,10 +514,24 @@ export default function Hero() {
     return () => window.clearInterval(id);
   }, []);
 
-  if (!mounted) return null;
+  // Don't render anything until client hydration is done
+  if (!mounted) {
+    return (
+      <section
+        id="home"
+        className="relative isolate overflow-hidden py-10 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
+        style={{
+          background:
+            "linear-gradient(135deg, #f3f8ff 0%, #edf5ff 30%, #f8fbff 55%, #eef9f4 100%)",
+        }}
+      >
+        {/* Empty placeholder - no theme-dependent content */}
+      </section>
+    );
+  }
 
   const slide = SLIDES[activeIndex];
-  const accent = MENTOR_ACCENT[slide.id];
+  const accent = MENTOR_ACCENT[slide.id][isDark ? "dark" : "light"];
 
   return (
     <section
@@ -467,7 +540,7 @@ export default function Hero() {
       style={{
         background: isDark
           ? "linear-gradient(135deg, #06182b 0%, #02040a 52%, #000000 100%)"
-          : "linear-gradient(135deg, #f7fbff 0%, #eef4ff 46%, #ffffff 100%)",
+          : "linear-gradient(135deg, #f3f8ff 0%, #edf5ff 30%, #f8fbff 55%, #eef9f4 100%)",
       }}
     >
       {/* Ambient blobs */}
@@ -475,21 +548,48 @@ export default function Hero() {
         className="absolute inset-0 -z-20"
         style={{
           background: isDark
-            ? "radial-gradient(circle at top left, rgba(85,201,255,0.16), transparent 26%), radial-gradient(circle at bottom right, rgba(123,245,111,0.10), transparent 24%)"
-            : "radial-gradient(circle at top left, rgba(85,201,255,0.16), transparent 26%), radial-gradient(circle at bottom right, rgba(87,240,162,0.14), transparent 24%)",
+            ? `
+    radial-gradient(circle at top left,
+      rgba(85,201,255,0.16),
+      transparent 26%),
+    radial-gradient(circle at bottom right,
+      rgba(123,245,111,0.10),
+      transparent 24%)
+  `
+            : `
+    radial-gradient(circle at 12% 18%,
+      rgba(46,168,255,0.22),
+      transparent 28%),
+
+    radial-gradient(circle at 88% 82%,
+      rgba(132,255,61,0.18),
+      transparent 30%),
+
+    radial-gradient(circle at 70% 25%,
+      rgba(255,207,51,0.14),
+      transparent 22%)
+  `,
         }}
       />
-
+      <div
+        className="absolute inset-0 opacity-[0.035] mix-blend-multiply pointer-events-none"
+        style={{
+          backgroundImage:
+            "url('https://grainy-gradients.vercel.app/noise.svg')",
+        }}
+      />
       {/* Dot grid */}
       <div
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `radial-gradient(circle, ${isDark ? "rgba(255,255,255,0.35)" : "rgba(80,100,140,0.25)"} 1px, transparent 1px)`,
+          backgroundImage: `radial-gradient(circle, ${
+            isDark ? "rgba(255,255,255,0.35)" : "rgba(120,140,180,0.32)"
+          } 1px, transparent 1px)`,
           backgroundSize: "30px 30px",
           maskImage:
-            "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, black 30%, transparent 80%)",
+            "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.92) 58%, transparent 100%)",
           WebkitMaskImage:
-            "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, black 30%, transparent 80%)",
+            "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.92) 58%, transparent 100%)",
         }}
       />
 
@@ -540,7 +640,9 @@ export default function Hero() {
                 <span
                   className="bg-clip-text text-transparent"
                   style={{
-                    backgroundImage: `linear-gradient(135deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 100%)`,
+                    backgroundImage: `linear-gradient(135deg, ${
+                      isDark ? slide.gradient[0] : slide.lightGradient[0]
+                    } 0%, ${isDark ? slide.gradient[1] : slide.lightGradient[1]} 100%)`,
                   }}
                 >
                   {slide.titleBottom}
@@ -554,7 +656,7 @@ export default function Hero() {
                   border: `1px solid ${accent.border}`,
                   background: isDark
                     ? "rgba(255,255,255,0.06)"
-                    : "rgba(255,255,255,0.85)",
+                    : "rgba(255, 255, 255, 0.44)",
                   backdropFilter: "blur(16px)",
                   boxShadow: `0 0 0 1px ${accent.text}18, 0 4px 28px ${accent.text}40, inset 0 1px 0 rgba(255,255,255,0.12)`,
                 }}
@@ -664,13 +766,13 @@ export default function Hero() {
               style={{
                 background: isDark
                   ? `radial-gradient(circle at center, ${slide.gradient[0]}18 0%, ${slide.gradient[1]}10 42%, transparent 72%)`
-                  : `radial-gradient(circle at center, ${slide.gradient[0]}30 0%, ${slide.gradient[1]}18 45%, transparent 75%)`,
+                  : `radial-gradient(circle at center, ${slide.gradient[0]}55 0%, ${slide.gradient[1]}18 45%, transparent 75%)`,
               }}
             />
           </AnimatePresence>
 
           <div className="relative w-full max-w-[540px] aspect-square rounded-[2.5rem] p-4 sm:p-6">
-            <OrbCluster slide={slide} isDark={isDark} />
+            <OrbCluster slide={slide} isDark={isDark} mounted={mounted} />
           </div>
         </div>
       </div>
