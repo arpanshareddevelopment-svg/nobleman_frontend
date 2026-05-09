@@ -69,10 +69,13 @@ function useThemeMode() {
     const root = document.documentElement;
     const update = () => setIsDark(root.classList.contains("dark"));
     update();
-    setMounted(true);
+    const frame = requestAnimationFrame(() => setMounted(true));
     const observer = new MutationObserver(update);
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, []);
 
   return { isDark, mounted };
@@ -441,10 +444,12 @@ function FloatingOrb({
 // ─── OrbCluster ───────────────────────────────────────────────────────────────
 function OrbCluster({
   slide,
+  gradient,
   isDark,
   mounted,
 }: {
   slide: Slide;
+  gradient: [string, string];
   isDark: boolean;
   mounted: boolean;
 }) {
@@ -476,7 +481,6 @@ function OrbCluster({
 
   return (
     <div className="relative mx-auto aspect-square w-[clamp(16rem,82vw,500px)] sm:w-[min(62vw,500px)]">
-      {/* Ambient centre glow */}
       {mounted && (
         <AnimatePresence mode="wait">
           <motion.div
@@ -488,15 +492,14 @@ function OrbCluster({
             className="absolute inset-[12%] rounded-full blur-3xl"
             style={{
               background: `radial-gradient(circle at center,
-              ${slide.gradient[0]}${isDark ? "33" : "44"} 0%,
-              ${slide.gradient[1]}${isDark ? "22" : "30"} 38%,
+              ${gradient[0]}${isDark ? "33" : "44"} 0%,
+              ${gradient[1]}${isDark ? "22" : "30"} 38%,
               transparent 72%)`,
             }}
           />
         </AnimatePresence>
       )}
 
-      {/* Dashed orbit ring */}
       <div
         className="absolute inset-[18%] rounded-full backdrop-blur-2xl"
         style={{
@@ -509,7 +512,7 @@ function OrbCluster({
           key={orb.key}
           orb={orb}
           active={slide.highlight === orb.key}
-          gradient={slide.gradient}
+          gradient={gradient}
           index={index}
           registerRef={(node, key) => {
             orbRefs.current[key] = node;
@@ -521,6 +524,7 @@ function OrbCluster({
     </div>
   );
 }
+
 function useScrambleText(text: string, speed = 40) {
   const [display, setDisplay] = useState(text);
 
@@ -584,7 +588,7 @@ export default function Hero() {
     yellow: isDark ? ["#ffcf33", "#ffe98a"] : ["#ffb000", "#ffe14d"],
   } as const;
 
-  const currentGradient = gradientMap[slide.id];
+  const currentGradient = gradientMap[slide.id] as [string, string];
 
   const scrambledBottom = useScrambleText(slide.titleBottom, 35);
 
@@ -871,14 +875,7 @@ export default function Hero() {
           </AnimatePresence>
 
           <div className="relative w-full max-w-[540px] aspect-square rounded-[2.5rem] p-4 sm:p-6">
-            <OrbCluster
-              slide={{
-                ...slide,
-                gradient: currentGradient,
-              }}
-              isDark={isDark}
-              mounted={mounted}
-            />
+            <OrbCluster slide={slide} gradient={currentGradient} isDark={isDark} mounted={mounted} />
           </div>
         </div>
       </div>
