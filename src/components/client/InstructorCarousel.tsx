@@ -383,7 +383,7 @@ export default function InstructorCarousel() {
                 Meet the Mentors
               </span>
               <h2
-                className="text-[2rem] sm:text-[2.4rem] md:text-[42px] font-black leading-[1.05] tracking-tight "
+                className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-[1.05] tracking-tight "
                 style={{ color: "var(--fg-primary)" }}
               >
                 Learn from people who&apos;ve{" "}
@@ -419,7 +419,7 @@ export default function InstructorCarousel() {
             </div>
 
             {/* Arrow controls */}
-            <div className="hidden sm:flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-3 ">
               <span
                 className="text-xs font-mono tracking-widest"
                 style={{ color: "var(--fg-muted)" }}
@@ -432,7 +432,7 @@ export default function InstructorCarousel() {
                   key={di}
                   onClick={() => handleArrow(dir)}
                   aria-label={dir === -1 ? "Previous" : "Next"}
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
                   style={{
                     background: "var(--bg-card)",
                     border: `1px solid ${displayInst.accent}50`,

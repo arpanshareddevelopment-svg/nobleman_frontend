@@ -38,27 +38,36 @@ export default function MissionStatement() {
       id="mission"
       ref={ref}
       className="relative isolate overflow-hidden py-12 md:py-28"
+      style={{
+        background: isDark
+          ? `
+        radial-gradient(circle at 20% 20%, rgba(85,201,255,0.08), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(132,255,61,0.06), transparent 32%),
+        linear-gradient(
+          180deg,
+          #05060a 0%,
+          #070b12 45%,
+          #05070d 100%
+        )
+      `
+          : `
+        radial-gradient(circle at 18% 22%, rgba(46,168,255,0.10), transparent 28%),
+        radial-gradient(circle at 82% 70%, rgba(132,255,61,0.10), transparent 32%),
+        radial-gradient(circle at 60% 30%, rgba(255,208,64,0.08), transparent 26%),
+        linear-gradient(
+          180deg,
+          #f7fbff 0%,
+          #eef6ff 42%,
+          #f5fbf6 100%
+        )
+      `,
+      }}
     >
       {/* ── seamless blend from hero above ── */}
       <div
         className="absolute inset-x-0 top-0 h-40 -z-10 pointer-events-none"
         style={{
           background: "linear-gradient(to bottom, var(--bg-page), transparent)",
-        }}
-      />
-
-      {/* ── radial dot grid, prominent at center ── */}
-      <div
-        className="absolute inset-0 -z-20"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-          maskImage:
-            "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, black 30%, transparent 80%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, black 30%, transparent 80%)",
-          opacity: isDark ? 0.2 : 0.42,
         }}
       />
 

@@ -136,7 +136,7 @@ export default function ValuesSection() {
           way
         </motion.h2>
 
-        {/* 🔥 CARDS */}
+        {/*  CARDS */}
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {VALUES.map((value, i) => {
             const Icon = value.icon;
@@ -148,12 +148,42 @@ export default function ValuesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.25 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative rounded-[1.5rem] border p-6 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-[1.5rem] border p-6 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background: isDark
-                    ? "rgba(255,255,255,0.05)"
-                    : "rgba(255,255,255,0.65)",
-                  borderColor: "var(--border)",
+                    ? `
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,0.07) 0%,
+        rgba(255,255,255,0.03) 100%
+      )
+    `
+                    : `
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,0.38) 0%,
+        rgba(255,255,255,0.18) 42%,
+        rgba(240,248,255,0.14) 100%
+      )
+    `,
+
+                  border: isDark
+                    ? "1px solid rgba(255,255,255,0.08)"
+                    : "1px solid rgba(255,255,255,0.45)",
+
+                  boxShadow: isDark
+                    ? `
+      0 12px 40px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.08)
+    `
+                    : `
+      0 12px 40px rgba(120,140,180,0.14),
+      0 2px 10px rgba(0,0,0,0.05),
+      inset 0 1px 0 rgba(255,255,255,0.75)
+    `,
+
+                  backdropFilter: "blur(28px)",
+                  WebkitBackdropFilter: "blur(28px)",
                 }}
               >
                 {/* Hover Glow */}
@@ -163,22 +193,23 @@ export default function ValuesSection() {
                     background: `radial-gradient(circle, ${value.glow}, transparent 70%)`,
                   }}
                 />
+                <div className="flex gap-3 ">
+                  {/* Icon */}
+                  <div
+                    className="relative z-10  flex h-14 w-14 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+                    style={{
+                      background: `${value.color}20`,
+                      color: value.color,
+                    }}
+                  >
+                    <Icon size={26} strokeWidth={1.6} />
+                  </div>
 
-                {/* Icon */}
-                <div
-                  className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-                  style={{
-                    background: `${value.color}20`,
-                    color: value.color,
-                  }}
-                >
-                  <Icon size={26} strokeWidth={1.6} />
+                  {/* Title */}
+                  <h3 className="relative z-10 font-bold text-lg text-[color:var(--fg-primary)]">
+                    {value.title}
+                  </h3>
                 </div>
-
-                {/* Title */}
-                <h3 className="relative z-10 font-bold text-lg text-[color:var(--fg-primary)]">
-                  {value.title}
-                </h3>
 
                 {/* Description */}
                 <p className="relative z-10 mt-2 text-sm text-[color:var(--fg-secondary)]">

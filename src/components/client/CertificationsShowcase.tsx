@@ -80,7 +80,17 @@ export default function CertificationsShowcase() {
       style={{
         background: isDark
           ? "linear-gradient(155deg, #010b27ff 0%, #00090489 45%, #000000 100%)"
-          : "linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
+          : `
+  radial-gradient(circle at 15% 20%, rgba(46,168,255,0.12), transparent 28%),
+  radial-gradient(circle at 85% 75%, rgba(255,208,64,0.10), transparent 30%),
+  radial-gradient(circle at 50% 50%, rgba(132,255,61,0.08), transparent 38%),
+  linear-gradient(
+    155deg,
+    #f8fbff 0%,
+    #eef5ff 35%,
+    #edf7f1 100%
+  )
+`,
       }}
     >
       {/* Dot-grid texture */}
@@ -90,7 +100,7 @@ export default function CertificationsShowcase() {
           backgroundImage:
             "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
-          opacity: isDark ? 0.08 : 0.14,
+          opacity: isDark ? 0.08 : 0.06,
         }}
       />
 
@@ -103,7 +113,7 @@ export default function CertificationsShowcase() {
             radial-gradient(circle at 85% 75%, var(--brand-yellow-glow), transparent 45%),
             radial-gradient(circle at 50% 50%, var(--brand-green-glow), transparent 55%)
           `,
-          opacity: isDark ? 1 : 0.92,
+          opacity: isDark ? 1 : 0.72,
         }}
       />
 
@@ -114,24 +124,33 @@ export default function CertificationsShowcase() {
             initial={{ opacity: 0, y: -10 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
-            className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4"
+            className="inline-flex mb-6 px-4 py-1 rounded-full font-medium text-white transition-all duration-200 hover:-translate-y-2 hover:scale-[1.02] active:scale-95"
             style={{
-              background: "var(--brand-blue-glow)",
-              borderColor: "rgba(59, 130, 246, 0.40)",
-              color: "var(--brand-blue-light)",
+              background:
+                "linear-gradient(135deg, var(--brand-blue-light), var(--brand-blue-dark))",
+              boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)",
             }}
           >
             Recognized Credentials
           </motion.span>
-
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black leading-tight mb-2"
+            className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-tight mb-2"
             style={{ color: "var(--fg-primary)" }}
           >
-            Credentials that matter
+            Credentials that{" "}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage: isDark
+                  ? "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)"
+                  : "linear-gradient(135deg, #1da1ff 0%, #32d74b 50%, #ffb000 100%)",
+              }}
+            >
+              matter
+            </span>
           </motion.h2>
 
           <motion.p
@@ -156,17 +175,42 @@ export default function CertificationsShowcase() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-                className="group rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer"
+                className="group rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] cursor-pointer"
                 style={{
                   background: isDark
-                    ? "rgba(255,255,255,0.04)"
-                    : "rgba(255,255,255,0.75)",
-                  backdropFilter: "blur(18px)",
-                  WebkitBackdropFilter: "blur(18px)",
-                  border: `1px solid var(--border)`,
+                    ? `
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,0.06) 0%,
+        rgba(255,255,255,0.03) 100%
+      )
+    `
+                    : `
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,0.34) 0%,
+        rgba(255,255,255,0.16) 42%,
+        rgba(240,248,255,0.12) 100%
+      )
+    `,
+
+                  backdropFilter: "blur(28px)",
+                  WebkitBackdropFilter: "blur(28px)",
+
+                  border: isDark
+                    ? "1px solid rgba(255,255,255,0.08)"
+                    : "1px solid rgba(255,255,255,0.42)",
+
                   boxShadow: isDark
-                    ? "0 4px 24px rgba(0,0,0,0.4)"
-                    : "0 4px 24px rgba(7,18,37,0.07)",
+                    ? `
+      0 10px 40px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.08)
+    `
+                    : `
+      0 12px 40px rgba(120,140,180,0.12),
+      0 2px 8px rgba(0,0,0,0.05),
+      inset 0 1px 0 rgba(255,255,255,0.75)
+    `,
                 }}
               >
                 {/* Gradient overlay on hover */}
@@ -176,34 +220,50 @@ export default function CertificationsShowcase() {
                     background: `radial-gradient(circle at 30% 30%, ${cert.color}18, transparent 65%)`,
                   }}
                 />
-
-                {/* Icon */}
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110"
-                  style={{
-                    background: `${cert.color}15`,
-                    color: cert.color,
-                  }}
-                >
-                  <Icon size={28} strokeWidth={1.5} />
-                </div>
-
-                {/* Content */}
-                <div className="mb-4">
+                <div className="flex gap-2 items-center">
+                  {" "}
+                  {/* Icon */}
                   <div
-                    className="text-xs font-bold tracking-widest uppercase mb-2"
-                    style={{ color: cert.color }}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center  transition-all duration-300 group-hover:scale-110 "
+                    style={{
+                      background: `${cert.color}15`,
+                      color: cert.color,
+                    }}
                   >
-                    {cert.type}
+                    <Icon size={28} strokeWidth={1.5} />
                   </div>
-                  <h3
-                    className="text-xl font-black leading-tight mb-2"
-                    style={{ color: "var(--fg-primary)" }}
-                  >
-                    {cert.title}
-                  </h3>
-                </div>
+                  {/* Content */}
+                  <div className="">
+                    <div
+                      className="text-xs font-bold tracking-widest uppercase  bg-clip-text text-transparent"
+                      style={{
+                        backgroundImage:
+                          cert.id === 1
+                            ? isDark
+                              ? "var(--blue-gradient-dark)"
+                              : "var(--blue-gradient-light)"
+                            : cert.id === 2
+                              ? isDark
+                                ? "var(--green-gradient-dark)"
+                                : "var(--green-gradient-light)"
+                              : isDark
+                                ? "var(--yellow-gradient-dark)"
+                                : "var(--yellow-gradient-light)",
 
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      {cert.type}
+                    </div>
+                  </div>
+                </div>
+                <h3
+                  className="text-xl font-black leading-tight mb-2"
+                  style={{ color: "var(--fg-primary)" }}
+                >
+                  {cert.title}
+                </h3>
                 {/* Description */}
                 <p
                   className="text-sm leading-relaxed"
@@ -236,7 +296,7 @@ export default function CertificationsShowcase() {
             partners trust our credentials
           </p>
           <button
-            className="px-8 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:scale-105 active:scale-95"
+            className="px-8 py-3 rounded-full font-bold text-white transition-all duration-200 hover:-translate-y-2 hover:scale-[1.02] active:scale-95"
             style={{
               background:
                 "linear-gradient(135deg, var(--brand-blue-light), var(--brand-blue-dark))",

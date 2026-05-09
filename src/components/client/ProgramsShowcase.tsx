@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
+import { MoveRight, MoveLeft } from "lucide-react";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 const PROGRAMS = [
@@ -175,7 +176,7 @@ export default function ProgramsShowcase() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.4 }}
-          className="mb-5 flex items-center gap-3 text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] uppercase tracking-[0.2em]"
+          className="mb-5 flex items-center gap-3 text-[10px] sm:text-[clamp(0.7rem,0.9vw,1rem)] uppercase tracking-[0.2em]"
           style={{ color: "var(--brand-green-dark)" }}
         >
           <span
@@ -193,11 +194,8 @@ export default function ProgramsShowcase() {
           className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end md:gap-5"
         >
           <h2
-            className="font-normal leading-[1.08] tracking-[-0.02em]"
-            style={{
-              fontSize: "clamp(1.75rem, 4vw, 3rem)",
-              color: "var(--fg-primary)",
-            }}
+            className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-bold leading-[1.05] tracking-tight "
+            style={{ color: "var(--fg-primary)" }}
           >
             Programs built to &nbsp;
             <span style={{ color: "var(--brand-green-dark)" }}>
@@ -206,7 +204,7 @@ export default function ProgramsShowcase() {
           </h2>
 
           <p
-            className="max-w-full text-left text-lg leading-[1.7] md:text-right"
+            className="max-w-full text-left text-lg md:text-xl leading-[1.7] md:text-right font-medium"
             style={{ color: "var(--fg-muted)" }}
           >
             Learn from industry veterans. Earn credentials that open doors.
@@ -232,7 +230,7 @@ export default function ProgramsShowcase() {
                   tabRefs.current[i] = node;
                 }}
                 onClick={() => goTo(i)}
-                className="relative flex-shrink-0 snap-center border-none bg-transparent px-4 sm:px-5 pb-[11px] pt-[13px] text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] uppercase tracking-[0.12em] transition-colors duration-200"
+                className="relative flex-shrink-0 snap-center border-none bg-transparent px-4 sm:px-5 pb-[11px] pt-[13px] text-[10px] sm:text-[clamp(0.8rem,1vw,1.5rem)] uppercase tracking-[0.12em] transition-colors duration-200 hover:font-bold"
                 style={{
                   borderRight: "1px solid var(--border)",
                   color:
@@ -352,12 +350,13 @@ export default function ProgramsShowcase() {
             </div>
 
             <button
-              className="mt-8 w-full cursor-pointer rounded-lg border-none px-5 py-[11px] text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] font-bold uppercase tracking-[0.16em] transition-colors duration-200 bg-[var(--brand-green)] text-[#0d1117] hover:bg-[var(--brand-green-dark)] hover:text-white"
+              className="flex gap-8 justify-center mt-8 w-full cursor-pointer rounded-full border-none px-5 py-[11px] text-[10px] sm:text-[clamp(0.7rem,0.8vw,1rem)] font-bold uppercase tracking-[0.16em] transition-colors duration-200 bg-[var(--brand-green)] text-[#0d1117] hover:bg-[var(--brand-green-dark)] hover:text-white"
               style={{
                 fontFamily: "inherit",
               }}
             >
-              Explore Program →
+              Explore Program
+              <MoveRight size={16} />
             </button>
           </motion.div>
 
@@ -372,7 +371,7 @@ export default function ProgramsShowcase() {
             }}
           >
             <p
-              className="mb-3 text-[clamp(0.6rem,0.75vw,0.7rem)] uppercase tracking-[0.18em]"
+              className="mb-3 text-[clamp(0.7rem,0.85vw,1rem)] uppercase tracking-[0.18em]"
               style={{ color: "var(--fg-muted)" }}
             >
               Curriculum stack
@@ -382,7 +381,7 @@ export default function ProgramsShowcase() {
               {p.stack.map((t) => (
                 <span
                   key={t}
-                  className="rounded-md px-3 py-[5px] text-[10px] sm:text-[clamp(0.6rem,0.75vw,0.7rem)] tracking-[0.04em]"
+                  className="rounded-md px-3 py-[5px]  text-[clamp(0.7rem,0.85vw,1rem)] tracking-[0.04em]"
                   style={{
                     border: "1px solid var(--border)",
                     color: "var(--fg-secondary)",
@@ -430,14 +429,14 @@ export default function ProgramsShowcase() {
               aria-label="Previous program"
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border text-sm transition-all duration-200 bg-[var(--bg-card)] border-[var(--border)] text-[var(--fg-muted)] hover:bg-[var(--brand-green-glow)] hover:border-[var(--brand-green)] hover:text-[var(--brand-green-dark)]"
             >
-              ←
+              <MoveLeft size={16} />
             </button>
             <button
               onClick={next}
               aria-label="Next program"
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border text-sm transition-all duration-200 bg-[var(--bg-card)] border-[var(--border)] text-[var(--fg-muted)] hover:bg-[var(--brand-green-glow)] hover:border-[var(--brand-green)] hover:text-[var(--brand-green-dark)]"
             >
-              →
+              <MoveRight size={16} />
             </button>
           </div>
         </motion.div>

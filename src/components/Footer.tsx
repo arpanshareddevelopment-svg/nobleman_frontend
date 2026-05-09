@@ -156,21 +156,24 @@ export default function Footer() {
         style={{
           background: isDark
             ? `
-              linear-gradient(
-                180deg,
-                rgba(2,6,23,0) 0%,
-                #020617 18%,
-                #000000 100%
-              )
-            `
+    linear-gradient(
+      180deg,
+      rgba(2,6,23,0) 0%,
+      #020617 18%,
+      #000000 100%
+    )
+  `
             : `
-              linear-gradient(
-                180deg,
-                #f8fbff 0%,
-                #f4f8ff 40%,
-                #ffffff 100%
-              )
-            `,
+    radial-gradient(circle at 15% 20%, rgba(46,168,255,0.10), transparent 28%),
+    radial-gradient(circle at 82% 75%, rgba(255,208,64,0.10), transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(132,255,61,0.08), transparent 38%),
+    linear-gradient(
+      180deg,
+      #f8fbff 0%,
+      #eef5ff 42%,
+      #edf7f1 100%
+    )
+  `,
         }}
       />
 
@@ -185,8 +188,8 @@ export default function Footer() {
               linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)
             `
             : `
-              linear-gradient(rgba(15,23,42,0.08) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(15,23,42,0.08) 1px, transparent 1px)
+              linear-gradient(rgba(15, 23, 42, 0.77) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(15, 23, 42, 0.88) 1px, transparent 1px)
             `,
           backgroundSize: "44px 44px",
         }}

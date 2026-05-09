@@ -180,7 +180,7 @@ export default function Testimonials() {
           className="mb-20 text-center"
         >
           <h2
-            className="text-4xl md:text-5xl font-black mb-5"
+            className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black mb-5"
             style={{
               color: isDark ? "white" : "#0f172a",
             }}

@@ -1,14 +1,14 @@
 "use client";
 import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import MissionStatement from "../components/MissionStatement";
-import InstructorCarousel from "../components/InstructorCarousel";
-import ProgramsShowcase from "../components/ProgramsShowcase";
-import CertificationsShowcase from "../components/CertificationsShowcase";
-import PlacementStats from "../components/PlacementStats";
-import WhyNobleMaLearning from "../components/WhyNobleManLearning";
-import Testimonials from "../components/Testimonials";
-import ValuesSection from "../components/ValuesSection";
+import Hero from "../components/client/Hero";
+import MissionStatement from "../components/client/MissionStatement";
+import InstructorCarousel from "../components/client/InstructorCarousel";
+import ProgramsShowcase from "../components/client/ProgramsShowcase";
+import CertificationsShowcase from "../components/client/CertificationsShowcase";
+import PlacementStats from "../components/client/PlacementStats";
+import WhyNobleMaLearning from "../components/client/WhyNobleManLearning";
+import Testimonials from "../components/client/Testimonials";
+import ValuesSection from "../components/client/ValuesSection";
 import Footer from "../components/Footer";
 
 export default function Home() {

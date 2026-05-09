@@ -414,19 +414,30 @@ export default function PlacementSection() {
         >
           <CircularProgress trigger={inView} isDark={isDark} />
 
-          <div className="max-w-lg">
-            <h3
-              className="text-3xl md:text-4xl font-black leading-tight text-white"
+          <div className="max-w-full">
+            <h2
+              className="text-[clamp(2rem,3.2vw,3.5rem)] font-black leading-tight text-white"
               style={{ color: "var(--fg-primary)" }}
             >
               91% of our graduates <br />
-              <span className="text-[var(--brand-blue-light)]">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: isDark
+                    ? "linear-gradient(120deg, #84ff3d 0%, #c8ff74 60%, #55c9ff 100%)"
+                    : "linear-gradient(120deg, #52d84f 0%, #8ee85f 55%, #2ea8ff 100%)",
+
+                  filter: isDark
+                    ? "none"
+                    : "drop-shadow(0 0 10px rgba(82,216,79,0.18))",
+                }}
+              >
                 are placed at top companies
               </span>
-            </h3>
+            </h2>
 
             <p
-              className="mt-4 text-white/60"
+              className="mt-4 text-lg font-medium"
               style={{ color: "var(--fg-secondary)" }}
             >
               Join a network of 400+ hiring partners across industries.
@@ -457,7 +468,7 @@ export default function PlacementSection() {
 
           <div className="hidden md:grid grid-cols-4 gap-4 h-[400px]">
             {columns.map((columnItems, colIndex) => (
-              <div key={colIndex} className="relative overflow-hidden">
+              <div key={colIndex} className="relative overflow-visible py-2">
                 <motion.div
                   animate={{
                     y: colIndex % 2 === 0 ? ["0%", "-50%"] : ["-50%", "0%"],
@@ -470,16 +481,54 @@ export default function PlacementSection() {
                   className="flex flex-col will-change-transform"
                 >
                   {[0, 1].map((groupIndex) => (
-                    <div key={groupIndex} className="flex flex-col gap-3">
+                    <div key={groupIndex} className="flex flex-col gap-5 py-2">
                       {columnItems.map((c, i) => (
                         <motion.div
                           key={`${groupIndex}-${i}`}
                           initial={{ opacity: 0, y: 10 }}
                           animate={
-                            inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }
+                            inView
+                              ? { opacity: 1, y: 0 }
+                              : { opacity: 0, y: 10 }
                           }
                           transition={{ duration: 0.35, delay: (i % 4) * 0.04 }}
-                          className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:-translate-y-1 will-change-transform"
+                          style={{
+                            background: isDark
+                              ? `
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,0.06) 0%,
+        rgba(255,255,255,0.03) 100%
+      )
+    `
+                              : `
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,0.52) 0%,
+        rgba(255,255,255,0.28) 45%,
+        rgba(240,248,255,0.22) 100%
+      )
+    `,
+
+                            border: isDark
+                              ? "1px solid rgba(255,255,255,0.08)"
+                              : "1px solid rgba(255,255,255,0.55)",
+
+                            backdropFilter: "blur(18px)",
+                            WebkitBackdropFilter: "blur(18px)",
+
+                            boxShadow: isDark
+                              ? `
+      0 8px 24px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.06)
+    `
+                              : `
+      0 10px 28px rgba(120,140,180,0.10),
+      0 2px 8px rgba(0,0,0,0.04),
+      inset 0 1px 0 rgba(255,255,255,0.85)
+    `,
+                          }}
                         >
                           <Image
                             src={c.logo}
@@ -535,10 +584,15 @@ export default function PlacementSection() {
                             key={`${group}-${i}`}
                             initial={{ opacity: 0, y: 8 }}
                             animate={
-                              inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }
+                              inView
+                                ? { opacity: 1, y: 0 }
+                                : { opacity: 0, y: 8 }
                             }
-                            transition={{ duration: 0.3, delay: (i % 5) * 0.03 }}
-                            className="flex w-[220px] flex-shrink-0 items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                            transition={{
+                              duration: 0.3,
+                              delay: (i % 5) * 0.03,
+                            }}
+                            className="flex w-[220px] flex-shrink-0 items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300"
                           >
                             <Image
                               src={c.logo}

@@ -21,8 +21,6 @@ type Slide = {
   titleBottom: string;
   summary: string;
   cta: string;
-  gradient: [string, string];
-  lightGradient: [string, string];
   solid: string;
   highlight: OrbKey;
 };
@@ -91,11 +89,6 @@ const SLIDES: Slide[] = [
       "Live cohorts, real projects, and focused placement support for outcome-driven learners.",
     cta: "Explore programs",
 
-    gradient: ["#2ea8ff", "#7ed8ff"],
-
-    // LIGHT MODE
-    lightGradient: ["#1da1ff", "#5ecbff"],
-
     solid: "#2ea8ff",
     highlight: "careers",
   },
@@ -109,11 +102,6 @@ const SLIDES: Slide[] = [
       "Structured practice, direct feedback, and interview prep that keep progress visible.",
     cta: "Meet mentors",
 
-    gradient: ["#84ff3d", "#c8ff74"],
-
-    // LIGHT MODE
-    lightGradient: ["#52e05f", "#9cff57"],
-
     solid: "#84ff3d",
     highlight: "support",
   },
@@ -126,11 +114,6 @@ const SLIDES: Slide[] = [
     summary:
       "Referrals, mock interviews, and partner access designed to keep the offer pipeline moving.",
     cta: "See outcomes",
-
-    gradient: ["#ffcf33", "#ffe98a"],
-
-    // LIGHT MODE
-    lightGradient: ["#ffbf1f", "#fff06a"],
 
     solid: "#ffcf33",
     highlight: "partners",
@@ -283,12 +266,12 @@ function FloatingOrb({
         rgba(255,255,255,0.02) 35%,
         #080c12 60%,
         #020406 100%)`
-    : `radial-gradient(circle at 35% 32%,
-        rgba(255,255,255,0.95) 0%,
-        rgba(255,255,255,0.80) 35%,
-        rgba(220,230,245,0.70) 65%,
-        rgba(200,215,235,0.55) 100%)`;
-
+    : `radial-gradient(circle at 35% 28%,
+    rgba(255,255,255,0.96) 0%,
+    rgba(248,250,255,0.92) 22%,
+    rgba(220,228,240,0.88) 52%,
+    rgba(185,198,220,0.82) 78%,
+    rgba(155,172,198,0.74) 100%)`;
   const activeBoxShadow = isDark
     ? `0 0 60px 18px ${g0}50,
        0 0 120px 40px ${g0}22,
@@ -304,20 +287,19 @@ function FloatingOrb({
     ? `0 0 28px 4px rgba(255,255,255,0.05),
        0 0 0 1.5px rgba(255,255,255,0.10),
        inset 0 0 40px 10px #000000bb`
-    : `0 4px 24px rgba(0,0,0,0.10),
-       0 0 0 1.5px rgba(180,200,230,0.55),
-       inset 0 2px 8px rgba(255,255,255,0.7)`;
+    : `0 18px 40px rgba(120,140,170,0.18),
+   0 4px 18px rgba(80,100,130,0.10),
+   0 0 0 1.5px rgba(170,190,220,0.72),
+   inset 0 2px 10px rgba(255,255,255,0.92),
+   inset 0 -10px 24px rgba(120,140,170,0.10)`;
 
   // ── Text colours depend on theme + active state
-  // Dark + active  → white text with neon glow
-  // Light + active → near-black text (sphere is bright colored)
-  // Dark + inactive → muted white
-  // Light + inactive → medium dark
+
   const valueColor = active
     ? "#0d1117"
     : isDark
       ? "rgba(255,255,255,0.52)"
-      : "rgba(40,55,80,0.65)";
+      : "var(--orb-inactive-value)";
 
   const valueShadow = active
     ? isDark
@@ -329,7 +311,7 @@ function FloatingOrb({
     ? "#0d1117bb"
     : isDark
       ? "rgba(255,255,255,0.32)"
-      : "rgba(40,55,80,0.42)";
+      : "var(--orb-inactive-label)";
 
   const labelShadow = active && isDark ? `0 0 8px ${g0}88` : "none";
 
@@ -518,9 +500,7 @@ function OrbCluster({
       <div
         className="absolute inset-[18%] rounded-full backdrop-blur-2xl"
         style={{
-          border: isDark
-            ? "1px dashed rgba(255,255,255,0.22)"
-            : "1px dashed rgba(0,0,0,0.12)",
+          border: "1px dashed var(--hero-orbit-border)",
         }}
       />
 
@@ -590,24 +570,35 @@ export default function Hero() {
       () => setActiveIndex((c) => (c + 1) % SLIDES.length),
       5600,
     );
+
     return () => window.clearInterval(id);
   }, []);
+
   const slide = SLIDES[activeIndex];
+
+  const gradientMap = {
+    blue: isDark ? ["#2ea8ff", "#7ed8ff"] : ["#1da1ff", "#5ecbff"],
+
+    green: isDark ? ["#84ff3d", "#c8ff74"] : ["#32d74b", "#7dff5a"],
+
+    yellow: isDark ? ["#ffcf33", "#ffe98a"] : ["#ffb000", "#ffe14d"],
+  } as const;
+
+  const currentGradient = gradientMap[slide.id];
+
   const scrambledBottom = useScrambleText(slide.titleBottom, 35);
+
   const accent = MENTOR_ACCENT[slide.id][isDark ? "dark" : "light"];
-  // Don't render anything until client hydration is done
+
   if (!mounted) {
     return (
       <section
         id="home"
         className="relative isolate overflow-hidden py-10 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
         style={{
-          background:
-            "linear-gradient(135deg, #f3f8ff 0%, #edf5ff 30%, #f8fbff 55%, #eef9f4 100%)",
+          background: "var(--hero-bg)",
         }}
-      >
-        {/* Empty placeholder - no theme-dependent content */}
-      </section>
+      />
     );
   }
 
@@ -616,39 +607,29 @@ export default function Hero() {
       id="home"
       className="relative isolate overflow-hidden py-0 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
       style={{
-        background: isDark
-          ? "linear-gradient(135deg, #06182b 0%, #02040a 52%, #000000 100%)"
-          : "linear-gradient(135deg, #f3f8ff 0%, #edf5ff 30%, #f8fbff 55%, #eef9f4 100%)",
+        background: "var(--hero-bg)",
       }}
     >
       {/* Ambient blobs */}
       <div
         className="absolute inset-0 -z-20"
         style={{
-          background: isDark
-            ? `
-    radial-gradient(circle at top left,
-      rgba(85,201,255,0.16),
-      transparent 26%),
-    radial-gradient(circle at bottom right,
-      rgba(123,245,111,0.10),
-      transparent 24%)
-  `
-            : `
-    radial-gradient(circle at 12% 18%,
-      rgba(46,168,255,0.22),
-      transparent 28%),
+          background: `
+            radial-gradient(circle at 12% 18%,
+              var(--hero-ambient-1),
+              transparent 30%),
 
-    radial-gradient(circle at 88% 82%,
-      rgba(132,255,61,0.18),
-      transparent 30%),
+            radial-gradient(circle at 88% 82%,
+              var(--hero-ambient-2),
+              transparent 32%),
 
-    radial-gradient(circle at 70% 25%,
-      rgba(255,207,51,0.14),
-      transparent 22%)
-  `,
+            radial-gradient(circle at 70% 25%,
+              var(--hero-ambient-3),
+              transparent 24%)
+          `,
         }}
       />
+
       <div
         className="absolute inset-0 opacity-[0.035] mix-blend-multiply pointer-events-none"
         style={{
@@ -656,13 +637,13 @@ export default function Hero() {
             "url('https://grainy-gradients.vercel.app/noise.svg')",
         }}
       />
+
       {/* Dot grid */}
       <div
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `radial-gradient(circle, ${
-            isDark ? "rgba(255,255,255,0.35)" : "rgba(120,140,180,0.32)"
-          } 1px, transparent 1px)`,
+          backgroundImage:
+            "radial-gradient(circle, var(--grid-dot) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
           maskImage:
             "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.92) 58%, transparent 100%)",
@@ -675,28 +656,28 @@ export default function Hero() {
       <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-white/70 to-transparent dark:from-transparent" />
 
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-6 md:px-10 lg:grid-cols-[1.4fr_0.6fr] lg:gap-6 xl:px-14">
-        {/* ── Left column ── */}
+        {/* LEFT */}
         <div className="relative w-full min-w-0">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={slide.id}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[2rem] p-6 md:p-8 lg:p-9 xl:py-10"
-            >
+            <div className="rounded-[2rem] p-6 md:p-8 lg:p-9 xl:py-10">
               {/* Tag */}
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className="rounded-full border px-3 py-1 mt-16 text-[11px] font-semibold tracking-[0.28em] uppercase"
+                  className="rounded-full px-4 py-1.5 mt-16 text-[11px] font-semibold tracking-[0.28em]  uppercase transition-all duration-300"
                   style={{
-                    borderColor: isDark
-                      ? "rgba(255,255,255,0.15)"
-                      : "rgba(0,0,0,0.12)",
-                    color: isDark
-                      ? "rgba(255,255,255,0.55)"
-                      : "rgba(30,40,60,0.65)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+
+                    color: "var(--hero-tag-text)",
+
+                    background: "var(--hero-tag-bg)",
+
+                    boxShadow: `
+    5px 5px 12px rgba(0,0,0,0.10),
+    -3px -3px 8px rgba(255,255,255,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.16)
+  `,
+
+                    backdropFilter: "blur(12px)",
                   }}
                 >
                   Live cohorts
@@ -710,17 +691,22 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.4, delay: 0.04 }}
-                className="mt-6 font-black leading-[1.05] tracking-tight text-[clamp(2rem,3.2vw,4.5rem)]"
-                style={{ color: isDark ? "#ffffff" : "#0d1117" }}
+                className="mt-6 font-black leading-[1.05] tracking-tight text-[clamp(2rem,3.2vw,5rem)]"
+                style={{
+                  color: "var(--hero-title)",
+                  textShadow: "var(--hero-title-shadow)",
+                }}
               >
                 <span>{slide.titleTop}</span>
                 &nbsp;
                 <span
                   className="bg-clip-text text-transparent"
                   style={{
-                    backgroundImage: `linear-gradient(135deg, ${
-                      isDark ? slide.gradient[0] : slide.lightGradient[0]
-                    } 0%, ${isDark ? slide.gradient[1] : slide.lightGradient[1]} 100%)`,
+                    backgroundImage: `linear-gradient(
+                      135deg,
+                      ${currentGradient[0]} 0%,
+                      ${currentGradient[1]} 100%
+                    )`,
                   }}
                 >
                   {scrambledBottom}
@@ -731,21 +717,29 @@ export default function Hero() {
               <div
                 className="relative mt-6 inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-500 overflow-hidden"
                 style={{
-                  border: `1px solid ${accent.border}`,
-                  background: isDark
-                    ? "rgba(255,255,255,0.06)"
-                    : "rgba(255, 255, 255, 0.44)",
-                  backdropFilter: "blur(16px)",
-                  boxShadow: `0 0 0 1px ${accent.text}18, 0 4px 28px ${accent.text}40, inset 0 1px 0 rgba(255,255,255,0.12)`,
+                  background: "var(--mentor-bg)",
+                  border: `1px solid ${
+                    isDark ? accent.border : "var(--mentor-border)"
+                  }`,
+                  boxShadow: isDark
+                    ? `0 0 0 1px ${accent.text}18,
+                       0 4px 28px ${accent.text}40,
+                       inset 0 1px 0 rgba(255,255,255,0.12)`
+                    : "var(--mentor-shadow)",
                 }}
               >
-                {/* Top shimmer */}
                 <div
                   className="absolute inset-x-0 top-0 h-px pointer-events-none"
                   style={{
-                    background: `linear-gradient(90deg, transparent 10%, ${accent.text}99 50%, transparent 90%)`,
+                    background: `linear-gradient(
+                      90deg,
+                      transparent 10%,
+                      ${accent.text}99 50%,
+                      transparent 90%
+                    )`,
                   }}
                 />
+
                 <Sparkles
                   size={18}
                   style={{
@@ -754,6 +748,7 @@ export default function Hero() {
                     flexShrink: 0,
                   }}
                 />
+
                 <span
                   className="text-sm font-semibold md:text-[1.02rem] bg-clip-text text-transparent"
                   style={{
@@ -773,11 +768,9 @@ export default function Hero() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3, delay: 0.08 }}
-                className="mt-5 max-w-[34rem] text-base leading-8 md:text-[1.05rem]"
+                className="mt-5 max-w-full text-base font-medium leading-8 md:text-xl"
                 style={{
-                  color: isDark
-                    ? "rgba(255,255,255,0.62)"
-                    : "rgba(30,40,60,0.70)",
+                  color: "var(--hero-summary)",
                 }}
               >
                 {slide.summary}
@@ -787,11 +780,25 @@ export default function Hero() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href="#programs"
-                  className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-transform duration-200 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-200 hover:-translate-y-[2px] hover:scale-[1.01] active:translate-y-[1px]"
                   style={{
-                    background: `linear-gradient(135deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 100%)`,
+                    background: `linear-gradient(
+    135deg,
+    ${currentGradient[0]} 0%,
+    ${currentGradient[1]} 100%
+  )`,
+
                     color: "#0d1117",
-                    boxShadow: `0 18px 38px ${slide.gradient[0]}44`,
+
+                    border: "1px solid rgba(255,255,255,0.08)",
+
+                    boxShadow: `
+    8px 8px 18px rgba(0,0,0,0.16),
+    -4px -4px 12px rgba(255,255,255,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.18)
+  `,
+
+                    backdropFilter: "blur(12px)",
                   }}
                 >
                   {slide.cta}
@@ -799,7 +806,7 @@ export default function Hero() {
                 </a>
               </div>
 
-              {/* Slide dots */}
+              {/* Dots */}
               <div className="mt-8 flex items-center gap-2">
                 {SLIDES.map((item, index) => (
                   <button
@@ -811,28 +818,32 @@ export default function Hero() {
                     style={{
                       width: index === activeIndex ? 24 : 8,
                       height: 8,
+
                       background:
                         index === activeIndex
-                          ? `linear-gradient(135deg, ${slide.gradient[0]} 0%, ${slide.gradient[1]} 100%)`
-                          : isDark
-                            ? "rgba(255,255,255,0.18)"
-                            : "rgba(0,0,0,0.18)",
+                          ? `linear-gradient(
+                              135deg,
+                              ${currentGradient[0]} 0%,
+                              ${currentGradient[1]} 100%
+                            )`
+                          : "var(--hero-dot-inactive)",
+
                       boxShadow:
                         index === activeIndex
-                          ? `0 0 18px ${slide.gradient[0]}66`
+                          ? `0 0 18px ${currentGradient[0]}66`
                           : "none",
+
                       opacity: index === activeIndex ? 1 : 0.4,
                     }}
                   />
                 ))}
               </div>
-            </motion.div>
+            </div>
           </AnimatePresence>
         </div>
 
-        {/* ── Right column ── */}
+        {/* RIGHT */}
         <div className="relative flex items-center justify-center">
-          {/* Background halo behind cluster */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`${slide.id}-halo`}
@@ -843,14 +854,31 @@ export default function Hero() {
               className="absolute inset-0 rounded-[2.5rem]"
               style={{
                 background: isDark
-                  ? `radial-gradient(circle at center, ${slide.gradient[0]}18 0%, ${slide.gradient[1]}10 42%, transparent 72%)`
-                  : `radial-gradient(circle at center, ${slide.gradient[0]}55 0%, ${slide.gradient[1]}18 45%, transparent 75%)`,
+                  ? `radial-gradient(
+                      circle at center,
+                      ${currentGradient[0]}18 0%,
+                      ${currentGradient[1]}10 42%,
+                      transparent 72%
+                    )`
+                  : `radial-gradient(
+                      circle at center,
+                      ${currentGradient[0]}55 0%,
+                      ${currentGradient[1]}18 45%,
+                      transparent 75%
+                    )`,
               }}
             />
           </AnimatePresence>
 
           <div className="relative w-full max-w-[540px] aspect-square rounded-[2.5rem] p-4 sm:p-6">
-            <OrbCluster slide={slide} isDark={isDark} mounted={mounted} />
+            <OrbCluster
+              slide={{
+                ...slide,
+                gradient: currentGradient,
+              }}
+              isDark={isDark}
+              mounted={mounted}
+            />
           </div>
         </div>
       </div>
@@ -858,7 +886,9 @@ export default function Hero() {
       {/* Bottom fade */}
       <div
         className="absolute inset-x-0 bottom-0 h-32 -z-10 bg-gradient-to-t to-transparent"
-        style={{ from: isDark ? "#000000" : "#ffffff" } as CSSProperties}
+        style={{
+          background: "linear-gradient(to top, var(--bg-page), transparent)",
+        }}
       />
     </section>
   );

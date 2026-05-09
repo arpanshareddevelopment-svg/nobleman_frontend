@@ -509,8 +509,11 @@ export default function Navbar({
     if (isMobile) return;
     isInsideNav.current = false;
     if (isAtTop) return;
-    const rel = e.relatedTarget as Node | null;
-    if (navRef.current && rel && navRef.current.contains(rel)) return;
+   const rel = e.relatedTarget;
+
+   if (navRef.current && rel instanceof Node && navRef.current.contains(rel)) {
+     return;
+   }
     setHovered(false);
     setClickedOpen(false);
   }
@@ -624,7 +627,7 @@ export default function Navbar({
               ? `${sectionColor.color}40`
               : sectionColor.color,
             overflow: "visible",
-            paddingLeft: isOpen ? 8 : 0,
+            paddingLeft:0,
             paddingRight: isOpen ? 8 : 0,
             cursor: !isAtTop ? "pointer" : "default",
             transition: "border-color 0.6s ease, box-shadow 0.6s ease",
