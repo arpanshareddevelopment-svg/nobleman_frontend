@@ -34,27 +34,43 @@ const CERTIFICATIONS = [
 ];
 
 function useThemeMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
     const update = () => setIsDark(root.classList.contains("dark"));
     update();
+    setMounted(true);
     const observer = new MutationObserver(update);
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  return isDark;
+  return { isDark, mounted };
 }
 
 export default function CertificationsShowcase() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-  const isDark = useThemeMode();
+  const { isDark, mounted } = useThemeMode();
+
+  // Early return placeholder to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <section
+        id="certifications"
+        ref={ref}
+        className="relative w-full overflow-hidden py-12 md:py-28"
+        style={{
+          background:
+            "linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
+        }}
+      >
+        {/* Placeholder - invisible until hydrated */}
+      </section>
+    );
+  }
 
   return (
     <section

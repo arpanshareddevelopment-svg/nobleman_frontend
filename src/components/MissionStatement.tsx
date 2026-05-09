@@ -31,7 +31,7 @@ function useThemeMode() {
 export default function MissionStatement() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-const { isDark } = useThemeMode();
+const  isDark  = useThemeMode();
 
 
 

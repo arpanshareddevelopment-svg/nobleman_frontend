@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
-
 type Company = {
   name: string;
   role: string;
@@ -108,24 +107,29 @@ const COMPANIES: Company[] = [
 ];
 
 function useThemeMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
     const update = () => setIsDark(root.classList.contains("dark"));
     update();
+    setMounted(true);
     const observer = new MutationObserver(update);
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  return isDark;
+  return { isDark, mounted };
 }
 
-function CircularProgress({ trigger, isDark }: { trigger: boolean; isDark: boolean }) {
+function CircularProgress({
+  trigger,
+  isDark,
+}: {
+  trigger: boolean;
+  isDark: boolean;
+}) {
   const radius = 102;
   const circumference = 2 * Math.PI * radius;
   const [progress, setProgress] = useState(0);
@@ -227,6 +231,7 @@ function CircularProgress({ trigger, isDark }: { trigger: boolean; isDark: boole
           strokeWidth="0.8"
           strokeOpacity={isDark ? 0.5 : 0.35}
         />
+
         {/* wide halo glow */}
         <circle
           cx="130"
@@ -301,7 +306,7 @@ function CircularProgress({ trigger, isDark }: { trigger: boolean; isDark: boole
           className="font-black leading-none"
           style={{
             fontSize: 48,
-            color: "#00e5ff" ,
+            color: "#00e5ff",
             textShadow: isDark
               ? "0 0 18px rgba(0,220,255,0.7), 0 0 40px rgba(0,180,255,0.35)"
               : "0 0 8px rgba(82,216,79,0.06)",
@@ -335,10 +340,27 @@ function CircularProgress({ trigger, isDark }: { trigger: boolean; isDark: boole
     </div>
   );
 }
+
 export default function PlacementSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { margin: "-100px" });
-  const isDark = useThemeMode();
+  const { isDark, mounted } = useThemeMode();
+
+  // Early return placeholder to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <section
+        id="placement"
+        ref={ref}
+        className="relative py-12 md:py-28 overflow-hidden isolate"
+        style={{
+          background: "linear-gradient(180deg, transparent 0%, #ffffff 100%)",
+        }}
+      >
+        {/* Placeholder - invisible until hydrated */}
+      </section>
+    );
+  }
 
   /*  columns logic OUTSIDE map */
   const columns: Company[][] = Array.from({ length: 4 }, () => []);
@@ -371,6 +393,7 @@ export default function PlacementSection() {
           `,
         }}
       />
+
       {/* grid */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
@@ -472,6 +495,7 @@ export default function PlacementSection() {
               </div>
             ))}
           </div>
+
           <div className="md:hidden flex flex-col gap-3 overflow-hidden">
             {Array.from({ length: 4 }).map((_, rowIndex) => {
               const rowItems = COMPANIES.slice(rowIndex * 5, rowIndex * 5 + 5);
@@ -505,11 +529,21 @@ export default function PlacementSection() {
                             />
 
                             <div>
-                              <p className="text-sm font-semibold text-white">
+                              <p
+                                className="text-sm font-semibold"
+                                style={{ color: "var(--fg-primary)" }}
+                              >
                                 {c.name}
                               </p>
 
-                              <p className="text-xs text-white/50">{c.role}</p>
+                              <p
+                                className="text-xs"
+                                style={{
+                                  color: "var(--fg-secondary)",
+                                }}
+                              >
+                                {c.role}
+                              </p>
                             </div>
                           </div>
                         ))}

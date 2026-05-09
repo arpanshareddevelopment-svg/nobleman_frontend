@@ -39,10 +39,8 @@ export default function Testimonials() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -52,6 +50,7 @@ export default function Testimonials() {
     };
 
     update();
+    setMounted(true);
 
     const observer = new MutationObserver(update);
 
@@ -62,6 +61,23 @@ export default function Testimonials() {
 
     return () => observer.disconnect();
   }, []);
+
+  // Early return placeholder to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <section
+        id="testimonials"
+        ref={ref}
+        className="relative overflow-hidden isolate py-14 md:py-28"
+        style={{
+          background:
+            "linear-gradient(160deg, #f8fbff 0%, #f4f8ff 35%, #ffffff 100%)",
+        }}
+      >
+        {/* Placeholder - invisible until hydrated */}
+      </section>
+    );
+  }
 
   return (
     <section

@@ -536,7 +536,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative isolate overflow-hidden py-10 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
+      className="relative isolate overflow-hidden py-0 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
       style={{
         background: isDark
           ? "linear-gradient(135deg, #06182b 0%, #02040a 52%, #000000 100%)"

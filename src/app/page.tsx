@@ -1,6 +1,5 @@
 "use client";
 import Navbar from "../components/Navbar";
-import Avatar from "../components/Avatar";
 import Hero from "../components/Hero";
 import MissionStatement from "../components/MissionStatement";
 import InstructorCarousel from "../components/InstructorCarousel";
@@ -16,7 +15,6 @@ export default function Home() {
   return (
     <div id="home" className="page-bg min-h-screen">
       <Navbar />
-      <Avatar hidden={false} />
 
       <main>
         <Hero />
