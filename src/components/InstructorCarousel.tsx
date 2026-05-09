@@ -257,16 +257,16 @@ export default function InstructorCarousel() {
     [total],
   );
 
-useEffect(() => {
-  // Only start if mounted
-  if (!mounted) return;
+  useEffect(() => {
+    // Only start if mounted
+    if (!mounted) return;
 
-  const id = setInterval(() => {
-    if (!paused) advance(1);
-  }, 5000);
+    const id = setInterval(() => {
+      if (!paused) advance(1);
+    }, 5000);
 
-  return () => clearInterval(id);
-}, [paused, advance, mounted]);
+    return () => clearInterval(id);
+  }, [paused, advance, mounted]);
 
   function select(i: number) {
     setActive(i);
@@ -486,15 +486,35 @@ useEffect(() => {
                 />
 
                 {/* Gradient overlay — bottom fade */}
+                {/* Cinematic readability overlay */}
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: `linear-gradient(
-                    to top,
-                    ${displayInst.accentDark}ee 0%,
-                    ${displayInst.accent}08 45%,
-                    transparent 70%
-                  )`,
+                    background: `
+      linear-gradient(
+        to top,
+        rgba(0,0,0,0.92) 0%,
+        rgba(0,0,0,0.72) 18%,
+        rgba(0,0,0,0.38) 38%,
+        rgba(0,0,0,0.10) 58%,
+        transparent 78%
+      )
+    `,
+                  }}
+                />
+
+                {/* subtle accent tint */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `
+      linear-gradient(
+        to top,
+        ${displayInst.accentDark}44 0%,
+        transparent 45%
+      )
+    `,
+                    mixBlendMode: "screen",
                   }}
                 />
 

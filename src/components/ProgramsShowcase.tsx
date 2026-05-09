@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, useInView } from "framer-motion";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 const PROGRAMS = [
@@ -103,23 +104,26 @@ export default function ProgramsShowcase() {
     startTimers();
     return clearTimers;
   }, [startTimers]);
-const navRef = useRef<HTMLElement | null>(null);
- useEffect(() => {
-   if (!window.matchMedia("(max-width: 767px)").matches) return;
+  const navRef = useRef<HTMLElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(sectionRef, { once: false, margin: "-120px" });
 
-   const container = navRef.current;
-   const tab = tabRefs.current[active];
+  useEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
 
-   if (!container || !tab) return;
+    const container = navRef.current;
+    const tab = tabRefs.current[active];
 
-   const left =
-     tab.offsetLeft - container.clientWidth / 2 + tab.clientWidth / 2;
+    if (!container || !tab) return;
 
-   container.scrollTo({
-     left,
-     behavior: "smooth",
-   });
- }, [active]);
+    const left =
+      tab.offsetLeft - container.clientWidth / 2 + tab.clientWidth / 2;
+
+    container.scrollTo({
+      left,
+      behavior: "smooth",
+    });
+  }, [active]);
 
   const goTo = (i: number) => {
     setActive(i);
@@ -135,6 +139,7 @@ const navRef = useRef<HTMLElement | null>(null);
   return (
     <section
       id="programs"
+      ref={sectionRef}
       className="relative overflow-hidden py-12 lg:py-20 text-[var(--fg-primary)] [font-family:'Space_Grotesk',sans-serif]"
       style={{ background: "var(--bg-page)" }}
     >
@@ -166,7 +171,10 @@ const navRef = useRef<HTMLElement | null>(null);
 
       <div className="relative mx-auto max-w-[1060px] px-4 sm:px-6 lg:px-9">
         {/* Eyebrow */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: 0.4 }}
           className="mb-5 flex items-center gap-3 text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] uppercase tracking-[0.2em]"
           style={{ color: "var(--brand-green-dark)" }}
         >
@@ -175,10 +183,15 @@ const navRef = useRef<HTMLElement | null>(null);
             style={{ background: "var(--brand-green)" }}
           />
           Career Accelerators
-        </div>
+        </motion.div>
 
         {/* Header */}
-        <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end md:gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.45, delay: 0.06 }}
+          className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end md:gap-5"
+        >
           <h2
             className="font-normal leading-[1.08] tracking-[-0.02em]"
             style={{
@@ -198,7 +211,7 @@ const navRef = useRef<HTMLElement | null>(null);
           >
             Learn from industry veterans. Earn credentials that open doors.
           </p>
-        </div>
+        </motion.div>
 
         {/* Tabs */}
         <div className="relative">
@@ -244,7 +257,10 @@ const navRef = useRef<HTMLElement | null>(null);
           </nav>
         </div>
         {/* Grid */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          transition={{ duration: 0.45, delay: 0.1 }}
           className="grid overflow-hidden rounded-2xl grid-cols-1 lg:grid-cols-2"
           style={{
             gap: "1px",
@@ -254,7 +270,10 @@ const navRef = useRef<HTMLElement | null>(null);
           }}
         >
           {/* Cell 1 */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, x: -18 }}
+            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -18 }}
+            transition={{ duration: 0.45, delay: 0.15 }}
             className="p-7 sm:p-8 lg:col-start-1 lg:row-start-1 lg:p-10"
             style={{
               background: "var(--bg-page)",
@@ -283,10 +302,13 @@ const navRef = useRef<HTMLElement | null>(null);
             >
               {p.desc}
             </p>
-          </div>
+          </motion.div>
 
           {/* Cell 2 */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, x: 18 }}
+            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 18 }}
+            transition={{ duration: 0.45, delay: 0.2 }}
             className="flex flex-col justify-between p-6 sm:p-7 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:border-l lg:border-t-0 lg:p-9 border-t border-[var(--border)]"
             style={{
               background: "var(--bg-card)",
@@ -337,10 +359,13 @@ const navRef = useRef<HTMLElement | null>(null);
             >
               Explore Program →
             </button>
-          </div>
+          </motion.div>
 
           {/* Cell 3 */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+            transition={{ duration: 0.4, delay: 0.24 }}
             className="px-7 py-6 sm:px-9 sm:py-[22px] lg:col-start-1 lg:row-start-2"
             style={{
               background: "var(--bg-card)",
@@ -368,11 +393,14 @@ const navRef = useRef<HTMLElement | null>(null);
                 </span>
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Footer */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+          transition={{ duration: 0.4, delay: 0.28 }}
           className="mt-7 flex flex-wrap items-center justify-between gap-4 pt-5"
           style={{ borderTop: "1px solid var(--border)" }}
         >
@@ -412,7 +440,7 @@ const navRef = useRef<HTMLElement | null>(null);
               →
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

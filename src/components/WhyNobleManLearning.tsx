@@ -76,7 +76,7 @@ export default function WhyNobleManLearning() {
   const ref = useRef<HTMLDivElement>(null);
 
   const inView = useInView(ref, {
-    once: true,
+    once: false,
     margin: "-100px",
   });
 
@@ -111,7 +111,7 @@ export default function WhyNobleManLearning() {
         {/* HEADER */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.45 }}
           className="mb-10 text-center text-3xl font-black leading-tight text-[var(--fg-primary)] sm:text-4xl md:mb-16 md:text-5xl"
         >
@@ -124,7 +124,7 @@ export default function WhyNobleManLearning() {
         {/* ───────────────── DESKTOP TABLE ───────────────── */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.45 }}
           className="hidden overflow-hidden rounded-2xl md:block"
           style={{
@@ -157,7 +157,7 @@ export default function WhyNobleManLearning() {
                 <motion.tr
                   key={i}
                   initial={{ opacity: 0, x: -10 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
                   transition={{ delay: i * 0.05 }}
                   className="border-b border-[var(--border)] transition last:border-0 hover:bg-black/[0.03] dark:hover:bg-white/5"
                 >
@@ -185,7 +185,7 @@ export default function WhyNobleManLearning() {
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 14 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
               transition={{ delay: i * 0.05 }}
               className="rounded-2xl p-5"
               style={{
@@ -223,7 +223,7 @@ export default function WhyNobleManLearning() {
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.45 }}
           className="mt-12 text-center md:mt-14"
         >

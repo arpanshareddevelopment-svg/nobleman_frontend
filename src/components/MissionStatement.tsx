@@ -30,10 +30,8 @@ function useThemeMode() {
 
 export default function MissionStatement() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-const  isDark  = useThemeMode();
-
-
+  const inView = useInView(ref, { once: false, margin: "-80px" });
+  const isDark = useThemeMode();
 
   return (
     <section
@@ -65,7 +63,16 @@ const  isDark  = useThemeMode();
       />
 
       {/* ── ambient green glow ── */}
-      <div
+      <motion.div
+        animate={{
+          scale: [1, 1.08, 1],
+          opacity: isDark ? [0.45, 0.65, 0.45] : [0.18, 0.3, 0.18],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         className={`absolute inset-0 -z-10 blur-3xl ${
           isDark ? "opacity-60" : "opacity-25"
         }`}
@@ -74,7 +81,7 @@ const  isDark  = useThemeMode();
             ? "radial-gradient(ellipse 60% 50% at 50% 40%, var(--brand-green-glow) 0%, transparent 70%)"
             : "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(132,255,61,0.10) 0%, transparent 72%)",
         }}
-      />
+      ></motion.div>
 
       {/* ── secondary blue accent glow ── */}
       <div
@@ -91,8 +98,12 @@ const  isDark  = useThemeMode();
 
       <div className="mx-auto max-w-5xl px-6 md:px-10">
         <motion.div
+          whileHover={{
+            y: -4,
+            scale: 1.005,
+          }}
           initial={{ opacity: 0, y: 32 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="relative rounded-[2rem] overflow-hidden p-8 md:p-12"
           style={{
@@ -126,7 +137,7 @@ const  isDark  = useThemeMode();
           {/* EYEBROW */}
           <motion.span
             initial={{ opacity: 0, y: -10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
             className="inline-flex items-center rounded-full px-4 py-1.5 text-[11px] font-bold tracking-[0.28em] uppercase"
             style={{
@@ -151,12 +162,12 @@ const  isDark  = useThemeMode();
           {/* HEADLINE */}
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
             transition={{ duration: 0.55, delay: 0.08 }}
             className="mt-6 font-black leading-[1.05] tracking-tight text-[clamp(2.2rem,3.8vw,3.8rem)] text-[var(--fg-primary)]"
           >
             Your aspirational career{" "}
-            <span
+            <motion.span
               className="bg-clip-text text-transparent"
               style={{
                 backgroundImage: isDark
@@ -169,13 +180,13 @@ const  isDark  = useThemeMode();
               }}
             >
               is our mission.
-            </span>
+            </motion.span>
           </motion.h2>
 
           {/* BODY */}
           <motion.p
             initial={{ opacity: 0, y: 18 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 0.5, delay: 0.18 }}
             className="mt-5 max-w-full text-base md:text-xl leading-[1.8] text-[var(--fg-secondary)]"
           >
@@ -185,7 +196,16 @@ const  isDark  = useThemeMode();
           </motion.p>
 
           {/* bottom right accent orb */}
-          <div
+          <motion.div
+            animate={{
+              y: [0, -18, 0],
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
             className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-3xl pointer-events-none opacity-20"
             style={{
               background:

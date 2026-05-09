@@ -1,27 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
 import { ArrowRight, Sparkles } from "lucide-react";
-
-// ─── Brand tokens (replaces missing CSS vars) ───────────────────────────────
-const BRAND = {
-  yellow: "#ffcf33",
-  yellowLight: "#ffe98a",
-  yellowGlow: "rgba(255,207,51,0.18)",
-  yellowDark: "#e6a800",
-
-  blue: "#2ea8ff",
-  blueLight: "#7ed8ff",
-  blueGlow: "rgba(46,168,255,0.18)",
-  blueDark: "#0080e6",
-
-  green: "#84ff3d",
-  greenLight: "#c8ff74",
-  greenGlow: "rgba(132,255,61,0.18)",
-  greenDark: "#50cc00",
-} as const;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type OrbKey = "careers" | "support" | "partners";
@@ -47,6 +35,32 @@ type Orb = {
   size: string;
   position: CSSProperties;
 };
+
+type ParsedCounter = {
+  target: number;
+  suffix: string;
+  useCommas: boolean;
+};
+
+function parseCounter(value: string): ParsedCounter {
+  const digits = value.replace(/[^\d]/g, "");
+  const target = Number(digits) || 0;
+  const suffix = value.includes("%")
+    ? "%"
+    : value.trim().endsWith("+")
+      ? "+"
+      : "";
+  return {
+    target,
+    suffix,
+    useCommas: value.includes(",") || target >= 1000,
+  };
+}
+
+function formatCounterValue(value: number, parsed: ParsedCounter): string {
+  const base = parsed.useCommas ? value.toLocaleString() : String(value);
+  return `${base}${parsed.suffix}`;
+}
 
 // ─── Dark-mode detector ───────────────────────────────────────────────────────
 function useThemeMode() {
@@ -213,6 +227,33 @@ function FloatingOrb({
   isDark: boolean;
   mounted: boolean;
 }) {
+  const parsed = useMemo(() => parseCounter(orb.value), [orb.value]);
+  const [displayValue, setDisplayValue] = useState(parsed.target);
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    const duration = 2200;
+    let frame = 0;
+    const start = performance.now();
+
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setDisplayValue(Math.round(parsed.target * eased));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame((now) => {
+      setDisplayValue(0);
+      tick(now);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [active, parsed.target]);
+
   // Don't render until mounted
   if (!mounted) {
     return (
@@ -386,7 +427,7 @@ function FloatingOrb({
             className="text-[clamp(1.4rem,2vw,2rem)] font-black tracking-tight leading-none"
             style={{ color: valueColor, textShadow: valueShadow }}
           >
-            {orb.value}
+            {formatCounterValue(displayValue, parsed)}
           </span>
           <span
             className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-center"
@@ -500,7 +541,45 @@ function OrbCluster({
     </div>
   );
 }
+function useScrambleText(text: string, speed = 40) {
+  const [display, setDisplay] = useState(text);
 
+  useEffect(() => {
+    let frame = 0;
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    const interval = setInterval(() => {
+      frame++;
+
+      const progress = frame / (text.length + 8);
+
+      const output = text
+        .split("")
+        .map((char, index) => {
+          if (char === " ") return " ";
+
+          if (index < progress * text.length) {
+            return text[index];
+          }
+
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join("");
+
+      setDisplay(output);
+
+      if (progress >= 1) {
+        clearInterval(interval);
+        setDisplay(text);
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return display;
+}
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -513,7 +592,9 @@ export default function Hero() {
     );
     return () => window.clearInterval(id);
   }, []);
-
+  const slide = SLIDES[activeIndex];
+  const scrambledBottom = useScrambleText(slide.titleBottom, 35);
+  const accent = MENTOR_ACCENT[slide.id][isDark ? "dark" : "light"];
   // Don't render anything until client hydration is done
   if (!mounted) {
     return (
@@ -529,9 +610,6 @@ export default function Hero() {
       </section>
     );
   }
-
-  const slide = SLIDES[activeIndex];
-  const accent = MENTOR_ACCENT[slide.id][isDark ? "dark" : "light"];
 
   return (
     <section
@@ -645,7 +723,7 @@ export default function Hero() {
                     } 0%, ${isDark ? slide.gradient[1] : slide.lightGradient[1]} 100%)`,
                   }}
                 >
-                  {slide.titleBottom}
+                  {scrambledBottom}
                 </span>
               </motion.h1>
 

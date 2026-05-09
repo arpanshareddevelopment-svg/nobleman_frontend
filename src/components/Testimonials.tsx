@@ -37,7 +37,7 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: false, margin: "-100px" });
 
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -176,7 +176,7 @@ export default function Testimonials() {
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           className="mb-20 text-center"
         >
           <h2
@@ -214,7 +214,7 @@ export default function Testimonials() {
             <motion.div
               key={t.id}
               initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ delay: i * 0.08 }}
               whileHover={{
                 y: -6,

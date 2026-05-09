@@ -52,7 +52,7 @@ function useThemeMode() {
 
 export default function CertificationsShowcase() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: false, margin: "-100px" });
   const { isDark, mounted } = useThemeMode();
 
   // Early return placeholder to prevent hydration mismatch
@@ -112,7 +112,7 @@ export default function CertificationsShowcase() {
         <div className="mb-16 text-center">
           <motion.span
             initial={{ opacity: 0, y: -10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
             className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4"
             style={{
@@ -126,7 +126,7 @@ export default function CertificationsShowcase() {
 
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.4, delay: 0.1 }}
             className="text-4xl md:text-5xl font-black leading-tight mb-2"
             style={{ color: "var(--fg-primary)" }}
@@ -136,7 +136,7 @@ export default function CertificationsShowcase() {
 
           <motion.p
             initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.4, delay: 0.15 }}
             className="text-lg max-w-2xl mx-auto"
             style={{ color: "var(--fg-secondary)" }}
@@ -154,7 +154,7 @@ export default function CertificationsShowcase() {
               <motion.div
                 key={cert.id}
                 initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
                 className="group rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer"
                 style={{
@@ -227,7 +227,7 @@ export default function CertificationsShowcase() {
         {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-16 text-center"
         >

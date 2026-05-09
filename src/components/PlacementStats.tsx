@@ -406,7 +406,12 @@ export default function PlacementSection() {
       />
 
       <div className="relative z-[2] max-w-6xl mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-14 ">
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col lg:flex-row items-center gap-14 "
+        >
           <CircularProgress trigger={inView} isDark={isDark} />
 
           <div className="max-w-lg">
@@ -427,9 +432,14 @@ export default function PlacementSection() {
               Join a network of 400+ hiring partners across industries.
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="text-center mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: 0.45, delay: 0.08 }}
+          className="text-center mb-10"
+        >
           <h4
             className="text-2xl font-black "
             style={{ color: "var(--fg-secondary)" }}
@@ -437,7 +447,7 @@ export default function PlacementSection() {
             <span className="text-[var(--brand-blue-light)]">Top teams</span>{" "}
             are hiring
           </h4>
-        </div>
+        </motion.div>
 
         <div className="relative overflow-hidden mt-12">
           <div
@@ -462,8 +472,13 @@ export default function PlacementSection() {
                   {[0, 1].map((groupIndex) => (
                     <div key={groupIndex} className="flex flex-col gap-3">
                       {columnItems.map((c, i) => (
-                        <div
+                        <motion.div
                           key={`${groupIndex}-${i}`}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={
+                            inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }
+                          }
+                          transition={{ duration: 0.35, delay: (i % 4) * 0.04 }}
                           className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"
                         >
                           <Image
@@ -487,7 +502,7 @@ export default function PlacementSection() {
                               {c.role}
                             </p>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   ))}
@@ -516,8 +531,13 @@ export default function PlacementSection() {
                     {[0, 1].map((group) => (
                       <div key={group} className="flex gap-3">
                         {rowItems.map((c, i) => (
-                          <div
+                          <motion.div
                             key={`${group}-${i}`}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={
+                              inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }
+                            }
+                            transition={{ duration: 0.3, delay: (i % 5) * 0.03 }}
                             className="flex w-[220px] flex-shrink-0 items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
                           >
                             <Image
@@ -545,7 +565,7 @@ export default function PlacementSection() {
                                 {c.role}
                               </p>
                             </div>
-                          </div>
+                          </motion.div>
                         ))}
                       </div>
                     ))}
