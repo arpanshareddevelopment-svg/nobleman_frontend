@@ -11,6 +11,12 @@ import SystemSettingsPage from "./pages/SystemSettingsPage";
 import AuditLogsPage from "./pages/AuditLogsPage";
 import AnnouncementsPage from "./pages/AnnouncementsPage";
 import PlansPage from "./pages/PlansPage";
+import InstructorsPage from "./pages/InstructorsPage";
+import ExamsPage from "./pages/ExamsPage";
+import SalesDashboardPage from "./pages/SalesDashboardPage";
+import SupportTicketsPage from "./pages/SupportTicketsPage";
+import AccessControlPage from "./pages/AccessControlPage";
+import ReportsPage from "./pages/ReportsPage";
 import AddAdminModal from "./modals/AddAdminModal";
 import AddTenantModal from "./modals/AddTenantModal";
 const globalStyles = `
@@ -326,16 +332,43 @@ export type PageId =
   | "plans"
   | "announcements"
   | "audit"
-  | "settings";
+  | "settings"
+  | "instructors"
+  | "exams"
+  | "sales"
+  | "tickets"
+  | "access"
+  | "reports";
 
 export const pageMeta: Record<PageId, { title: string; sub: string }> = {
   dashboard: { title: "Super Admin Dashboard", sub: "Platform-wide overview" },
   admins: { title: "Admin Accounts", sub: "Manage all admin users" },
-  tenants: { title: "Tenants / Branches", sub: "Manage all tenant organisations" },
-  revenue: { title: "Platform Revenue", sub: "Financial overview across all tenants" },
-  plans: { title: "Plans & Pricing", sub: "Subscription tiers and feature gates" },
-  announcements: { title: "Announcements", sub: "Broadcast messages to admins & students" },
-  audit: { title: "Audit Logs", sub: "Full activity trail across the platform" },
+  tenants: {
+    title: "Tenants / Branches",
+    sub: "Manage all tenant organisations",
+  },
+  revenue: {
+    title: "Platform Revenue",
+    sub: "Financial overview across all tenants",
+  },
+  plans: {
+    title: "Plans & Pricing",
+    sub: "Subscription tiers and feature gates",
+  },
+  announcements: {
+    title: "Announcements",
+    sub: "Broadcast messages to admins & students",
+  },
+  instructors: { title: "Instructors", sub: "Manage instructors and profiles" },
+  exams: { title: "Exams & Quizzes", sub: "Create and review assessments" },
+  sales: { title: "Sales Dashboard", sub: "Revenue and sales metrics" },
+  tickets: { title: "Support Tickets", sub: "Customer support queue" },
+  access: { title: "Access Control", sub: "Roles and permissions" },
+  reports: { title: "Reports", sub: "Platform reports and exports" },
+  audit: {
+    title: "Audit Logs",
+    sub: "Full activity trail across the platform",
+  },
   settings: { title: "System Settings", sub: "Global platform configuration" },
 };
 
@@ -345,7 +378,8 @@ export default function SuperAdminShell() {
   const [addTenantOpen, setAddTenantOpen] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = addAdminOpen || addTenantOpen ? "hidden" : "";
+    document.body.style.overflow =
+      addAdminOpen || addTenantOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -354,13 +388,31 @@ export default function SuperAdminShell() {
   const renderPage = () => {
     switch (activePage) {
       case "dashboard":
-        return <DashboardPage setPage={setActivePage} openAddAdmin={() => setAddAdminOpen(true)} openAddTenant={() => setAddTenantOpen(true)} />;
+        return (
+          <DashboardPage
+            setPage={setActivePage}
+            openAddAdmin={() => setAddAdminOpen(true)}
+            openAddTenant={() => setAddTenantOpen(true)}
+          />
+        );
       case "admins":
         return <AdminsPage openAddAdmin={() => setAddAdminOpen(true)} />;
       case "tenants":
         return <TenantsPage openAddTenant={() => setAddTenantOpen(true)} />;
       case "revenue":
         return <PlatformRevenueePage />;
+      case "instructors":
+        return <InstructorsPage />;
+      case "exams":
+        return <ExamsPage />;
+      case "sales":
+        return <SalesDashboardPage />;
+      case "tickets":
+        return <SupportTicketsPage />;
+      case "access":
+        return <AccessControlPage />;
+      case "reports":
+        return <ReportsPage />;
       case "plans":
         return <PlansPage />;
       case "announcements":
@@ -370,7 +422,13 @@ export default function SuperAdminShell() {
       case "settings":
         return <SystemSettingsPage />;
       default:
-        return <DashboardPage setPage={setActivePage} openAddAdmin={() => setAddAdminOpen(true)} openAddTenant={() => setAddTenantOpen(true)} />;
+        return (
+          <DashboardPage
+            setPage={setActivePage}
+            openAddAdmin={() => setAddAdminOpen(true)}
+            openAddTenant={() => setAddTenantOpen(true)}
+          />
+        );
     }
   };
 
@@ -378,7 +436,12 @@ export default function SuperAdminShell() {
     <>
       <style>{globalStyles}</style>
       <div className="sa-root">
-        <Sidebar activePage={activePage} setPage={setActivePage} openAddAdmin={() => setAddAdminOpen(true)} openAddTenant={() => setAddTenantOpen(true)} />
+        <Sidebar
+          activePage={activePage}
+          setPage={setActivePage}
+          openAddAdmin={() => setAddAdminOpen(true)}
+          openAddTenant={() => setAddTenantOpen(true)}
+        />
         <main className="sa-main">
           <Topbar meta={pageMeta[activePage]} />
           <div className="sa-content">{renderPage()}</div>
@@ -386,7 +449,9 @@ export default function SuperAdminShell() {
       </div>
 
       {addAdminOpen && <AddAdminModal onClose={() => setAddAdminOpen(false)} />}
-      {addTenantOpen && <AddTenantModal onClose={() => setAddTenantOpen(false)} />}
+      {addTenantOpen && (
+        <AddTenantModal onClose={() => setAddTenantOpen(false)} />
+      )}
     </>
   );
 }

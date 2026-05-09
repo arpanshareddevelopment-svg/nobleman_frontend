@@ -1,31 +1,27 @@
 "use client";
 
-import { BadgeCheck, Building2, CircleAlert, Search, Users } from "lucide-react";
+import { BookOpen, Users, FileText, Tag } from "lucide-react";
 
 interface Props {
   openAddAdmin: () => void;
 }
 
-const admins = [
-  { init: "RK", name: "Rahul Kumar",   email: "rahul@acme.com",       tenant: "Acme LMS",    role: "Admin",       status: "tg", statusLabel: "Active",   lastLogin: "2 min ago",  perms: ["Courses","Students","Revenue"] },
-  { init: "PS", name: "Priya Singh",   email: "priya@edgelearn.com",  tenant: "EdgeLearn",   role: "Admin",       status: "tg", statusLabel: "Active",   lastLogin: "18 min ago", perms: ["Courses","Students"] },
-  { init: "AM", name: "Arjun Mehta",   email: "arjun@brightpath.com", tenant: "BrightPath",  role: "Admin",       status: "tr", statusLabel: "Inactive", lastLogin: "3 days ago", perms: ["Courses"] },
-  { init: "NK", name: "Neha Kapoor",   email: "neha@skillhub.com",    tenant: "SkillHub",    role: "Super Admin", status: "tp", statusLabel: "Active",   lastLogin: "1 hr ago",   perms: ["All Access"] },
-  { init: "VR", name: "Vikram Rao",    email: "vikram@learnpro.com",  tenant: "LearnPro",    role: "Admin",       status: "tg", statusLabel: "Active",   lastLogin: "5 hr ago",   perms: ["Courses","Exams"] },
-  { init: "SD", name: "Sneha Das",     email: "sneha@edunext.com",    tenant: "EduNext",     role: "Admin",       status: "ty", statusLabel: "Suspended",lastLogin: "2 days ago", perms: ["Courses"] },
+const courses = [
+  { code: "NBL-101", title: "Principles of Leadership", instructor: "Rahul Kumar", students: 420, tenant: "Acme LMS", status: "Published" },
+  { code: "NBL-202", title: "Advanced Communication", instructor: "Priya Singh", students: 220, tenant: "EdgeLearn", status: "Published" },
+  { code: "NBL-303", title: "Team Management", instructor: "Arjun Mehta", students: 120, tenant: "BrightPath", status: "Draft" },
+  { code: "NBL-404", title: "Sales Strategies", instructor: "Neha Kapoor", students: 86, tenant: "SkillHub", status: "Published" },
 ];
-
-const tagColors: Record<string, string> = { Admin: "tb", "Super Admin": "tp" };
 
 export default function AdminsPage({ openAddAdmin }: Props) {
   return (
     <div>
       <div className="sa-stats sa-stats-4">
         {[
-          { icon: <Users size={18} />, label: "Total Admins",    val: "28", sub: "Across all tenants", cls: "si-blue"   },
-          { icon: <BadgeCheck size={18} />, label: "Active",           val: "24", sub: "Currently active",  cls: "si-green"  },
-          { icon: <CircleAlert size={18} />, label: "Inactive/Suspended", val: "4", sub: "Need attention",  cls: "si-red"    },
-          { icon: <Building2 size={18} />, label: "Tenants Covered",  val: "12", sub: "All tenants",       cls: "si-purple" },
+          { icon: <BookOpen size={18} />, label: "Total Courses", val: "96", sub: "Published: 82", cls: "si-yellow" },
+          { icon: <Users size={18} />, label: "Instructors", val: "42", sub: "Active: 38", cls: "si-blue" },
+          { icon: <FileText size={18} />, label: "Active Enrollments", val: "4,820", sub: "+18% this month", cls: "si-green" },
+          { icon: <Tag size={18} />, label: "Drafts", val: "14", sub: "Needs review", cls: "si-red" },
         ].map((s) => (
           <div className="sa-stat" key={s.label}>
             <div className={`sa-si ${s.cls}`}>{s.icon}</div>
@@ -40,72 +36,57 @@ export default function AdminsPage({ openAddAdmin }: Props) {
 
       <div className="sa-table-card">
         <div className="sa-table-hd">
-          <input className="sa-search" placeholder="Search name, email…" />
+          <input className="sa-search" placeholder="Search courses, instructors…" />
           <select className="sa-sel">
             <option>All Tenants</option>
             <option>Acme LMS</option>
             <option>EdgeLearn</option>
-            <option>BrightPath</option>
           </select>
           <select className="sa-sel">
             <option>All Status</option>
-            <option>Active</option>
-            <option>Inactive</option>
-            <option>Suspended</option>
-          </select>
-          <select className="sa-sel">
-            <option>All Roles</option>
-            <option>Admin</option>
-            <option>Super Admin</option>
+            <option>Published</option>
+            <option>Draft</option>
           </select>
           <button
             className="sa-btn sa-btn-primary sa-btn-sm"
             style={{ marginLeft: "auto" }}
             onClick={openAddAdmin}
           >
-            + Add Admin
+            + Add Course
           </button>
         </div>
         <table>
           <thead>
             <tr>
-              <th>Admin</th>
+              <th>Course</th>
+              <th>Instructor</th>
+              <th>Students</th>
               <th>Tenant</th>
-              <th>Role</th>
-              <th>Permissions</th>
-              <th>Last Login</th>
               <th>Status</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {admins.map((a) => (
-              <tr key={a.email}>
+            {courses.map((c) => (
+              <tr key={c.code}>
                 <td>
                   <div className="sa-cu">
-                    <div className="sa-ca" style={{ background: "linear-gradient(135deg,var(--brand-green),var(--brand-yellow))", color: "#06110c" }}>{a.init}</div>
+                    <div className="sa-ca" style={{ background: "linear-gradient(135deg,var(--brand-green),var(--brand-yellow))", color: "#06110c" }}>{c.code}</div>
                     <div>
-                      <div className="sa-cn">{a.name}</div>
-                      <div className="sa-cs">{a.email}</div>
+                      <div className="sa-cn">{c.title}</div>
+                      <div className="sa-cs">{c.code}</div>
                     </div>
                   </div>
                 </td>
-                <td>{a.tenant}</td>
-                <td><span className={`sa-tag ${tagColors[a.role] ?? "tb"}`}>{a.role}</span></td>
-                <td>
-                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                    {a.perms.map((p) => (
-                      <span key={p} className="sa-tag tgr" style={{ fontSize: 9 }}>{p}</span>
-                    ))}
-                  </div>
-                </td>
-                <td style={{ color: "var(--sa-muted2)", fontSize: 11 }}>{a.lastLogin}</td>
-                <td><span className={`sa-tag ${a.status}`}>{a.statusLabel}</span></td>
+                <td>{c.instructor}</td>
+                <td>{c.students}</td>
+                <td>{c.tenant}</td>
+                <td><span className={`sa-tag ${c.status === "Published" ? "tg" : "tr"}`}>{c.status}</span></td>
                 <td>
                   <div className="sa-acts">
                     <button className="sa-ab">View</button>
                     <button className="sa-ab">Edit</button>
-                    <button className="sa-ab danger">Suspend</button>
+                    <button className="sa-ab danger">Delete</button>
                   </div>
                 </td>
               </tr>

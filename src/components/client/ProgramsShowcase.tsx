@@ -230,13 +230,13 @@ export default function ProgramsShowcase() {
                   tabRefs.current[i] = node;
                 }}
                 onClick={() => goTo(i)}
-                className="relative flex-shrink-0 snap-center border-none bg-transparent px-4 sm:px-5 pb-[11px] pt-[13px] text-[10px] sm:text-[clamp(0.8rem,1vw,1.5rem)] uppercase tracking-[0.12em] transition-colors duration-200 hover:font-bold"
+                className="relative flex-shrink-0 snap-center border-none bg-transparent px-4  text-[clamp(0.8rem,1vw,1.5rem)] uppercase tracking-[0.12em] transition-colors duration-200 hover:font-bold"
                 style={{
                   borderRight: "1px solid var(--border)",
                   color:
                     i === active
                       ? "var(--brand-green-dark)"
-                      : "var(--fg-muted)",
+                      : "var(--fg-primary)",
                   fontFamily: "inherit",
                   cursor: "pointer",
                 }}

@@ -1,7 +1,17 @@
+
 "use client";
 
 import { useEffect, useRef } from "react";
-import { BadgeDollarSign, BarChart3, Building2, CalendarDays, GraduationCap, LucideIcon, Megaphone, ShieldCheck, Sparkles, Users } from "lucide-react";
+import {
+  BadgeDollarSign,
+  BookOpen,
+  GraduationCap,
+  Megaphone,
+  Users,
+  UserCheck,
+  FileText,
+  TrendingUp,
+} from "lucide-react";
 import type { PageId } from "../SuperAdminShell";
 
 interface Props {
@@ -11,28 +21,42 @@ interface Props {
 }
 
 const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"];
-const vals   = [180, 240, 310, 275, 360, 420, 510];
+const vals = [120, 180, 260, 240, 320, 410, 520];
 
-export default function DashboardPage({ setPage, openAddAdmin, openAddTenant }: Props) {
+export default function DashboardPage({ setPage }: Props) {
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = chartRef.current;
     if (!el || el.childElementCount > 0) return;
+
     const max = Math.max(...vals);
+
     months.forEach((m, i) => {
       const h = Math.round((vals[i] / max) * 100);
+
       const col = document.createElement("div");
       col.className = "sa-bc-col";
+
       col.innerHTML = `
-        <div style="flex:1;display:flex;align-items:flex-end">
-          <div class="sa-bc-bar" style="height:${h}px;background:${
-            i === 6
-              ? "linear-gradient(180deg,var(--brand-green),var(--brand-yellow))"
-              : "linear-gradient(180deg,rgba(200,255,0,.32),rgba(0,196,255,.22))"
-          };${i === 6 ? "box-shadow:0 0 12px rgba(200,255,0,.26)" : ""}"></div>
+        <div style="flex:1;display:flex;align-items:flex-end;width:100%">
+          <div
+            class="sa-bc-bar"
+            style="
+              height:${h}px;
+              width:100%;
+              border-radius:10px 10px 0 0;
+              background:${
+                i === 6
+                  ? "linear-gradient(180deg,var(--brand-blue),var(--brand-green))"
+                  : "linear-gradient(180deg,rgba(37,99,235,.9),rgba(16,185,129,.45))"
+              };
+            "
+          ></div>
         </div>
-        <div class="sa-bc-lbl">${m}</div>`;
+        <div class="sa-bc-lbl">${m}</div>
+      `;
+
       el.appendChild(col);
     });
   }, []);
@@ -40,20 +64,46 @@ export default function DashboardPage({ setPage, openAddAdmin, openAddTenant }: 
   return (
     <div>
       {/* Stats */}
-      <div className="sa-stats sa-stats-5">
+      <div className="sa-stats sa-stats-4">
         {[
-          { icon: <Building2 size={18} />, label: "Tenants",      val: "12",    sub: "Active: 10 · Trial: 2",   cls: "si-purple" },
-          { icon: <Users size={18} />, label: "Admins",        val: "28",    sub: "Active: 24 · Inactive: 4", cls: "si-blue"   },
-          { icon: <GraduationCap size={18} />, label: "Total Students", val: "4,820", sub: "↑ 18% this month",         cls: "si-green"  },
-          { icon: <Sparkles size={18} />, label: "Total Courses",  val: "96",    sub: "Published: 82",            cls: "si-yellow" },
-          { icon: <BadgeDollarSign size={18} />, label: "Platform Rev.",  val: "₹84L",  sub: "↑ 31% YoY",               cls: "si-indigo" },
+          {
+            icon: <BookOpen size={18} />,
+            label: "Courses",
+            val: "24",
+            sub: "Active: 20 · Upcoming: 4",
+            cls: "si-blue",
+          },
+          {
+            icon: <GraduationCap size={18} />,
+            label: "Lessons",
+            val: "220",
+            sub: "Published: 180 · Drafts: 40",
+            cls: "si-green",
+          },
+          {
+            icon: <Users size={18} />,
+            label: "Enrollments",
+            val: "348",
+            sub: "Paid: 301 · Free: 47",
+            cls: "si-yellow",
+          },
+          {
+            icon: <UserCheck size={18} />,
+            label: "Students",
+            val: "17",
+            sub: "12 Active · 5 Inactive",
+            cls: "si-purple",
+          },
         ].map((s) => (
           <div className="sa-stat" key={s.label}>
             <div className={`sa-si ${s.cls}`}>{s.icon}</div>
+
             <div>
               <div className="sa-sl">{s.label}</div>
               <div className="sa-sv">{s.val}</div>
-              <div className="sa-ss"><span className="up">{s.sub}</span></div>
+              <div className="sa-ss">
+                <span className="up">{s.sub}</span>
+              </div>
             </div>
           </div>
         ))}
@@ -64,46 +114,132 @@ export default function DashboardPage({ setPage, openAddAdmin, openAddTenant }: 
         <div className="sa-card">
           <div className="sa-card-hd">
             <div>
-              <div className="sa-card-title"><BadgeDollarSign size={16} /> Platform Revenue</div>
+              <div className="sa-card-title">
+                <BadgeDollarSign size={16} /> Admin Revenue
+              </div>
+
               <div className="sa-card-sub">
-                ₹84,00,000&nbsp;
-                <span style={{ color: "var(--sa-a3)", fontWeight: 700 }}>+31% YoY</span>
+                ₹2,40,000
+                <span
+                  style={{
+                    color: "var(--brand-green)",
+                    fontWeight: 700,
+                    marginLeft: 8,
+                  }}
+                >
+                  +36% from last year
+                </span>
               </div>
             </div>
+
             <select className="sa-mini-sel">
               <option>This Year</option>
               <option>Last Year</option>
             </select>
           </div>
+
           <div className="sa-bar-chart" ref={chartRef} />
         </div>
 
         <div className="sa-card">
           <div className="sa-card-hd">
-            <div className="sa-card-title"><Building2 size={16} /> Tenant Distribution</div>
+            <div className="sa-card-title">
+              <TrendingUp size={16} /> Lead Sources
+            </div>
           </div>
+
           <div className="sa-donut-row">
             <svg width="100" height="100" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(148,163,184,.25)" strokeWidth="4" />
-              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--brand-green)" strokeWidth="4"
-                strokeDasharray="50 100" strokeDashoffset="25" strokeLinecap="round" />
-              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--brand-blue)" strokeWidth="4"
-                strokeDasharray="28 100" strokeDashoffset="-25" strokeLinecap="round" />
-              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--brand-yellow)" strokeWidth="4"
-                strokeDasharray="22 100" strokeDashoffset="-53" strokeLinecap="round" />
-              <text x="18" y="20" textAnchor="middle" fill="var(--sa-text)"
-                fontSize="5.5" fontFamily="Manrope" fontWeight="800">12</text>
+              <circle
+                cx="18"
+                cy="18"
+                r="14"
+                fill="none"
+                stroke="rgba(148,163,184,.25)"
+                strokeWidth="4"
+              />
+
+              <circle
+                cx="18"
+                cy="18"
+                r="14"
+                fill="none"
+                stroke="var(--brand-blue)"
+                strokeWidth="4"
+                strokeDasharray="52 100"
+                strokeDashoffset="25"
+                strokeLinecap="round"
+              />
+
+              <circle
+                cx="18"
+                cy="18"
+                r="14"
+                fill="none"
+                stroke="var(--brand-green)"
+                strokeWidth="4"
+                strokeDasharray="30 100"
+                strokeDashoffset="-27"
+                strokeLinecap="round"
+              />
+
+              <circle
+                cx="18"
+                cy="18"
+                r="14"
+                fill="none"
+                stroke="var(--brand-yellow)"
+                strokeWidth="4"
+                strokeDasharray="18 100"
+                strokeDashoffset="-57"
+                strokeLinecap="round"
+              />
+
+              <text
+                x="18"
+                y="20"
+                textAnchor="middle"
+                fill="var(--sa-text)"
+                fontSize="5.5"
+                fontFamily="Manrope"
+                fontWeight="800"
+              >
+                348
+              </text>
             </svg>
+
             <div className="sa-leg">
               {[
-                { color: "var(--brand-green)", label: "Enterprise", val: "6" },
-                { color: "var(--brand-blue)", label: "Growth",     val: "4" },
-                { color: "var(--brand-yellow)", label: "Starter",    val: "2" },
+                {
+                  color: "var(--brand-blue)",
+                  label: "WhatsApp",
+                  val: "181",
+                },
+                {
+                  color: "var(--brand-green)",
+                  label: "Meta Ads",
+                  val: "104",
+                },
+                {
+                  color: "var(--brand-yellow)",
+                  label: "Organic",
+                  val: "63",
+                },
               ].map((l) => (
                 <div className="sa-leg-item" key={l.label}>
-                  <div className="sa-leg-dot" style={{ background: l.color }} />
+                  <div
+                    className="sa-leg-dot"
+                    style={{ background: l.color }}
+                  />
+
                   {l.label}
-                  <span className="sa-leg-val" style={{ color: l.color }}>{l.val}</span>
+
+                  <span
+                    className="sa-leg-val"
+                    style={{ color: l.color }}
+                  >
+                    {l.val}
+                  </span>
                 </div>
               ))}
             </div>
@@ -111,7 +247,7 @@ export default function DashboardPage({ setPage, openAddAdmin, openAddTenant }: 
         </div>
       </div>
 
-      {/* Quick actions */}
+      {/* Quick Actions */}
       <div
         style={{
           display: "flex",
@@ -120,76 +256,196 @@ export default function DashboardPage({ setPage, openAddAdmin, openAddTenant }: 
           marginBottom: 10,
         }}
       >
-        <div style={{ fontFamily: '"Manrope",sans-serif', fontSize: 14, fontWeight: 800, color: "var(--sa-text)" }}>
+        <div
+          style={{
+            fontFamily: '"Manrope",sans-serif',
+            fontSize: 14,
+            fontWeight: 800,
+            color: "var(--sa-text)",
+          }}
+        >
           Quick Actions
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+          gap: 12,
+          marginBottom: 20,
+        }}
+      >
         {[
-          { icon: <Users size={18} />, label: "Add Admin",   color: "rgba(0,196,255,.08)", border: "rgba(0,196,255,.18)", fn: openAddAdmin  },
-          { icon: <Building2 size={18} />, label: "Add Tenant",  color: "rgba(200,255,0,.08)", border: "rgba(200,255,0,.18)", fn: openAddTenant },
-          { icon: <Sparkles size={18} />, label: "Manage Plans",color: "rgba(255,230,0,.08)", border: "rgba(255,230,0,.18)", fn: () => setPage("plans") },
-          { icon: <Megaphone size={18} />, label: "Announce",    color: "rgba(0,196,255,.06)", border: "rgba(0,196,255,.16)", fn: () => setPage("announcements") },
+          {
+            icon: <BookOpen size={18} />,
+            label: "Add Course",
+            color: "rgba(37,99,235,.08)",
+            border: "rgba(37,99,235,.18)",
+            fn: () => setPage("courses" as PageId),
+          },
+          {
+            icon: <Users size={18} />,
+            label: "Add Student",
+            color: "rgba(16,185,129,.08)",
+            border: "rgba(16,185,129,.18)",
+            fn: () => setPage("students" as PageId),
+          },
+          {
+            icon: <Megaphone size={18} />,
+            label: "Marketing",
+            color: "rgba(245,158,11,.08)",
+            border: "rgba(245,158,11,.18)",
+            fn: () => setPage("revenue" as PageId),
+          },
+          {
+            icon: <FileText size={18} />,
+            label: "Create Exam",
+            color: "rgba(139,92,246,.08)",
+            border: "rgba(139,92,246,.18)",
+            fn: () => setPage("exams" as PageId),
+          },
         ].map((q) => (
           <div
             key={q.label}
             onClick={q.fn}
             style={{
-              background: q.color, border: `1.5px solid ${q.border}`,
-              borderRadius: 10, padding: "16px 14px",
-              display: "flex", alignItems: "center", gap: 10,
-              cursor: "pointer", transition: "all .2s",
+              background: q.color,
+              border: `1.5px solid ${q.border}`,
+              borderRadius: 12,
+              padding: "16px 14px",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              cursor: "pointer",
+              transition: "all .2s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "")}
           >
-            <span style={{ fontSize: 22, color: "var(--sa-text)" }}>{q.icon}</span>
-            <span style={{ fontWeight: 700, fontSize: 12, color: "var(--sa-text)" }}>{q.label}</span>
+            <span style={{ color: "var(--sa-text)" }}>{q.icon}</span>
+            <span
+              style={{
+                fontWeight: 700,
+                fontSize: 12,
+                color: "var(--sa-text)",
+              }}
+            >
+              {q.label}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* Recent admins */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-        <div style={{ fontFamily: '"Manrope",sans-serif', fontSize: 14, fontWeight: 800, color: "var(--sa-text)" }}>
-          Recent Admin Activity
+      {/* Recent Enrollments */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 10,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: '"Manrope",sans-serif',
+            fontSize: 14,
+            fontWeight: 800,
+            color: "var(--sa-text)",
+          }}
+        >
+          Recent Enrollments
         </div>
-        <button className="sa-btn sa-btn-ghost sa-btn-sm" onClick={() => setPage("audit")}>
-          View Audit Log →
+
+        <button
+          className="sa-btn sa-btn-ghost sa-btn-sm"
+          onClick={() => setPage("students" as PageId)}
+        >
+          View All →
         </button>
       </div>
+
       <div className="sa-table-card">
         <table>
           <thead>
             <tr>
-              <th>Admin</th>
-              <th>Tenant</th>
-              <th>Action</th>
-              <th>Time</th>
-              <th>Status</th>
+              <th>Student</th>
+              <th>Course</th>
+              <th>Source</th>
+              <th>Payment</th>
+              <th>Expires</th>
+              <th>Access</th>
             </tr>
           </thead>
+
           <tbody>
             {[
-              { init: "RK", name: "Rahul Kumar",  email: "rahul@acme.com",   tenant: "Acme LMS",    action: "Added 3 students",    time: "2 min ago",  status: "tg", statusLabel: "Success" },
-              { init: "PS", name: "Priya Singh",  email: "priya@edgelearn.com", tenant: "EdgeLearn", action: "Published new course", time: "18 min ago", status: "tb", statusLabel: "Success" },
-              { init: "AM", name: "Arjun Mehta",  email: "arjun@brightpath.com", tenant: "BrightPath", action: "Login attempt failed", time: "1 hr ago",  status: "tr", statusLabel: "Failed"  },
-              { init: "NK", name: "Neha Kapoor",  email: "neha@skillhub.com", tenant: "SkillHub",   action: "Exported student data", time: "3 hr ago",  status: "ty", statusLabel: "Warning" },
+              {
+                init: "RK",
+                name: "Rohit Kumar",
+                course: "Full Stack Dev",
+                source: "WhatsApp",
+                payment: "Paid ₹12,999",
+                expires: "May 22, 2025",
+                access: "Active",
+                color:
+                  "linear-gradient(135deg,#2563eb,#60a5fa)",
+              },
+              {
+                init: "PS",
+                name: "Priya Sharma",
+                course: "Digital Marketing",
+                source: "Meta Ads",
+                payment: "Partial ₹5,000",
+                expires: "Jun 10, 2025",
+                access: "Active",
+                color:
+                  "linear-gradient(135deg,#10b981,#34d399)",
+              },
+              {
+                init: "AM",
+                name: "Arjun Mehta",
+                course: "Data Analytics",
+                source: "Organic",
+                payment: "Pending",
+                expires: "Apr 30, 2025",
+                access: "Expired",
+                color:
+                  "linear-gradient(135deg,#f59e0b,#fbbf24)",
+              },
             ].map((r) => (
-              <tr key={r.email}>
+              <tr key={r.name}>
                 <td>
                   <div className="sa-cu">
-                    <div className="sa-ca" style={{ background: "linear-gradient(135deg,var(--brand-green),var(--brand-yellow))", color: "#06110c" }}>{r.init}</div>
+                    <div
+                      className="sa-ca"
+                      style={{
+                        background: r.color,
+                        color: "white",
+                      }}
+                    >
+                      {r.init}
+                    </div>
+
                     <div>
                       <div className="sa-cn">{r.name}</div>
-                      <div className="sa-cs">{r.email}</div>
                     </div>
                   </div>
                 </td>
-                <td>{r.tenant}</td>
-                <td>{r.action}</td>
-                <td style={{ color: "var(--sa-muted2)", fontSize: 11 }}>{r.time}</td>
-                <td><span className={`sa-tag ${r.status}`}>{r.statusLabel}</span></td>
+
+                <td>{r.course}</td>
+                <td>
+                  <span className="sa-tag tb">{r.source}</span>
+                </td>
+                <td>{r.payment}</td>
+                <td>{r.expires}</td>
+                <td>
+                  <span
+                    className={`sa-tag ${
+                      r.access === "Active" ? "tg" : "tr"
+                    }`}
+                  >
+                    {r.access}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -198,3 +454,4 @@ export default function DashboardPage({ setPage, openAddAdmin, openAddTenant }: 
     </div>
   );
 }
+

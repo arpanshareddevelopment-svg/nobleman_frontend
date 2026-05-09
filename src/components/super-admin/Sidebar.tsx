@@ -1,7 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { BarChart3, Building2, ChevronRight, HandCoins, LayoutDashboard, Shield, Sparkles, Users, Megaphone, Search, Settings, BadgeDollarSign, ShieldCheck } from "lucide-react";
+import {
+  BarChart3,
+  ChevronRight,
+  LayoutDashboard,
+  Users,
+  Megaphone,
+  Settings,
+  BadgeDollarSign,
+  ShieldCheck,
+  FileText,
+  MessageSquare,
+  Lock,
+  FileBarChart2,
+  BookOpen,
+  UserCheck,
+} from "lucide-react";
 import type { PageId } from "./SuperAdminShell";
 
 interface Props {
@@ -11,10 +26,17 @@ interface Props {
   openAddTenant: () => void;
 }
 
-export default function Sidebar({ activePage, setPage, openAddAdmin, openAddTenant }: Props) {
+export default function Sidebar({
+  activePage,
+  setPage,
+  openAddAdmin,
+  openAddTenant,
+}: Props) {
   const [openSubs, setOpenSubs] = useState<Record<string, boolean>>({
-    "sub-admins": true,
-    "sub-tenants": false,
+    "sub-courses": true,
+    "sub-students": false,
+    "sub-instructors": false,
+    "sub-exams": false,
   });
 
   const toggleSub = (id: string) =>
@@ -24,7 +46,7 @@ export default function Sidebar({ activePage, setPage, openAddAdmin, openAddTena
     id: PageId,
     icon: React.ReactNode,
     label: string,
-    badge?: number
+    badge?: number,
   ) => (
     <div
       className={`sa-nav-item${activePage === id ? " active" : ""}`}
@@ -44,8 +66,16 @@ export default function Sidebar({ activePage, setPage, openAddAdmin, openAddTena
         <div className="sa-logo-wrap">
           <div className="sa-logo-box">
             <div className="sa-logo-icon">
-              <img src="/branding/logo_light.png" alt="Nobleman Learning" className="sa-logo-img sa-logo-light" />
-              <img src="/branding/logo_dark.png" alt="Nobleman Learning" className="sa-logo-img sa-logo-dark" />
+              <img
+                src="/branding/logo_light.png"
+                alt="Nobleman Learning"
+                className="sa-logo-img sa-logo-light"
+              />
+              <img
+                src="/branding/logo_dark.png"
+                alt="Nobleman Learning"
+                className="sa-logo-img sa-logo-dark"
+              />
             </div>
             <div className="sa-logo-text">
               Nobleman Learning
@@ -64,59 +94,145 @@ export default function Sidebar({ activePage, setPage, openAddAdmin, openAddTena
         <div className="sa-nav-group">
           <div className="sa-nav-label">Platform</div>
 
-          {/* Admins */}
+          {/* Courses */}
           <div
-            className={`sa-nav-item${openSubs["sub-admins"] ? " open" : ""}`}
-            onClick={() => toggleSub("sub-admins")}
+            className={`sa-nav-item${openSubs["sub-courses"] ? " open" : ""}`}
+            onClick={() => toggleSub("sub-courses")}
           >
-            <span className="ni"><Users size={16} /></span>Admin Accounts
-            <span className="arr">›</span>
+            <span className="ni">
+              <BookOpen size={16} />
+            </span>
+            Courses
+            <span className="arr">
+              <ChevronRight size={14} />
+            </span>
           </div>
-          <div className={`sa-sub-nav${openSubs["sub-admins"] ? " open" : ""}`}>
+          <div
+            className={`sa-sub-nav${openSubs["sub-courses"] ? " open" : ""}`}
+          >
             <div
               className={`sa-sub-item${activePage === "admins" ? " active" : ""}`}
               onClick={() => setPage("admins")}
             >
-              • All Admins
+              • All Courses
             </div>
             <div className="sa-sub-item" onClick={openAddAdmin}>
-              • Add Admin
+              • Add Course
+            </div>
+            <div className="sa-sub-item" onClick={openAddAdmin}>
+              • Course Content
             </div>
           </div>
 
-          {/* Tenants */}
+          {/* Students */}
           <div
-            className={`sa-nav-item${openSubs["sub-tenants"] ? " open" : ""}`}
-            onClick={() => toggleSub("sub-tenants")}
+            className={`sa-nav-item${openSubs["sub-students"] ? " open" : ""}`}
+            onClick={() => toggleSub("sub-students")}
           >
-            <span className="ni"><Building2 size={16} /></span>Tenants / Branches
-            <span className="arr">›</span>
+            <span className="ni">
+              <Users size={16} />
+            </span>
+            Students
+            <span className="arr">
+              <ChevronRight size={14} />
+            </span>
           </div>
-          <div className={`sa-sub-nav${openSubs["sub-tenants"] ? " open" : ""}`}>
+          <div
+            className={`sa-sub-nav${openSubs["sub-students"] ? " open" : ""}`}
+          >
             <div
               className={`sa-sub-item${activePage === "tenants" ? " active" : ""}`}
               onClick={() => setPage("tenants")}
             >
-              • All Tenants
+              • All Students
             </div>
             <div className="sa-sub-item" onClick={openAddTenant}>
-              • Add Tenant
+              • Add Student
+            </div>
+            <div className="sa-sub-item" onClick={openAddTenant}>
+              • Enrollments
             </div>
           </div>
 
-          {navItem("plans", <Sparkles size={16} />, "Plans & Pricing")}
+          {/* Instructors */}
+          <div
+            className={`sa-nav-item${openSubs["sub-instructors"] ? " open" : ""}`}
+            onClick={() => toggleSub("sub-instructors")}
+          >
+            <span className="ni">
+              <UserCheck size={16} />
+            </span>
+            Instructors
+            <span className="arr">
+              <ChevronRight size={14} />
+            </span>
+          </div>
+          <div
+            className={`sa-sub-nav${openSubs["sub-instructors"] ? " open" : ""}`}
+          >
+            <div
+              className={`sa-sub-item${activePage === "instructors" ? " active" : ""}`}
+              onClick={() => setPage("instructors")}
+            >
+              • All Instructors
+            </div>
+            <div className="sa-sub-item" onClick={() => setPage("instructors")}>
+              • Add Instructor
+            </div>
+          </div>
+
+          {/* Exams */}
+          <div
+            className={`sa-nav-item${openSubs["sub-exams"] ? " open" : ""}`}
+            onClick={() => toggleSub("sub-exams")}
+          >
+            <span className="ni">
+              <FileText size={16} />
+            </span>
+            Quiz / Exams
+            <span className="arr">
+              <ChevronRight size={14} />
+            </span>
+          </div>
+          <div className={`sa-sub-nav${openSubs["sub-exams"] ? " open" : ""}`}>
+            <div
+              className={`sa-sub-item${activePage === "exams" ? " active" : ""}`}
+              onClick={() => setPage("exams")}
+            >
+              • All Exams
+            </div>
+            <div className="sa-sub-item" onClick={() => setPage("exams")}>
+              • Create Exam
+            </div>
+            <div className="sa-sub-item" onClick={() => setPage("exams")}>
+              • Results
+            </div>
+          </div>
         </div>
 
         {/* Business */}
         <div className="sa-nav-group">
           <div className="sa-nav-label">Business</div>
-          {navItem("revenue", <BadgeDollarSign size={16} />, "Platform Revenue")}
+          {navItem("sales", <BarChart3 size={16} />, "Sales Dashboard")}
+          {navItem(
+            "revenue",
+            <BadgeDollarSign size={16} />,
+            "Platform Revenue",
+          )}
+          {navItem(
+            "tickets",
+            <MessageSquare size={16} />,
+            "Support Tickets",
+            5,
+          )}
+          {navItem("access", <Lock size={16} />, "Access Control")}
           {navItem("announcements", <Megaphone size={16} />, "Announcements")}
         </div>
 
         {/* System */}
         <div className="sa-nav-group">
           <div className="sa-nav-label">System</div>
+          {navItem("reports", <FileBarChart2 size={16} />, "Reports")}
           {navItem("audit", <ShieldCheck size={16} />, "Audit Logs")}
           {navItem("settings", <Settings size={16} />, "System Settings")}
         </div>
@@ -150,7 +266,7 @@ const sidebarStyles = `
   .sa-logo-icon {
     width:38px; height:38px;
     background:linear-gradient(135deg, rgba(200,255,0,.18), rgba(255,230,0,.18));
-    border-radius:12px; display:flex; align-items:center;
+    border-radius:12px; display:flex; aligsn-items:center;
     justify-content:center; overflow:hidden; border:1px solid rgba(200,255,0,.22);
   }
   .sa-logo-img { width:100%; height:100%; object-fit:contain; padding:4px; }

@@ -49,7 +49,11 @@ export default function SystemSettingsPage() {
           <div className="sa-card">
             <div className="sa-sec-lbl"><FileCog size={16} /> Platform Defaults</div>
             <div className="sa-fg"><label>Default Access Duration</label>
-              <select><option>30 Days</option><option>60 Days</option><option selected>90 Days</option></select>
+              <select defaultValue="90">
+                <option value="30">30 Days</option>
+                <option value="60">60 Days</option>
+                <option value="90">90 Days</option>
+              </select>
             </div>
             <div className="sa-fg"><label>Auto-lock on Expiry</label>
               <select><option>Yes — immediate</option><option>3 day grace period</option></select>
