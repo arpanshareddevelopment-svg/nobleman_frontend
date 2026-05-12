@@ -7,15 +7,15 @@ import { useState } from "react";
 const roles = [
   {
     name: "Super Admin",
-    desc: "Full platform access — all tenants, all settings",
+    desc: "Full platform access — all students, all settings",
     users: 1,
     color: "text-purple-600",
     bg: "bg-purple-100",
-    permissions: ["Manage Tenants", "Manage Admins", "View Revenue", "System Settings", "Audit Logs", "Access Control", "Announcements", "Reports"],
+    permissions: ["Manage Students", "Manage Admins", "View Revenue", "System Settings", "Audit Logs", "Access Control", "Announcements", "Reports"],
   },
   {
-    name: "Tenant Admin",
-    desc: "Full access within their assigned tenant",
+    name: "Student Admin",
+    desc: "Full access within their assigned student",
     users: 18,
     color: "text-blue-600",
     bg: "bg-blue-100",
@@ -129,3 +129,4 @@ export default function AccessControlPage() {
     </div>
   );
 }
+

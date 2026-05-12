@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import DashboardPage from "./pages/DashboardPage";
 import AdminsPage from "./pages/AdminsPage";
-import TenantsPage from "./pages/TenantsPage";
+import StudentsPage from "./pages/StudentsPage";
 import PlatformRevenueePage from "./pages/PlatformRevenuePage";
 import SystemSettingsPage from "./pages/SystemSettingsPage";
 import AuditLogsPage from "./pages/AuditLogsPage";
@@ -18,12 +18,12 @@ import SupportTicketsPage from "./pages/SupportTicketsPage";
 import AccessControlPage from "./pages/AccessControlPage";
 import ReportsPage from "./pages/ReportsPage";
 import AddAdminModal from "./modals/AddAdminModal";
-import AddTenantModal from "./modals/AddTenantModal";
+import AddStudentModal from "./modals/AddStudentModal";
 
 export type PageId =
   | "dashboard"
   | "admins"
-  | "tenants"
+  | "Students"
   | "revenue"
   | "plans"
   | "announcements"
@@ -39,13 +39,13 @@ export type PageId =
 export const pageMeta: Record<PageId, { title: string; sub: string }> = {
   dashboard: { title: "Super Admin Dashboard", sub: "Platform-wide overview" },
   admins: { title: "Admin Accounts", sub: "Manage all admin users" },
-  tenants: {
-    title: "Tenants / Branches",
-    sub: "Manage all tenant organisations",
+  Students: {
+    title: "Students / Branches",
+    sub: "Manage all Student organisations",
   },
   revenue: {
     title: "Platform Revenue",
-    sub: "Financial overview across all tenants",
+    sub: "Financial overview across all Students",
   },
   plans: {
     title: "Plans & Pricing",
@@ -71,15 +71,15 @@ export const pageMeta: Record<PageId, { title: string; sub: string }> = {
 export default function SuperAdminShell() {
   const [activePage, setActivePage] = useState<PageId>("dashboard");
   const [addAdminOpen, setAddAdminOpen] = useState(false);
-  const [addTenantOpen, setAddTenantOpen] = useState(false);
+  const [addStudentOpen, setAddStudentOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow =
-      addAdminOpen || addTenantOpen ? "hidden" : "";
+      addAdminOpen || addStudentOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [addAdminOpen, addTenantOpen]);
+  }, [addAdminOpen, addStudentOpen]);
 
   const renderPage = () => {
     switch (activePage) {
@@ -88,13 +88,13 @@ export default function SuperAdminShell() {
           <DashboardPage
             setPage={setActivePage}
             openAddAdmin={() => setAddAdminOpen(true)}
-            openAddTenant={() => setAddTenantOpen(true)}
+            openAddStudent={() => setAddStudentOpen(true)}
           />
         );
       case "admins":
         return <AdminsPage openAddAdmin={() => setAddAdminOpen(true)} />;
-      case "tenants":
-        return <TenantsPage openAddTenant={() => setAddTenantOpen(true)} />;
+      case "Students":
+        return <StudentsPage openAddStudent={() => setAddStudentOpen(true)} />;
       case "revenue":
         return <PlatformRevenueePage />;
       case "instructors":
@@ -122,7 +122,7 @@ export default function SuperAdminShell() {
           <DashboardPage
             setPage={setActivePage}
             openAddAdmin={() => setAddAdminOpen(true)}
-            openAddTenant={() => setAddTenantOpen(true)}
+            openAddStudent={() => setAddStudentOpen(true)}
           />
         );
     }
@@ -146,7 +146,7 @@ export default function SuperAdminShell() {
           activePage={activePage}
           setPage={setActivePage}
           openAddAdmin={() => setAddAdminOpen(true)}
-          openAddTenant={() => setAddTenantOpen(true)}
+          openAddStudent={() => setAddStudentOpen(true)}
         />
         <main className="flex flex-1 flex-col overflow-hidden">
           <Topbar meta={pageMeta[activePage]} />
@@ -155,8 +155,8 @@ export default function SuperAdminShell() {
       </div>
 
       {addAdminOpen && <AddAdminModal onClose={() => setAddAdminOpen(false)} />}
-      {addTenantOpen && (
-        <AddTenantModal onClose={() => setAddTenantOpen(false)} />
+      {addStudentOpen && (
+        <AddStudentModal onClose={() => setAddStudentOpen(false)} />
       )}
     </>
   );

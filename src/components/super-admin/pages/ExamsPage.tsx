@@ -3,11 +3,11 @@
 import { ClipboardList, Clock, FileText, Users } from "lucide-react";
 
 const exams = [
-  { code: "EX-001", title: "Full Stack Dev — Final Assessment", tenant: "Acme LMS", questions: 50, duration: "90 min", attempts: 142, avgScore: "74%", status: "Active" },
-  { code: "EX-002", title: "Digital Marketing Fundamentals Quiz", tenant: "EdgeLearn", questions: 30, duration: "45 min", attempts: 98, avgScore: "81%", status: "Active" },
-  { code: "EX-003", title: "Data Analytics Mid-Term", tenant: "BrightPath", questions: 40, duration: "60 min", attempts: 67, avgScore: "68%", status: "Active" },
-  { code: "EX-004", title: "Leadership Principles — Module 2", tenant: "SkillHub", questions: 25, duration: "30 min", attempts: 210, avgScore: "88%", status: "Active" },
-  { code: "EX-005", title: "Sales Strategies Assessment", tenant: "SkillHub", questions: 35, duration: "50 min", attempts: 0, avgScore: "—", status: "Draft" },
+  { code: "EX-001", title: "Full Stack Dev — Final Assessment", student: "Acme LMS", questions: 50, duration: "90 min", attempts: 142, avgScore: "74%", status: "Active" },
+  { code: "EX-002", title: "Digital Marketing Fundamentals Quiz", student: "EdgeLearn", questions: 30, duration: "45 min", attempts: 98, avgScore: "81%", status: "Active" },
+  { code: "EX-003", title: "Data Analytics Mid-Term", student: "BrightPath", questions: 40, duration: "60 min", attempts: 67, avgScore: "68%", status: "Active" },
+  { code: "EX-004", title: "Leadership Principles — Module 2", student: "SkillHub", questions: 25, duration: "30 min", attempts: 210, avgScore: "88%", status: "Active" },
+  { code: "EX-005", title: "Sales Strategies Assessment", student: "SkillHub", questions: 35, duration: "50 min", attempts: 0, avgScore: "—", status: "Draft" },
 ];
 
 const stats = [
@@ -57,7 +57,7 @@ export default function ExamsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] bg-white/50">
-                {["Exam", "Tenant", "Questions", "Duration", "Attempts", "Avg Score", "Status", "Actions"].map((h) => (
+                {["Exam", "Student", "Questions", "Duration", "Attempts", "Avg Score", "Status", "Actions"].map((h) => (
                   <th key={h} className={`px-4 py-3 text-left font-bold text-[var(--fg-primary)] ${h === "Actions" ? "text-center" : ""}`}>{h}</th>
                 ))}
               </tr>
@@ -75,7 +75,7 @@ export default function ExamsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-xs text-[var(--fg-secondary)]">{e.tenant}</td>
+                  <td className="px-4 py-3 text-xs text-[var(--fg-secondary)]">{e.student}</td>
                   <td className="px-4 py-3 text-[var(--fg-primary)]">{e.questions}</td>
                   <td className="px-4 py-3 text-[var(--fg-secondary)]">{e.duration}</td>
                   <td className="px-4 py-3 text-[var(--fg-primary)]">{e.attempts}</td>
@@ -101,3 +101,4 @@ export default function ExamsPage() {
     </div>
   );
 }
+

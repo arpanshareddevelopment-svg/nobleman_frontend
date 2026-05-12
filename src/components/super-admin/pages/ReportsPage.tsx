@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Download, FileBarChart2, FileText, TrendingUp, Users } from "lucide-react";
 
@@ -6,7 +6,7 @@ const reports = [
   {
     icon: <Users size={20} />,
     title: "Student Enrollment Report",
-    desc: "All enrollments, payment status, and access expiry across tenants",
+    desc: "All enrollments, payment status, and access expiry across students",
     lastGenerated: "Today, 9:00 AM",
     format: "CSV / PDF",
     bg: "bg-blue-100",
@@ -15,7 +15,7 @@ const reports = [
   {
     icon: <TrendingUp size={20} />,
     title: "Revenue & Billing Report",
-    desc: "Platform fees, tenant payments, discounts, and pending dues",
+    desc: "Platform fees, student payments, discounts, and pending dues",
     lastGenerated: "Today, 8:30 AM",
     format: "CSV / PDF",
     bg: "bg-emerald-100",
@@ -50,8 +50,8 @@ const reports = [
   },
   {
     icon: <FileBarChart2 size={20} />,
-    title: "Tenant Health Report",
-    desc: "Active users, course completion, and subscription status per tenant",
+    title: "Student Health Report",
+    desc: "Active users, course completion, and subscription status per student",
     lastGenerated: "May 8, 2025",
     format: "PDF",
     bg: "bg-rose-100",
@@ -112,3 +112,4 @@ export default function ReportsPage() {
     </div>
   );
 }
+

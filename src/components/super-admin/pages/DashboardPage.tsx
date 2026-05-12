@@ -16,7 +16,7 @@ import type { PageId } from "../SuperAdminShell";
 interface Props {
   setPage: (p: PageId) => void;
   openAddAdmin: () => void;
-  openAddTenant: () => void;
+  openAddStudent: () => void;
 }
 
 const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"];
@@ -324,3 +324,4 @@ export default function DashboardPage({ setPage }: Props) {
     </div>
   );
 }
+

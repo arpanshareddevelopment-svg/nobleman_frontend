@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Badge, Braces, Building2, CreditCard, Database, FileCog, Globe2, KeyRound, Mail, ShieldCheck, Smartphone, Users } from "lucide-react";
@@ -102,8 +102,8 @@ export default function SystemSettingsPage() {
             <FormField label="Root Domain" required>
               <InputField type="text" defaultValue="noblemanlearning.com" />
             </FormField>
-            <FormField label="Tenant Subdomain Pattern" required>
-              <InputField type="text" defaultValue="{tenant}.noblemanlearning.com" />
+            <FormField label="Student Subdomain Pattern" required>
+              <InputField type="text" defaultValue="{student}.noblemanlearning.com" />
             </FormField>
             <FormField label="Default Language">
               <SelectField>
@@ -114,7 +114,7 @@ export default function SystemSettingsPage() {
             <FormField label="Maintenance Mode">
               <SelectField>
                 <option>Off</option>
-                <option>On — show maintenance page</option>
+                <option>On � show maintenance page</option>
               </SelectField>
             </FormField>
             <PrimaryButton>Save Changes</PrimaryButton>
@@ -130,7 +130,7 @@ export default function SystemSettingsPage() {
             </FormField>
             <FormField label="Auto-lock on Expiry">
               <SelectField>
-                <option>Yes — immediate</option>
+                <option>Yes � immediate</option>
                 <option>3 day grace period</option>
               </SelectField>
             </FormField>
@@ -156,7 +156,7 @@ export default function SystemSettingsPage() {
             </FormField>
             <FormField label="Invoice Currency">
               <SelectField>
-                <option>INR (₹)</option>
+                <option>INR (?)</option>
                 <option>USD ($)</option>
               </SelectField>
             </FormField>
@@ -191,7 +191,7 @@ export default function SystemSettingsPage() {
           <Card icon={<ShieldCheck size={16} className="text-gray-900" />} title="Access Policies">
             <FormField label="IP Whitelist (Super Admin)">
               <textarea
-                placeholder="Enter IPs, one per line…"
+                placeholder="Enter IPs, one per line�"
                 className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] resize-none"
                 style={{ minHeight: 80 }}
               />
@@ -229,7 +229,7 @@ export default function SystemSettingsPage() {
               <InputField type="email" placeholder="noreply@noblemanlearning.com" />
             </FormField>
             <FormField label="Password" required>
-              <InputField type="password" placeholder="••••••••" />
+              <InputField type="password" placeholder="��������" />
             </FormField>
             <div className="flex gap-2.5">
               <SecondaryButton style={{ flex: 1 }}>Test Connection</SecondaryButton>
@@ -293,3 +293,4 @@ export default function SystemSettingsPage() {
     </div>
   );
 }
+

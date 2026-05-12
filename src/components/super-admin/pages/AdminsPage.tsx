@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { BookOpen, Users, FileText, Tag } from "lucide-react";
 
@@ -7,10 +7,10 @@ interface Props {
 }
 
 const courses = [
-  { code: "NBL-101", title: "Principles of Leadership", instructor: "Rahul Kumar", students: 420, tenant: "Acme LMS", status: "Published" },
-  { code: "NBL-202", title: "Advanced Communication", instructor: "Priya Singh", students: 220, tenant: "EdgeLearn", status: "Published" },
-  { code: "NBL-303", title: "Team Management", instructor: "Arjun Mehta", students: 120, tenant: "BrightPath", status: "Draft" },
-  { code: "NBL-404", title: "Sales Strategies", instructor: "Neha Kapoor", students: 86, tenant: "SkillHub", status: "Published" },
+  { code: "NBL-101", title: "Principles of Leadership", instructor: "Rahul Kumar", students: 420, student: "Acme LMS", status: "Published" },
+  { code: "NBL-202", title: "Advanced Communication", instructor: "Priya Singh", students: 220, student: "EdgeLearn", status: "Published" },
+  { code: "NBL-303", title: "Team Management", instructor: "Arjun Mehta", students: 120, student: "BrightPath", status: "Draft" },
+  { code: "NBL-404", title: "Sales Strategies", instructor: "Neha Kapoor", students: 86, student: "SkillHub", status: "Published" },
 ];
 
 export default function AdminsPage({ openAddAdmin }: Props) {
@@ -40,11 +40,11 @@ export default function AdminsPage({ openAddAdmin }: Props) {
         <div className="flex flex-wrap gap-2.5 border-b border-[var(--border)] bg-white/50 p-4 md:flex-nowrap">
           <input
             type="text"
-            placeholder="Search courses, instructors…"
+            placeholder="Search courses, instructors�"
             className="flex-1 rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
           />
           <select className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
-            <option>All Tenants</option>
+            <option>All Students</option>
             <option>Acme LMS</option>
             <option>EdgeLearn</option>
           </select>
@@ -67,7 +67,7 @@ export default function AdminsPage({ openAddAdmin }: Props) {
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Course</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Instructor</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Students</th>
-                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Tenant</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Student</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Status</th>
                 <th className="px-4 py-3 text-center font-bold text-[var(--fg-primary)]">Actions</th>
               </tr>
@@ -88,7 +88,7 @@ export default function AdminsPage({ openAddAdmin }: Props) {
                   </td>
                   <td className="px-4 py-3 text-[var(--fg-primary)]">{c.instructor}</td>
                   <td className="px-4 py-3 text-[var(--fg-primary)]">{c.students}</td>
-                  <td className="px-4 py-3 text-[var(--fg-primary)]">{c.tenant}</td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{c.student}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2.5 py-0.75 text-xs font-bold uppercase tracking-widest ${c.status === "Published" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                       {c.status}
@@ -110,3 +110,4 @@ export default function AdminsPage({ openAddAdmin }: Props) {
     </div>
   );
 }
+

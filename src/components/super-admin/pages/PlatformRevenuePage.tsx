@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { BadgeDollarSign, CalendarDays, Download, Percent, TrendingDown } from "lucide-react";
 
@@ -8,10 +8,10 @@ export default function PlatformRevenuePage() {
       {/* Stats Grid */}
       <div className="mb-6 grid grid-cols-4 gap-3.5">
         {[
-          { icon: <BadgeDollarSign size={18} />, label: "All-Time Revenue",  val: "₹84L",  sub: "↑ 31% YoY",    color: "from-purple-50 to-purple-100/50", dotColor: "bg-purple-400" },
-          { icon: <CalendarDays size={18} />, label: "This Month",         val: "₹8.4L", sub: "↑ 22%",         color: "from-green-50 to-green-100/50", dotColor: "bg-green-400" },
-          { icon: <Percent size={18} />, label: "Discounts Given",    val: "₹3.2L", sub: "Across tenants", color: "from-yellow-50 to-yellow-100/50", dotColor: "bg-yellow-400" },
-          { icon: <TrendingDown size={18} />, label: "Pending Dues",       val: "₹1.8L", sub: "From 3 tenants", color: "from-red-50 to-red-100/50", dotColor: "bg-red-400" },
+          { icon: <BadgeDollarSign size={18} />, label: "All-Time Revenue",  val: "?84L",  sub: "? 31% YoY",    color: "from-purple-50 to-purple-100/50", dotColor: "bg-purple-400" },
+          { icon: <CalendarDays size={18} />, label: "This Month",         val: "?8.4L", sub: "? 22%",         color: "from-green-50 to-green-100/50", dotColor: "bg-green-400" },
+          { icon: <Percent size={18} />, label: "Discounts Given",    val: "?3.2L", sub: "Across students", color: "from-yellow-50 to-yellow-100/50", dotColor: "bg-yellow-400" },
+          { icon: <TrendingDown size={18} />, label: "Pending Dues",       val: "?1.8L", sub: "From 3 students", color: "from-red-50 to-red-100/50", dotColor: "bg-red-400" },
         ].map((s) => (
           <div key={s.label} className={`rounded-2xl bg-gradient-to-br ${s.color} border border-[var(--border)] p-4 shadow-sm`}>
             <div className="mb-3 flex items-start justify-between">
@@ -24,10 +24,10 @@ export default function PlatformRevenuePage() {
         ))}
       </div>
 
-      {/* Tenant-wise Revenue Table */}
+      {/* Student-wise Revenue Table */}
       <div className="mb-6 overflow-hidden rounded-2xl border border-[var(--border)] bg-white/70 shadow-sm">
         <div className="flex items-center justify-between border-b border-[var(--border)] bg-white/50 px-6 py-4">
-          <h3 className="text-sm font-bold text-[var(--fg-primary)]">Tenant-wise Revenue Breakdown</h3>
+          <h3 className="text-sm font-bold text-[var(--fg-primary)]">Student-wise Revenue Breakdown</h3>
           <button className="rounded-lg border border-[rgba(15,23,42,0.14)] bg-transparent px-3 py-2 text-xs font-bold text-[var(--fg-secondary)] transition-all hover:text-[var(--fg-primary)] hover:border-opacity-50 flex items-center gap-1.5">
             <Download size={14} /> Export CSV
           </button>
@@ -36,24 +36,24 @@ export default function PlatformRevenuePage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] bg-white/50">
-                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Tenant</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Student</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Plan</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Students</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Gross Revenue</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Platform Fee (15%)</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Discounts</th>
-                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Net to Tenant</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Net to Student</th>
                 <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Status</th>
               </tr>
             </thead>
             <tbody>
               {[
-                { name: "SkillHub",   plan: "Enterprise", students: 1200, gross: "₹22.4L", fee: "₹3.36L", disc: "₹1.2L",  net: "₹17.8L", status: "tg", sl: "Paid"    },
-                { name: "Acme LMS",  plan: "Enterprise", students: 820,  gross: "₹14.2L", fee: "₹2.13L", disc: "₹0.8L",  net: "₹11.3L", status: "tg", sl: "Paid"    },
-                { name: "EdgeLearn", plan: "Growth",     students: 540,  gross: "₹8.6L",  fee: "₹1.29L", disc: "₹0.4L",  net: "₹6.9L",  status: "tg", sl: "Paid"    },
-                { name: "BrightPath",plan: "Growth",     students: 390,  gross: "₹6.1L",  fee: "₹0.92L", disc: "₹0.3L",  net: "₹4.9L",  status: "ty", sl: "Partial" },
-                { name: "LearnPro",  plan: "Starter",    students: 120,  gross: "₹1.8L",  fee: "₹0.27L", disc: "₹0.1L",  net: "₹1.4L",  status: "tr", sl: "Pending" },
-                { name: "EduNext",   plan: "Starter",    students: 80,   gross: "₹0.9L",  fee: "₹0.14L", disc: "₹0.05L", net: "₹0.7L",  status: "tr", sl: "Pending" },
+                { name: "SkillHub",   plan: "Enterprise", students: 1200, gross: "?22.4L", fee: "?3.36L", disc: "?1.2L",  net: "?17.8L", status: "tg", sl: "Paid"    },
+                { name: "Acme LMS",  plan: "Enterprise", students: 820,  gross: "?14.2L", fee: "?2.13L", disc: "?0.8L",  net: "?11.3L", status: "tg", sl: "Paid"    },
+                { name: "EdgeLearn", plan: "Growth",     students: 540,  gross: "?8.6L",  fee: "?1.29L", disc: "?0.4L",  net: "?6.9L",  status: "tg", sl: "Paid"    },
+                { name: "BrightPath",plan: "Growth",     students: 390,  gross: "?6.1L",  fee: "?0.92L", disc: "?0.3L",  net: "?4.9L",  status: "ty", sl: "Partial" },
+                { name: "LearnPro",  plan: "Starter",    students: 120,  gross: "?1.8L",  fee: "?0.27L", disc: "?0.1L",  net: "?1.4L",  status: "tr", sl: "Pending" },
+                { name: "EduNext",   plan: "Starter",    students: 80,   gross: "?0.9L",  fee: "?0.14L", disc: "?0.05L", net: "?0.7L",  status: "tr", sl: "Pending" },
               ].map((r) => (
                 <tr key={r.name} className="border-b border-[var(--border)] hover:bg-white/40 transition-colors">
                   <td className="px-4 py-3 font-semibold text-[var(--fg-primary)]">{r.name}</td>
@@ -97,7 +97,7 @@ export default function PlatformRevenuePage() {
               <div key={r.month}>
                 <div className="mb-2 flex justify-between text-xs">
                   <span className="font-semibold text-[var(--fg-secondary)]">{r.month} 2025</span>
-                  <span className="font-bold text-[var(--fg-primary)]">₹{r.val}L</span>
+                  <span className="font-bold text-[var(--fg-primary)]">?{r.val}L</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-[rgba(15,23,42,0.08)]">
                   <div
@@ -118,9 +118,9 @@ export default function PlatformRevenuePage() {
           </div>
           <div className="space-y-4">
             {[
-              { label: "Enterprise", val: "₹36.6L", pct: 87, color: "from-[var(--brand-green)] to-[var(--brand-yellow)]" },
-              { label: "Growth",     val: "₹14.7L", pct: 58, color: "bg-[var(--brand-blue)]" },
-              { label: "Starter",    val: "₹2.7L",  pct: 22, color: "bg-[var(--brand-yellow)]" },
+              { label: "Enterprise", val: "?36.6L", pct: 87, color: "from-[var(--brand-green)] to-[var(--brand-yellow)]" },
+              { label: "Growth",     val: "?14.7L", pct: 58, color: "bg-[var(--brand-blue)]" },
+              { label: "Starter",    val: "?2.7L",  pct: 22, color: "bg-[var(--brand-yellow)]" },
             ].map((r) => (
               <div key={r.label}>
                 <div className="mb-2 flex justify-between text-xs">
@@ -143,3 +143,4 @@ export default function PlatformRevenuePage() {
     </div>
   );
 }
+

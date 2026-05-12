@@ -3,12 +3,12 @@
 import { CheckCircle2, Clock, MessageSquare, AlertCircle } from "lucide-react";
 
 const tickets = [
-  { id: "TKT-042", subject: "Unable to access course after payment", tenant: "Acme LMS", user: "Rohit Sharma", priority: "High", status: "Open", time: "10 min ago" },
-  { id: "TKT-041", subject: "Certificate not generated after completion", tenant: "EdgeLearn", user: "Priya Mehta", priority: "Medium", status: "In Progress", time: "1 hr ago" },
-  { id: "TKT-040", subject: "Video not loading on mobile devices", tenant: "BrightPath", user: "Arjun Das", priority: "Medium", status: "Open", time: "3 hr ago" },
-  { id: "TKT-039", subject: "Bulk student import failing with CSV", tenant: "SkillHub", user: "Admin", priority: "High", status: "In Progress", time: "5 hr ago" },
-  { id: "TKT-038", subject: "Password reset email not received", tenant: "LearnPro", user: "Sneha Rao", priority: "Low", status: "Resolved", time: "1 day ago" },
-  { id: "TKT-037", subject: "Exam timer not working correctly", tenant: "Acme LMS", user: "Vikram K", priority: "High", status: "Resolved", time: "2 days ago" },
+  { id: "TKT-042", subject: "Unable to access course after payment", student: "Acme LMS", user: "Rohit Sharma", priority: "High", status: "Open", time: "10 min ago" },
+  { id: "TKT-041", subject: "Certificate not generated after completion", student: "EdgeLearn", user: "Priya Mehta", priority: "Medium", status: "In Progress", time: "1 hr ago" },
+  { id: "TKT-040", subject: "Video not loading on mobile devices", student: "BrightPath", user: "Arjun Das", priority: "Medium", status: "Open", time: "3 hr ago" },
+  { id: "TKT-039", subject: "Bulk student import failing with CSV", student: "SkillHub", user: "Admin", priority: "High", status: "In Progress", time: "5 hr ago" },
+  { id: "TKT-038", subject: "Password reset email not received", student: "LearnPro", user: "Sneha Rao", priority: "Low", status: "Resolved", time: "1 day ago" },
+  { id: "TKT-037", subject: "Exam timer not working correctly", student: "Acme LMS", user: "Vikram K", priority: "High", status: "Resolved", time: "2 days ago" },
 ];
 
 const stats = [
@@ -74,7 +74,7 @@ export default function SupportTicketsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] bg-white/50">
-                {["Ticket", "Subject", "Tenant", "User", "Priority", "Status", "Time", "Actions"].map((h) => (
+                {["Ticket", "Subject", "Student", "User", "Priority", "Status", "Time", "Actions"].map((h) => (
                   <th key={h} className={`px-4 py-3 text-left font-bold text-[var(--fg-primary)] ${h === "Actions" ? "text-center" : ""}`}>{h}</th>
                 ))}
               </tr>
@@ -84,7 +84,7 @@ export default function SupportTicketsPage() {
                 <tr key={t.id} className="border-b border-[var(--border)] hover:bg-white/40 transition-colors">
                   <td className="px-4 py-3 text-xs font-bold text-[var(--fg-secondary)]">{t.id}</td>
                   <td className="px-4 py-3 font-medium text-[var(--fg-primary)] max-w-[220px] truncate">{t.subject}</td>
-                  <td className="px-4 py-3 text-xs text-[var(--fg-secondary)]">{t.tenant}</td>
+                  <td className="px-4 py-3 text-xs text-[var(--fg-secondary)]">{t.student}</td>
                   <td className="px-4 py-3 text-[var(--fg-primary)]">{t.user}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-widest ${priorityColors[t.priority]}`}>
@@ -113,3 +113,4 @@ export default function SupportTicketsPage() {
     </div>
   );
 }
+

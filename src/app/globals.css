@@ -42,21 +42,29 @@
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
 
   /* ─── Sidebar (light) ───────────────── */
-  --sb-bg:          #f0f4f8;
-  --sb-border:      rgba(0, 0, 0, 0.08);
-  --sb-text:        #1e293b;
-  --sb-text-muted:  #64748b;
-  --sb-hover:       rgba(0, 0, 0, 0.05);
+  --sb-bg: #f0f4f8;
+  --sb-border: rgba(0, 0, 0, 0.08);
+  --sb-text: #1e293b;
+  --sb-text-muted: #64748b;
+  --sb-hover: rgba(0, 0, 0, 0.05);
   --sb-section-lbl: #94a3b8;
-  --sb-divider:     rgba(0, 0, 0, 0.08);
+  --sb-divider: rgba(0, 0, 0, 0.08);
   --sb-logo-border: rgba(0, 0, 0, 0.1);
   --sb-toggle-text: #64748b;
   --sb-toggle-hover-bg: rgba(0, 0, 0, 0.06);
-  --sb-sub-text:    #64748b;
-  --sb-sub-active:  #059669;
-  --sb-footer-bg:   rgba(0, 0, 0, 0.03);
+  --sb-sub-text: #64748b;
+  --sb-sub-active: #059669;
+  --sb-footer-bg: rgba(0, 0, 0, 0.03);
   --sb-footer-name: #1e293b;
-  --sb-footer-email:#64748b;
+  --sb-footer-email: #64748b;
+
+  /* topbar (light) */
+  --topbar-bg: rgba(255, 255, 255, 0.85);
+  --topbar-border: rgba(15, 23, 42, 0.08);
+  --topbar-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  --topbar-control-bg: rgba(255, 255, 255, 0.9);
+  --topbar-control-border: rgba(15, 23, 42, 0.12);
+  --topbar-badge-ring: #ffffff;
 
   /* ─── HERO ──────────────────────────── */
 
@@ -147,21 +155,29 @@
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
 
   /* ─── Sidebar (dark) ────────────────── */
-  --sb-bg:          #0f1117;
-  --sb-border:      rgba(255, 255, 255, 0.07);
-  --sb-text:        rgba(255, 255, 255, 0.82);
-  --sb-text-muted:  rgba(255, 255, 255, 0.38);
-  --sb-hover:       rgba(255, 255, 255, 0.06);
+  --sb-bg: #0f1117;
+  --sb-border: rgba(255, 255, 255, 0.07);
+  --sb-text: rgba(255, 255, 255, 0.82);
+  --sb-text-muted: rgba(255, 255, 255, 0.38);
+  --sb-hover: rgba(255, 255, 255, 0.06);
   --sb-section-lbl: rgba(255, 255, 255, 0.28);
-  --sb-divider:     rgba(255, 255, 255, 0.08);
+  --sb-divider: rgba(255, 255, 255, 0.08);
   --sb-logo-border: rgba(255, 255, 255, 0.1);
   --sb-toggle-text: rgba(255, 255, 255, 0.38);
   --sb-toggle-hover-bg: rgba(255, 255, 255, 0.08);
-  --sb-sub-text:    rgba(255, 255, 255, 0.45);
-  --sb-sub-active:  #34d399;
-  --sb-footer-bg:   rgba(255, 255, 255, 0.03);
+  --sb-sub-text: rgba(255, 255, 255, 0.45);
+  --sb-sub-active: #34d399;
+  --sb-footer-bg: rgba(255, 255, 255, 0.03);
   --sb-footer-name: rgba(255, 255, 255, 0.9);
-  --sb-footer-email:rgba(255, 255, 255, 0.38);
+  --sb-footer-email: rgba(255, 255, 255, 0.38);
+
+  /* topbar (dark) */
+  --topbar-bg: rgba(6, 4, 15, 0.72);
+  --topbar-border: rgba(255, 255, 255, 0.08);
+  --topbar-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --topbar-control-bg: rgba(255, 255, 255, 0.06);
+  --topbar-control-border: rgba(255, 255, 255, 0.14);
+  --topbar-badge-ring: rgba(6, 4, 15, 0.9);
   /* common */
   --green-gradient-dark: linear-gradient(135deg, #84ff3d, #c8ff74);
 
@@ -200,25 +216,6 @@
 
   --orb-inactive-value: rgba(255, 255, 255, 0.52);
   --orb-inactive-label: rgba(255, 255, 255, 0.32);
-}
-/* ─── Tailwind theme bridge ──────────────────────────────────── */
-@theme inline {
-  --color-background: var(--bg-page);
-  --color-foreground: var(--fg-primary);
-
-  /* sidebar */
-  --color-sidebar-bg: #111827;
-  --color-sidebar-border: rgba(255,255,255,0.08);
-  --color-sidebar-text: rgba(255,255,255,0.85);
-  --color-sidebar-muted: rgba(255,255,255,0.4);
-  --color-sidebar-hover: rgba(255,255,255,0.07);
-  --color-sidebar-active-from: #10b981;
-  --color-sidebar-active-to: #f59e0b;
-
-  /* brand */
-  --color-brand-green: var(--brand-green);
-  --color-brand-yellow: var(--brand-yellow);
-  --color-brand-blue: var(--brand-blue);
 }
 
 /* ─── Base ───────────────────────────────────────────────────── */

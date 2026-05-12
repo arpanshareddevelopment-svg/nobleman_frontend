@@ -26,7 +26,7 @@ const labelCls = "block text-[10px] font-bold uppercase tracking-widest text-[va
 const sectionLabelCls =
   "flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)] mt-5 mb-3 pb-2 border-b border-black/8 dark:border-white/8";
 
-export default function AddTenantModal({ onClose }: Props) {
+export default function AddStudentModal({ onClose }: Props) {
   const [password, setPassword] = useState("");
   const [subdomain, setSubdomain] = useState("");
 
@@ -45,7 +45,7 @@ export default function AddTenantModal({ onClose }: Props) {
             <Building2 size={18} />
           </div>
           <div className="flex-1">
-            <div className="text-sm font-bold text-[var(--fg-primary)] font-[Manrope]">Add New Tenant</div>
+            <div className="text-sm font-bold text-[var(--fg-primary)] font-[Manrope]">Add New Student</div>
             <div className="text-xs text-[var(--fg-muted)]">Onboard a new organisation onto the platform</div>
           </div>
           <button
@@ -191,7 +191,7 @@ export default function AddTenantModal({ onClose }: Props) {
             <UserCircle2 size={14} /> Primary Admin Account
           </div>
           <div className="mb-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
-            This will be the first admin for this tenant. They can add more admins later.
+            This will be the first admin for this student. They can add more admins later.
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
@@ -261,10 +261,11 @@ export default function AddTenantModal({ onClose }: Props) {
             onClick={onClose}
             className="rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-5 py-2 text-xs font-bold text-[#06110c] shadow-lg hover:shadow-xl transition-all cursor-pointer"
           >
-            Create Tenant
+            Create Student
           </button>
         </div>
       </div>
     </div>
   );
 }
+

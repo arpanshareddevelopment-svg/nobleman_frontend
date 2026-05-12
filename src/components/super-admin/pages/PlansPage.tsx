@@ -17,7 +17,7 @@ const plans = [
       "Email support",
       "Custom subdomain",
     ],
-    tenants: 2,
+    students: 2,
   },
   {
     name: "Growth",
@@ -35,7 +35,7 @@ const plans = [
       "Exam & quiz builder",
       "Certificate generation",
     ],
-    tenants: 4,
+    students: 4,
   },
   {
     name: "Enterprise",
@@ -54,7 +54,7 @@ const plans = [
       "SLA guarantee",
       "Custom integrations",
     ],
-    tenants: 6,
+    students: 6,
   },
 ];
 
@@ -121,7 +121,7 @@ export default function PlansPage() {
               </button>
             </div>
             <div className="text-center text-xs" style={{ color: "var(--fg-secondary)" }}>
-              <span style={{ fontWeight: 700, color: p.color }}>{p.tenants}</span> tenants on this plan
+              <span style={{ fontWeight: 700, color: p.color }}>{p.students}</span> students on this plan
             </div>
           </div>
         ))}
@@ -188,3 +188,4 @@ export default function PlansPage() {
     </div>
   );
 }
+

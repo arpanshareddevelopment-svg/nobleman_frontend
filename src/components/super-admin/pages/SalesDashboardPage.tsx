@@ -5,7 +5,7 @@ import { BadgeDollarSign, ShoppingCart, TrendingUp, Users } from "lucide-react";
 const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"];
 const revenueData = [38, 52, 71, 65, 88, 112, 142];
 
-const topTenants = [
+const topStudents = [
   { init: "SH", name: "SkillHub", plan: "Enterprise", revenue: "₹22.4L", growth: "+18%", positive: true },
   { init: "AL", name: "Acme LMS", plan: "Enterprise", revenue: "₹14.2L", growth: "+12%", positive: true },
   { init: "EL", name: "EdgeLearn", plan: "Growth", revenue: "₹8.6L", growth: "+9%", positive: true },
@@ -17,7 +17,7 @@ const stats = [
   { icon: <BadgeDollarSign size={18} />, label: "Total Revenue", val: "₹84L", sub: "↑ 31% YoY", bg: "from-purple-50 to-purple-100/50", dot: "bg-purple-400" },
   { icon: <ShoppingCart size={18} />, label: "New Enrollments", val: "1,240", sub: "This month", bg: "from-green-50 to-green-100/50", dot: "bg-green-400" },
   { icon: <TrendingUp size={18} />, label: "MoM Growth", val: "+26%", sub: "vs last month", bg: "from-blue-50 to-blue-100/50", dot: "bg-blue-400" },
-  { icon: <Users size={18} />, label: "Active Tenants", val: "10", sub: "Paying customers", bg: "from-amber-50 to-amber-100/50", dot: "bg-amber-400" },
+  { icon: <Users size={18} />, label: "Active Students", val: "10", sub: "Paying customers", bg: "from-amber-50 to-amber-100/50", dot: "bg-amber-400" },
 ];
 
 const maxVal = Math.max(...revenueData);
@@ -82,11 +82,11 @@ export default function SalesDashboardPage() {
           </div>
         </div>
 
-        {/* Top Tenants */}
+        {/* Top Students */}
         <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-5 shadow-sm">
-          <div className="mb-4 text-sm font-extrabold text-[var(--fg-primary)]">Top Tenants by Revenue</div>
+          <div className="mb-4 text-sm font-extrabold text-[var(--fg-primary)]">Top Students by Revenue</div>
           <div className="space-y-2.5">
-            {topTenants.map((t) => (
+            {topStudents.map((t) => (
               <div key={t.name} className="flex items-center gap-3">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] text-[10px] font-bold text-[#06110c]">
                   {t.init}
@@ -132,3 +132,4 @@ export default function SalesDashboardPage() {
     </div>
   );
 }
+

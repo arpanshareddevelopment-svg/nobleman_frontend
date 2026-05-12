@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CalendarDays, Eye, Megaphone, PencilLine, Save, ShieldAlert, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 
 const announcements = [
-  { id: "ANN-012", title: "Platform maintenance on May 15, 2025", body: "Scheduled downtime from 2:00 AM – 4:00 AM IST. All services will be unavailable during this window.", target: "All Tenants", type: "tp", typeLabel: "Maintenance", time: "2 hours ago", sent: true },
+  { id: "ANN-012", title: "Platform maintenance on May 15, 2025", body: "Scheduled downtime from 2:00 AM – 4:00 AM IST. All services will be unavailable during this window.", target: "All Students", type: "tp", typeLabel: "Maintenance", time: "2 hours ago", sent: true },
   { id: "ANN-011", title: "New feature: Certificate auto-generation is live", body: "Certificates are now auto-generated upon course completion. Admins can customise templates from Settings.", target: "All Admins", type: "tg", typeLabel: "Feature", time: "1 day ago", sent: true },
   { id: "ANN-010", title: "Billing reminder — Growth plan renewal due", body: "Your Growth plan subscription renews on May 20. Please ensure payment details are up to date.", target: "EdgeLearn, BrightPath", type: "ty", typeLabel: "Billing", time: "3 days ago", sent: true },
   { id: "ANN-009", title: "Security update: 2FA now mandatory for admins", body: "Two-factor authentication is now required for all admin logins. Please set up your authenticator app.", target: "All Admins", type: "tr", typeLabel: "Security", time: "5 days ago", sent: true },
@@ -147,10 +147,10 @@ export default function AnnouncementsPage() {
                 Target Audience <span className="text-red-500">*</span>
               </label>
               <select className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]">
-                <option>All Tenants</option>
+                <option>All Students</option>
                 <option>All Admins</option>
                 <option>All Students</option>
-                <option>Specific Tenant</option>
+                <option>Specific Student</option>
               </select>
             </div>
             <div className="flex flex-col gap-1">
@@ -207,3 +207,4 @@ export default function AnnouncementsPage() {
     </div>
   );
 }
+

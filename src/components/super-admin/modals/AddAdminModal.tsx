@@ -34,7 +34,7 @@ const perms = [
   { icon: <Plus size={15} />, label: "Support Tickets", sub: "Reply and resolve tickets" },
   { icon: <Sparkles size={15} />, label: "Announcements", sub: "Send messages to students" },
   { icon: <FileText size={15} />, label: "Download Reports", sub: "Export data as PDF/CSV" },
-  { icon: <Building2 size={15} />, label: "Tenant Settings", sub: "Edit platform configuration" },
+  { icon: <Building2 size={15} />, label: "Student Settings", sub: "Edit platform configuration" },
   { icon: <KeyRound size={15} />, label: "Access Control", sub: "Lock/unlock student access" },
 ];
 
@@ -78,7 +78,7 @@ export default function AddAdminModal({ onClose }: Props) {
           </div>
           <div className="flex-1">
             <div className="text-sm font-bold text-[var(--fg-primary)] font-[Manrope]">Add New Admin</div>
-            <div className="text-xs text-[var(--fg-muted)]">Create admin account & assign to a tenant</div>
+            <div className="text-xs text-[var(--fg-muted)]">Create admin account & assign to a student</div>
           </div>
           <button
             onClick={onClose}
@@ -110,7 +110,7 @@ export default function AddAdminModal({ onClose }: Props) {
               <label className={labelCls}>Email Address <span className="text-red-500">*</span></label>
               <input
                 type="email"
-                placeholder="admin@tenant.com"
+                placeholder="admin@student.com"
                 className={inputCls}
                 onChange={(e) => setUsername(e.target.value.split("@")[0])}
               />
@@ -121,13 +121,13 @@ export default function AddAdminModal({ onClose }: Props) {
             </div>
           </div>
 
-          {/* Tenant Assignment */}
+          {/* Student Assignment */}
           <div className={sectionLabelCls}>
-            <Building2 size={14} /> Tenant Assignment
+            <Building2 size={14} /> Student Assignment
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Assign to Tenant <span className="text-red-500">*</span></label>
+              <label className={labelCls}>Assign to Student <span className="text-red-500">*</span></label>
               <select className={selectCls}>
                 <option>Acme LMS</option>
                 <option>EdgeLearn</option>
@@ -140,7 +140,7 @@ export default function AddAdminModal({ onClose }: Props) {
               <label className={labelCls}>Admin Role</label>
               <select className={selectCls}>
                 <option>Admin</option>
-                <option>Super Admin (Tenant-level)</option>
+                <option>Super Admin (Student-level)</option>
               </select>
             </div>
           </div>
@@ -206,7 +206,7 @@ export default function AddAdminModal({ onClose }: Props) {
             <ShieldCheck size={14} /> Platform Permissions
           </div>
           <div className="mb-3 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-3 py-2 text-xs text-blue-800 dark:text-blue-300">
-            Select what this admin can do within their tenant. You can change these anytime.
+            Select what this admin can do within their student. You can change these anytime.
           </div>
           <div className="grid grid-cols-2 gap-2">
             {perms.map((p, i) => (
@@ -278,3 +278,4 @@ export default function AddAdminModal({ onClose }: Props) {
     </div>
   );
 }
+
