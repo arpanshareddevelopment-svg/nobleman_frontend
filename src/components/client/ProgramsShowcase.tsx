@@ -12,6 +12,7 @@ const PROGRAMS = [
     duration: "3",
     students: "1,200+",
     hike: "86%",
+    cover: "/course/data_analyst.png",
     desc: "Become an advanced Data Analyst in 3 months. Master Excel, SQL, Power BI, and Python through live classes with practitioner instructors.",
     stack: ["Python", "Excel", "SQL", "Power BI"],
   },
@@ -21,6 +22,7 @@ const PROGRAMS = [
     duration: "4",
     students: "980+",
     hike: "92%",
+    cover: "/course/fullstack.png",
     desc: "Zero to deployed in 4 months. Build production-ready applications with React, Node.js, and modern DevOps practices.",
     stack: ["React", "Node.js", "MongoDB", "AWS"],
   },
@@ -30,6 +32,7 @@ const PROGRAMS = [
     duration: "3.5",
     students: "740+",
     hike: "78%",
+    cover: "/course/product_management.png",
     desc: "Think like a PM, ship like a pro. Learn strategy, execution, and analytics from industry experts at BCG and Amazon.",
     stack: ["Figma", "Analytics", "Strategy", "Metrics"],
   },
@@ -39,6 +42,7 @@ const PROGRAMS = [
     duration: "4",
     students: "620+",
     hike: "95%",
+    cover: "/course/ai.png",
     desc: "Master cutting-edge AI/ML from Google researchers. Build real-world models and deploy them to production at scale.",
     stack: ["Python", "TensorFlow", "PyTorch", "LLMs"],
   },
@@ -48,6 +52,7 @@ const PROGRAMS = [
     duration: "3",
     students: "530+",
     hike: "82%",
+    cover: "/course/uxui.png",
     desc: "Design systems that 100M+ users love. Learn from Flipkart's design lead with hands-on projects and a real portfolio.",
     stack: ["Figma", "Design Systems", "Research", "Prototyping"],
   },
@@ -57,11 +62,11 @@ const PROGRAMS = [
     duration: "3.5",
     students: "480+",
     hike: "88%",
+    cover: "/course/devops.png",
     desc: "Demystify Kubernetes & AWS. Scale infrastructure for Fortune 500 clients with confidence and a job-ready portfolio.",
     stack: ["Kubernetes", "AWS", "CI/CD", "Docker"],
   },
 ];
-
 const SHORT_NAMES = [
   "Data Analyst",
   "Full-Stack",
@@ -141,7 +146,7 @@ export default function ProgramsShowcase() {
     <section
       id="programs"
       ref={sectionRef}
-      className="relative overflow-hidden py-12 lg:py-20 text-[var(--fg-primary)] [font-family:'Space_Grotesk',sans-serif]"
+      className="relative overflow-x-hidden overflow-y-hidden py-12 lg:py-20 text-[var(--fg-primary)] [font-family:'Space_Grotesk',sans-serif]"
       style={{ background: "var(--bg-page)" }}
     >
       <div
@@ -163,14 +168,14 @@ export default function ProgramsShowcase() {
       />
 
       <div
-        className="pointer-events-none absolute -right-24 -top-24 h-[520px] w-[520px] rounded-full"
+        className="pointer-events-none absolute right-0 -top-24 h-[520px] w-[520px] rounded-full"
         style={{
           background:
             "radial-gradient(circle, var(--brand-green-glow) 0%, transparent 70%)",
         }}
       />
 
-      <div className="relative mx-auto max-w-[1060px] px-4 sm:px-6 lg:px-9">
+      <div className="relative mx-auto w-full max-w-[1060px] overflow-x-hidden px-4 sm:px-6 lg:px-9">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -212,17 +217,17 @@ export default function ProgramsShowcase() {
         </motion.div>
 
         {/* Tabs */}
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <nav
             ref={navRef}
-            className="program-tabs mb-9 flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="program-tabs mb-9 flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:h-0"
             style={{
               borderTop: "1px solid var(--border)",
               borderBottom: "1px solid var(--border)",
             }}
           >
             {" "}
-            <div className="w-[35vw] flex-shrink-0 md:hidden" />
+            <div className="w-4 flex-shrink-0 md:hidden" />
             {SHORT_NAMES.map((name, i) => (
               <button
                 key={i}
@@ -251,7 +256,7 @@ export default function ProgramsShowcase() {
                 />
               </button>
             ))}
-            <div className="w-[35vw] flex-shrink-0 md:hidden" />
+            <div className="w-4 flex-shrink-0 md:hidden" />
           </nav>
         </div>
         {/* Grid */}
@@ -259,7 +264,7 @@ export default function ProgramsShowcase() {
           initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           transition={{ duration: 0.45, delay: 0.1 }}
-          className="grid overflow-hidden rounded-2xl grid-cols-1 lg:grid-cols-2"
+          className="grid overflow-hidden rounded-2xl grid-cols-1 lg:grid-cols-2 items-stretch"
           style={{
             gap: "1px",
             background: "var(--border)",
@@ -272,46 +277,29 @@ export default function ProgramsShowcase() {
             initial={{ opacity: 0, x: -18 }}
             animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -18 }}
             transition={{ duration: 0.45, delay: 0.15 }}
-            className="p-7 sm:p-8 lg:col-start-1 lg:row-start-1 lg:p-10"
+            className="relative overflow-hidden lg:col-start-1 lg:row-start-1 h-full"
             style={{
               background: "var(--bg-page)",
             }}
           >
-            <p
-              className="mb-3 text-[10px] sm:text-[clamp(0.65rem,0.8vw,0.75rem)] tracking-[0.1em]"
-              style={{ color: "var(--fg-muted)" }}
-            >
-              {p.id} / 06
-            </p>
-
-            <h3
-              className="mb-3 font-normal leading-[1.12] tracking-[-0.01em] text-[clamp(1.35rem,2.4vw,1.75rem)]"
-              style={{
-                fontFamily: "'DM Serif Display', Georgia, serif",
-                color: "var(--fg-primary)",
-              }}
-            >
-              {p.name}
-            </h3>
-
-            <p
-              className="max-w-full text-[12.5px] leading-[1.8] sm:max-w-[320px]"
-              style={{ color: "var(--fg-secondary)" }}
-            >
-              {p.desc}
-            </p>
+            <img
+              src={p.cover}
+              alt={p.name}
+              className="block w-full h-full object-contain bg-black"
+            />
           </motion.div>
 
-          {/* Cell 2 */}
+          {/* Cell 2 — stats + curriculum + CTA */}
           <motion.div
             initial={{ opacity: 0, x: 18 }}
             animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 18 }}
             transition={{ duration: 0.45, delay: 0.2 }}
-            className="flex flex-col justify-between p-6 sm:p-7 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:border-l lg:border-t-0 lg:p-9 border-t border-[var(--border)]"
+            className="flex flex-col justify-between p-6 sm:p-7 lg:col-start-2 lg:row-start-1 lg:border-l lg:border-t-0 lg:py-2 border-t border-[var(--border)] h-full"
             style={{
               background: "var(--bg-card)",
             }}
           >
+            {/* Stats */}
             <div className="flex flex-row items-stretch gap-3 sm:gap-0">
               {[
                 { label: "Duration", value: p.duration, unit: "months" },
@@ -349,49 +337,42 @@ export default function ProgramsShowcase() {
               ))}
             </div>
 
+            {/* Curriculum stack */}
+            <div
+              className="mt-2 pt-6"
+              style={{ borderTop: "1px solid var(--border)" }}
+            >
+              <p
+                className="mb-3 text-[clamp(0.7rem,0.85vw,1rem)] uppercase tracking-[0.18em]"
+                style={{ color: "var(--fg-muted)" }}
+              >
+                Curriculum stack
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {p.stack.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-md px-3 py-[5px] text-[clamp(0.7rem,0.85vw,1rem)] tracking-[0.04em]"
+                    style={{
+                      border: "1px solid var(--border)",
+                      color: "var(--fg-secondary)",
+                      background: "var(--bg-page)",
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA */}
             <button
-              className="flex gap-8 justify-center mt-8 w-full cursor-pointer rounded-full border-none px-5 py-[11px] text-[10px] sm:text-[clamp(0.7rem,0.8vw,1rem)] font-bold uppercase tracking-[0.16em] transition-colors duration-200 bg-[var(--brand-green)] text-[#0d1117] hover:bg-[var(--brand-green-dark)] hover:text-white"
-              style={{
-                fontFamily: "inherit",
-              }}
+              className="flex gap-8 justify-center my-6 w-full cursor-pointer rounded-full border-none px-5 py-[11px] text-[10px] sm:text-[clamp(0.7rem,0.8vw,1rem)] font-bold uppercase tracking-[0.16em] transition-colors duration-200 bg-[var(--brand-green)] text-[#0d1117] hover:bg-[var(--brand-green-dark)] hover:text-white"
+              style={{ fontFamily: "inherit" }}
             >
               Explore Program
               <MoveRight size={16} />
             </button>
-          </motion.div>
-
-          {/* Cell 3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ duration: 0.4, delay: 0.24 }}
-            className="px-7 py-6 sm:px-9 sm:py-[22px] lg:col-start-1 lg:row-start-2"
-            style={{
-              background: "var(--bg-card)",
-            }}
-          >
-            <p
-              className="mb-3 text-[clamp(0.7rem,0.85vw,1rem)] uppercase tracking-[0.18em]"
-              style={{ color: "var(--fg-muted)" }}
-            >
-              Curriculum stack
-            </p>
-
-            <div className="flex flex-wrap gap-2">
-              {p.stack.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-md px-3 py-[5px]  text-[clamp(0.7rem,0.85vw,1rem)] tracking-[0.04em]"
-                  style={{
-                    border: "1px solid var(--border)",
-                    color: "var(--fg-secondary)",
-                    background: "var(--bg-page)",
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
           </motion.div>
         </motion.div>
 

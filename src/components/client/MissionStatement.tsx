@@ -105,7 +105,7 @@ export default function MissionStatement() {
         }}
       />
 
-      <div className="mx-auto max-w-5xl px-6 md:px-10">
+      <div className="mx-auto max-w-5xl px-4 md:px-10">
         <motion.div
           whileHover={{
             y: -4,
@@ -114,7 +114,7 @@ export default function MissionStatement() {
           initial={{ opacity: 0, y: 32 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="relative rounded-[2rem] overflow-hidden p-8 md:p-12"
+          className="relative rounded-[2rem] overflow-hidden p-6  md:p-12"
           style={{
             background: isDark
               ? "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)"

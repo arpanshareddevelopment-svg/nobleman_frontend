@@ -175,7 +175,7 @@ function ThumbStrip({
   // Don't render until mounted
   if (!mounted) {
     return (
-      <div className="hidden lg:flex flex-col justify-between h-[380px] flex-shrink-0" />
+      <div className="hidden lg:flex flex-col gap-3 h-[320px] flex-shrink-0" />
     );
   }
 
@@ -196,7 +196,7 @@ function ThumbStrip({
   );
 
   return (
-    <div className="hidden lg:flex flex-col justify-between h-[380px] flex-shrink-0">
+    <div className="hidden lg:flex flex-col gap-3 h-[320px] flex-shrink-0">
       {displayInstructors.map((inst, i) => {
         const globalIndex = start + i;
         const themeSet = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
@@ -356,7 +356,7 @@ export default function InstructorCarousel() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-14">
         {/* Glass wrapper matching other sections */}
         <div
-          className="relative rounded-[2rem] border p-4 sm:p-6 md:p-8 overflow-hidden"
+          className="relative rounded-[2rem] border p-4 sm:p-6 overflow-hidden"
           style={{
             background: isDark
               ? "rgba(255,255,255,0.04)"
@@ -372,18 +372,51 @@ export default function InstructorCarousel() {
           {/* ── Section header ── */}
           <div className="flex items-end justify-between mb-12">
             <div>
-              <span
-                className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 transition-colors duration-500"
-                style={{
-                  background: `${displayInst.accent}14`,
-                  borderColor: `${displayInst.accent}40`,
-                  color: displayInst.accent,
-                }}
-              >
-                Meet the Mentors
-              </span>
+              <div className="flex w-full  justify-between">
+                <span
+                  className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 transition-colors duration-500"
+                  style={{
+                    background: `${displayInst.accent}14`,
+                    borderColor: `${displayInst.accent}40`,
+                    color: displayInst.accent,
+                  }}
+                >
+                  Meet the Mentors
+                </span>
+
+                {/* Arrow controls */}
+                <div className="hidden sm:flex items-center gap-3 ">
+                  <span
+                    className="text-xs font-mono tracking-widest"
+                    style={{ color: "var(--fg-muted)" }}
+                  >
+                    {String(active + 1).padStart(2, "0")} /{" "}
+                    {String(total).padStart(2, "0")}
+                  </span>
+                  {([-1, 1] as const).map((dir, di) => (
+                    <button
+                      key={di}
+                      onClick={() => handleArrow(dir)}
+                      aria-label={dir === -1 ? "Previous" : "Next"}
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
+                      style={{
+                        background: "var(--bg-card)",
+                        border: `1px solid ${displayInst.accent}50`,
+                        color: displayInst.accent,
+                      }}
+                    >
+                      {dir === -1 ? (
+                        <ChevronLeft size={15} strokeWidth={2.5} />
+                      ) : (
+                        <ChevronRight size={15} strokeWidth={2.5} />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <h2
-                className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-[1.05] tracking-tight "
+                className="text-[clamp(2.2rem,3.2vw,3.5rem)] font-black leading-[1.05] tracking-tight"
                 style={{ color: "var(--fg-primary)" }}
               >
                 Learn from people who&apos;ve{" "}
@@ -417,36 +450,6 @@ export default function InstructorCarousel() {
                 </AnimatePresence>
               </h2>
             </div>
-
-            {/* Arrow controls */}
-            <div className="hidden sm:flex items-center gap-3 ">
-              <span
-                className="text-xs font-mono tracking-widest"
-                style={{ color: "var(--fg-muted)" }}
-              >
-                {String(active + 1).padStart(2, "0")} /{" "}
-                {String(total).padStart(2, "0")}
-              </span>
-              {([-1, 1] as const).map((dir, di) => (
-                <button
-                  key={di}
-                  onClick={() => handleArrow(dir)}
-                  aria-label={dir === -1 ? "Previous" : "Next"}
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
-                  style={{
-                    background: "var(--bg-card)",
-                    border: `1px solid ${displayInst.accent}50`,
-                    color: displayInst.accent,
-                  }}
-                >
-                  {dir === -1 ? (
-                    <ChevronLeft size={15} strokeWidth={2.5} />
-                  ) : (
-                    <ChevronRight size={15} strokeWidth={2.5} />
-                  )}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* ── Main content row ── */}
@@ -470,8 +473,8 @@ export default function InstructorCarousel() {
                 className="relative w-full lg:flex-shrink-0 rounded-3xl overflow-hidden self-stretch"
                 style={{
                   width: "100%",
-                  maxWidth: "360px",
-                  height: "380px",
+                  maxWidth: "320px",
+                  height: "320px",
                   boxShadow: isDark
                     ? `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`
                     : `0 20px 60px rgba(7,18,37,0.06), 0 0 0 1px ${displayInst.accent}14`,

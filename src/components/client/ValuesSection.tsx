@@ -150,40 +150,9 @@ export default function ValuesSection() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group relative overflow-hidden rounded-[1.5rem] border p-6 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1"
                 style={{
-                  background: isDark
-                    ? `
-      linear-gradient(
-        135deg,
-        rgba(255,255,255,0.07) 0%,
-        rgba(255,255,255,0.03) 100%
-      )
-    `
-                    : `
-      linear-gradient(
-        135deg,
-        rgba(255,255,255,0.38) 0%,
-        rgba(255,255,255,0.18) 42%,
-        rgba(240,248,255,0.14) 100%
-      )
-    `,
-
-                  border: isDark
-                    ? "1px solid rgba(255,255,255,0.08)"
-                    : "1px solid rgba(255,255,255,0.45)",
-
-                  boxShadow: isDark
-                    ? `
-      0 12px 40px rgba(0,0,0,0.35),
-      inset 0 1px 0 rgba(255,255,255,0.08)
-    `
-                    : `
-      0 12px 40px rgba(120,140,180,0.14),
-      0 2px 10px rgba(0,0,0,0.05),
-      inset 0 1px 0 rgba(255,255,255,0.75)
-    `,
-
-                  backdropFilter: "blur(28px)",
-                  WebkitBackdropFilter: "blur(28px)",
+                  background: "var(--card)",
+                  border: "1px solid var(--card-border)",
+                  boxShadow: "var(--card-shadow)",
                 }}
               >
                 {/* Hover Glow */}

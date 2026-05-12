@@ -65,7 +65,7 @@ function FooterColumn({
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = isDark
                   ? "white"
-                  : "var(--brand-blue-dark)";
+                  : "black";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = isDark
@@ -239,7 +239,7 @@ export default function Footer() {
               style={{
                 color: isDark
                   ? "rgba(255,255,255,0.55)"
-                  : "rgba(15,23,42,0.62)",
+                  : "rgba(0, 0, 0, 0.62)",
               }}
             >
               NobleMan Learning helps students and professionals break into
@@ -278,12 +278,15 @@ export default function Footer() {
           style={{
             borderColor: isDark
               ? "rgba(255,255,255,0.08)"
-              : "rgba(15,23,42,0.08)",
+              : "rgba(0, 2, 4, 0.08)",
 
             color: isDark ? "rgba(255,255,255,0.4)" : "rgba(15,23,42,0.45)",
           }}
         >
-          <p>© 2026 NobleMan Learning. All rights reserved.</p>
+          <p>
+            © 2026 NobleMan Learning. Powered by Aurelian Vulcan Group Pvt Ltd.
+            All rights reserved.
+          </p>
 
           <div className="flex flex-wrap items-center gap-5">
             {["Privacy Policy", "Terms", "Cookies"].map((item) => (
@@ -298,7 +301,7 @@ export default function Footer() {
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = isDark
                     ? "white"
-                    : "var(--brand-blue-dark)";
+                    : "black";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = isDark

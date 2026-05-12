@@ -35,7 +35,7 @@ const SECTION_COLORS: SectionColor[] = [
 // ─── Nav links (full + abbreviated) ──────────────────────────────────────────
 const NAV_LINKS = [
   { href: "#programs", label: "Programs", short: "Programs" },
-  { href: "#subscriptions", label: "Pricing", short: "Pricing" },
+  { href: "#subscriptions", label: "Subscriptions", short: "Subscriptions" },
   { href: "#resources", label: "Resources", short: "Resources" },
 ];
 
@@ -74,7 +74,11 @@ function BrandLogo({
     return (
       <div
         className="relative flex items-center justify-center transition-all duration-300 rounded-full overflow-hidden"
-        style={{ height: isMobile ? 34 : 52, width: displayWidth, background: "transparent" }}
+        style={{
+          height: isMobile ? 34 : 52,
+          width: displayWidth,
+          background: "transparent",
+        }}
       />
     );
   }
@@ -90,7 +94,11 @@ function BrandLogo({
   return (
     <div
       className="relative flex items-center justify-center transition-all duration-300 rounded-full overflow-hidden"
-      style={{ height: isMobile ? 34 : 52, width: displayWidth, background: "transparent" }}
+      style={{
+        height: isMobile ? 34 : 52,
+        width: displayWidth,
+        background: "transparent",
+      }}
     >
       <Image
         src={src}
@@ -145,7 +153,9 @@ function UserAvatar({
           fontFamily: "inherit",
           boxShadow: open
             ? `0 0 0 2.5px ${avatarBg}, 0 0 24px rgba(200,255,0,0.50), 0 4px 20px rgba(0,0,0,0.22)`
-            : `0 0 0 2px rgba(0, 234, 255, 0.45), 0 4px 18px rgba(0,0,0,0.18)`,
+            : isDark
+              ? `0 0 0 2px rgba(0, 234, 255, 0.45), 0 4px 18px rgba(0,0,0,0.18)`
+              : `0 0 0 2px rgba(0, 180, 200, 0.9), 0 4px 12px rgba(0,0,0,0.10)`,
           transition: "box-shadow 0.3s ease",
         }}
       >
@@ -204,7 +214,7 @@ function UserAvatar({
                 </p>
                 <p
                   className="text-sm font-semibold truncate leading-none"
-                  style={{ color: "#c8ff00" }}
+                  style={{ color: "#749401b3" }}
                 >
                   Hi, {userName.split(" ")[0]} 👋
                 </p>
@@ -416,7 +426,7 @@ export default function Navbar({
 
       {/* Navbar pill — top-left */}
       <div
-        className={`fixed z-50 ${isMobile ? "left-4 top-4" : "left-5 top-5"}`}
+        className={`fixed z-50 ${isMobile ? "left-4 top-4" : "left-5 top-3"}`}
       >
         <motion.nav
           ref={navRef}
@@ -505,7 +515,7 @@ export default function Navbar({
                   {/* Nav links */}
                   <div
                     className={`flex items-center min-w-0 ${
-                      isMobile ? "gap-2.5 text-[13px]" : "gap-5 text-sm"
+                      isMobile ? "gap-2 text-[11.5px]" : "gap-5 text-sm"
                     } font-medium text-[var(--fg-primary)]`}
                   >
                     {NAV_LINKS.map(({ href, label, short }) => (
@@ -535,8 +545,8 @@ export default function Navbar({
                       aria-label="Toggle theme"
                       className="cursor-pointer flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ml-1"
                       style={{
-                        height: isMobile ? 30 : 32,
-                        width: isMobile ? 30 : 32,
+                        height: isMobile ? 25 : 32,
+                        width: isMobile ? 25 : 32,
                         background: isDark
                           ? "rgba(255,255,255,0.08)"
                           : "rgba(255,255,255,0.72)",
@@ -551,9 +561,9 @@ export default function Navbar({
                       }}
                     >
                       {isDark ? (
-                        <Sun size={isMobile ? 14 : 16} />
+                        <Sun size={isMobile ? 13 : 16} />
                       ) : (
-                        <Moon size={isMobile ? 14 : 16} />
+                        <Moon size={isMobile ? 13 : 16} />
                       )}
                     </motion.button>
                   )}

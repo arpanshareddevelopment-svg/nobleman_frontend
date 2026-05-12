@@ -25,7 +25,6 @@ import {
   Sun,
 } from "lucide-react";
 
-
 import type { PageId } from "./SuperAdminShell";
 
 interface Props {
@@ -90,29 +89,28 @@ export default function Sidebar({
   openAddAdmin,
   openAddStudent,
 }: Props) {
-
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-useEffect(() => {
-  const initialDark = document.documentElement.classList.contains("dark");
+  useEffect(() => {
+    const initialDark = document.documentElement.classList.contains("dark");
 
-  setIsDark(initialDark);
-  setMounted(true);
+    setIsDark(initialDark);
+    setMounted(true);
 
-  const observer = new MutationObserver(() => {
-    const isDarkNow = document.documentElement.classList.contains("dark");
+    const observer = new MutationObserver(() => {
+      const isDarkNow = document.documentElement.classList.contains("dark");
 
-    setIsDark(isDarkNow);
-  });
+      setIsDark(isDarkNow);
+    });
 
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
-  return () => observer.disconnect();
-}, []);
+    return () => observer.disconnect();
+  }, []);
 
   function toggle() {
     const nowDark = document.documentElement.classList.toggle("dark");
@@ -341,20 +339,21 @@ useEffect(() => {
           <>
             {/* Brand */}
             <div className="flex min-w-0 flex-1 flex-col justify-center items-start">
-              {mounted && (<Image
-                src={
-                  isDark
-                    ? "/branding/brand_dark.png"
-                    : "/branding/brand_light.png"
-                }
-                alt="Brand"
-                width={175}
-                height={40}
-                priority
-                unoptimized
-                className="h-9 w-auto object-contain"
-              />)}
-              
+              {mounted && (
+                <Image
+                  src={
+                    isDark
+                      ? "/branding/brand_dark.png"
+                      : "/branding/brand_light.png"
+                  }
+                  alt="Brand"
+                  width={175}
+                  height={40}
+                  priority
+                  unoptimized
+                  className="h-9 w-auto object-contain"
+                />
+              )}
 
               <span
                 className="mt-0.5 pl-1 text-[10px] font-semibold uppercase tracking-[0.22em]"
@@ -378,7 +377,7 @@ useEffect(() => {
                   "sub-exams": false,
                 });
               }}
-              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-150 hover:bg-[var(--sb-hover)]"
+              className="flex h-9 w-9  items-center justify-center rounded-xl transition-all duration-150 hover:bg-[var(--sb-hover)]"
             >
               <PanelLeftClose size={17} />
             </button>
@@ -391,26 +390,28 @@ useEffect(() => {
               style={{
                 borderColor: "var(--sb-logo-border)",
               }}
-            >{mounted && ( <Image
-                src={
-                  isDark
-                    ? "/branding/logo_dark.png"
-                    : "/branding/logo_light.png"
-                }
-                alt="Logo"
-                width={38}
-                height={38}
-                priority
-                unoptimized
-                className="h-full w-full object-contain p-[6px]"
-              />)}
-             
+            >
+              {mounted && (
+                <Image
+                  src={
+                    isDark
+                      ? "/branding/logo_dark.png"
+                      : "/branding/logo_light.png"
+                  }
+                  alt="Logo"
+                  width={38}
+                  height={38}
+                  priority
+                  unoptimized
+                  className="h-full w-full object-contain p-[6px]"
+                />
+              )}
             </div>
 
             {/* Expand */}
             <button
               onClick={() => setCollapsed(false)}
-              className="absolute -right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg transition-all duration-150 hover:bg-[var(--sb-hover)]"
+              className="absolute -right-6 z-30 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg transition-all duration-150 hover:bg-[var(--sb-hover)]"
             >
               <PanelLeftOpen size={15} />
             </button>

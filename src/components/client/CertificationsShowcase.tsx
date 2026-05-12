@@ -6,7 +6,7 @@ import { Award, BookOpen, Briefcase } from "lucide-react";
 const CERTIFICATIONS = [
   {
     id: 1,
-    type: "Course Completion",
+    type: "Course Completion Certificate",
     icon: BookOpen,
     color: "var(--brand-blue-light)",
     title: "Master the Skills",
@@ -15,7 +15,7 @@ const CERTIFICATIONS = [
   },
   {
     id: 2,
-    type: "Project Completion",
+    type: "Project Completion Certificate",
     icon: Briefcase,
     color: "var(--brand-green-light)",
     title: "Prove Your Expertise",
@@ -24,7 +24,7 @@ const CERTIFICATIONS = [
   },
   {
     id: 3,
-    type: "Internship",
+    type: "Internship Completion Certificate",
     icon: Award,
     color: "var(--brand-yellow-light)",
     title: "Real-World Experience",
