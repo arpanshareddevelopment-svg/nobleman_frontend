@@ -32,6 +32,13 @@ const SECTION_COLORS: SectionColor[] = [
   { id: "testimonials", color: "#38bdf8", glow: "rgba(56,189,248,0.25)" },
 ];
 
+// ─── Nav links (full + abbreviated) ──────────────────────────────────────────
+const NAV_LINKS = [
+  { href: "#programs", label: "Programs", short: "Programs" },
+  { href: "#subscriptions", label: "Pricing", short: "Pricing" },
+  { href: "#resources", label: "Resources", short: "Resources" },
+];
+
 // ─── User dropdown link config ────────────────────────────────────────────────
 const USER_LINKS = [
   { icon: Bell, label: "Notifications & Messages", href: "#notifications" },
@@ -41,24 +48,33 @@ const USER_LINKS = [
 ];
 
 // ─── BrandLogo ────────────────────────────────────────────────────────────────
+// KEY FIX: accepts `isMobile` as a prop — no `window.innerWidth` during render.
+// The placeholder (mounted=false) uses the same fixed widths on both server
+// and client, eliminating the hydration attribute mismatch.
 function BrandLogo({
   isOpen,
   isDark,
   mounted,
+  isMobile,
 }: {
   isOpen: boolean;
   isDark: boolean;
   mounted: boolean;
+  isMobile: boolean;
 }) {
+  // Widths are deterministic and never read from `window` during render.
+  const expandedWidth = isMobile ? 110 : 180;
+  const collapsedWidth = isMobile ? 40 : 52;
+  const displayWidth = isOpen ? expandedWidth : collapsedWidth;
+
   if (!mounted) {
+    // Both server and client first-render agree on this placeholder.
+    // `isMobile` starts as `false` on both sides until the hydration
+    // is complete, so the placeholder dimensions always match.
     return (
       <div
         className="relative flex items-center justify-center transition-all duration-300 rounded-full overflow-hidden"
-        style={{
-          height: 52,
-          width: isOpen ? 180 : 52,
-          background: "transparent",
-        }}
+        style={{ height: isMobile ? 34 : 52, width: displayWidth, background: "transparent" }}
       />
     );
   }
@@ -74,18 +90,14 @@ function BrandLogo({
   return (
     <div
       className="relative flex items-center justify-center transition-all duration-300 rounded-full overflow-hidden"
-      style={{
-        height: 52,
-        width: isOpen ? 180 : 52,
-        background: "transparent",
-      }}
+      style={{ height: isMobile ? 34 : 52, width: displayWidth, background: "transparent" }}
     >
       <Image
         src={src}
         alt="Brand"
         fill
-        sizes={isOpen ? "180px" : "52px"}
-        className={`object-contain ${!isOpen ? "scale-110" : ""}`}
+        sizes={isOpen ? `${expandedWidth}px` : `${collapsedWidth}px`}
+        className={`object-contain py-[2px] ${!isOpen ? "scale-110" : ""}`}
         priority
       />
     </div>
@@ -93,7 +105,6 @@ function BrandLogo({
 }
 
 // ─── Floating User Avatar + Dropdown ─────────────────────────────────────────
-// Fixed top-right, completely outside the navbar pill
 function UserAvatar({
   isDark,
   userName = "Alex Johnson",
@@ -113,12 +124,11 @@ function UserAvatar({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const avatarBg = "#c8ff00";
-  const avatarFg = "#1a2000";
+  const avatarBg = "#00f7ff";
+  const avatarFg = "#001a20";
 
   return (
-    <div ref={ref} className="fixed z-50 right-5 top-5">
-      {/* Avatar circle */}
+    <div ref={ref} className="fixed z-50 right-5 top-6">
       <motion.button
         onClick={() => setOpen((p) => !p)}
         whileHover={{ scale: 1.08 }}
@@ -127,22 +137,21 @@ function UserAvatar({
         aria-expanded={open}
         className="flex items-center justify-center rounded-full font-bold text-sm select-none cursor-pointer"
         style={{
-          width: 48,
-          height: 48,
+          width: 30,
+          height: 30,
           background: avatarBg,
           color: avatarFg,
           letterSpacing: "0.05em",
           fontFamily: "inherit",
           boxShadow: open
             ? `0 0 0 2.5px ${avatarBg}, 0 0 24px rgba(200,255,0,0.50), 0 4px 20px rgba(0,0,0,0.22)`
-            : `0 0 0 2px rgba(200,255,0,0.45), 0 4px 18px rgba(0,0,0,0.18)`,
+            : `0 0 0 2px rgba(0, 234, 255, 0.45), 0 4px 18px rgba(0,0,0,0.18)`,
           transition: "box-shadow 0.3s ease",
         }}
       >
         <User size={20} strokeWidth={2.2} />
       </motion.button>
 
-      {/* Dropdown */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -268,172 +277,6 @@ function UserAvatar({
   );
 }
 
-// ─── Mobile sidebar ───────────────────────────────────────────────────────────
-function MobileSidebar({
-  open,
-  onClose,
-  isDark,
-  toggleTheme,
-  sectionColor,
-  mounted,
-}: {
-  open: boolean;
-  onClose: () => void;
-  isDark: boolean;
-  toggleTheme: () => void;
-  sectionColor: SectionColor;
-  mounted: boolean;
-}) {
-  const NAV_LINKS = [
-    { href: "#programs", label: "Programs" },
-    { href: "#subscriptions", label: "Subscriptions" },
-    { href: "#resources", label: "Resources" },
-  ];
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            onClick={onClose}
-            className="fixed inset-0 z-40"
-            style={{
-              background: "rgba(0,0,0,0.50)",
-              backdropFilter: "blur(4px)",
-            }}
-          />
-
-          {/* Panel */}
-          <motion.aside
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              mass: 0.85,
-            }}
-            className="fixed left-0 top-0 bottom-0 z-50 flex flex-col"
-            style={{
-              width: 288,
-              background: isDark
-                ? "rgba(10,10,14,0.97)"
-                : "rgba(252,252,255,0.97)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
-              borderRight: `1px solid ${sectionColor.color}20`,
-              boxShadow: "4px 0 48px rgba(0,0,0,0.24)",
-            }}
-          >
-            {/* Top bar */}
-            <div
-              className="flex items-center justify-between px-5 py-4 border-b"
-              style={{ borderColor: `${sectionColor.color}18` }}
-            >
-              <div className="flex items-center">
-                <BrandLogo isOpen={true} isDark={isDark} mounted={mounted} />
-              </div>
-              <button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full transition-all"
-                style={{
-                  background: isDark
-                    ? "rgba(255,255,255,0.06)"
-                    : "rgba(0,0,0,0.05)",
-                  color: "var(--fg-primary)",
-                }}
-              >
-                <X size={15} strokeWidth={2} />
-              </button>
-            </div>
-
-            {/* Nav links */}
-            <div className="px-3 pt-4 pb-2">
-              {NAV_LINKS.map(({ href, label }, i) => (
-                <motion.div
-                  key={label}
-                  initial={{ opacity: 0, x: -18 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{
-                    delay: 0.04 + i * 0.055,
-                    type: "spring",
-                    stiffness: 260,
-                    damping: 22,
-                  }}
-                >
-                  <Link
-                    href={href}
-                    onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-3.5 rounded-xl text-sm font-medium transition-all mb-0.5 group"
-                    style={{ color: "var(--fg-primary)" }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background =
-                        `${sectionColor.color}10`;
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background =
-                        "transparent";
-                    }}
-                  >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
-                      style={{ background: sectionColor.color }}
-                    />
-                    <span className="opacity-75 group-hover:opacity-100 transition-opacity">
-                      {label}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Bottom: theme toggle */}
-            <div
-              className="mt-auto px-5 pb-6 pt-4 border-t"
-              style={{ borderColor: `${sectionColor.color}18` }}
-            >
-              {mounted && (
-                <button
-                  onClick={toggleTheme}
-                  className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm mb-3 transition-all"
-                  style={{
-                    background: isDark
-                      ? "rgba(255,255,255,0.05)"
-                      : "rgba(0,0,0,0.04)",
-                    border: `1px solid ${sectionColor.color}18`,
-                    color: "var(--fg-primary)",
-                  }}
-                >
-                  <span className="opacity-65 font-medium">
-                    {isDark ? "Dark mode" : "Light mode"}
-                  </span>
-                  <span
-                    className="flex items-center justify-center rounded-full w-7 h-7"
-                    style={{
-                      background: isDark
-                        ? "rgba(255,230,0,0.14)"
-                        : "rgba(0,150,255,0.10)",
-                      color: isDark ? "#ffe600" : "#0096ff",
-                    }}
-                  >
-                    {isDark ? <Sun size={14} /> : <Moon size={14} />}
-                  </span>
-                </button>
-              )}
-            </div>
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
-  );
-}
-
 // ─── Main export ──────────────────────────────────────────────────────────────
 export default function Navbar({
   userName = "Alex Johnson",
@@ -444,32 +287,37 @@ export default function Navbar({
   const [hovered, setHovered] = useState(false);
   const [clickedOpen, setClickedOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  // KEY FIX: `mounted` guards ALL browser-dependent state.
+  // Both server and client render mounted=false initially → no mismatch.
   const [mounted, setMounted] = useState(false);
   const [sectionColor, setSectionColor] = useState<SectionColor>(
     SECTION_COLORS[0],
   );
+  // KEY FIX: `isMobile` starts false on both server and client.
+  // It only becomes true after hydration (inside useEffect), so the
+  // initial HTML always matches.
   const [isMobile, setIsMobile] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const isInsideNav = useRef(false);
   const navRef = useRef<HTMLElement | null>(null);
 
-  // ── Mount ──────────────────────────────────────────────────────────────────
+  // ── Mount (client-only — runs after hydration is complete) ─────────────────
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
     setMounted(true);
   }, []);
 
-  // ── Responsive ────────────────────────────────────────────────────────────
+  // ── Responsive — runs after mount, safe to read window ────────────────────
   useEffect(() => {
+    if (!mounted) return;
     const mq = window.matchMedia("(max-width: 640px)");
     setIsMobile(mq.matches);
     const h = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", h);
     return () => mq.removeEventListener("change", h);
-  }, []);
+  }, [mounted]);
 
-  // ── Scroll + section detection ────────────────────────────────────────────
+  // ── Scroll + section detection ─────────────────────────────────────────────
   useEffect(() => {
     const onScroll = () => {
       setIsAtTop(window.scrollY < 10);
@@ -486,7 +334,29 @@ export default function Navbar({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ── Theme ─────────────────────────────────────────────────────────────────
+  // ── Close on outside click / scroll ───────────────────────────────────────
+  useEffect(() => {
+    function handleOutsideClick(e: MouseEvent) {
+      if (
+        clickedOpen &&
+        navRef.current &&
+        !navRef.current.contains(e.target as Node)
+      ) {
+        setClickedOpen(false);
+      }
+    }
+    function handleScrollClose() {
+      if (clickedOpen) setClickedOpen(false);
+    }
+    document.addEventListener("mousedown", handleOutsideClick);
+    window.addEventListener("scroll", handleScrollClose, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      window.removeEventListener("scroll", handleScrollClose);
+    };
+  }, [clickedOpen]);
+
+  // ── Theme ──────────────────────────────────────────────────────────────────
   function toggleTheme() {
     const nowDark = document.documentElement.classList.toggle("dark");
     setIsDark(nowDark);
@@ -495,10 +365,9 @@ export default function Navbar({
     } catch {}
   }
 
-  // ── Desktop open state ────────────────────────────────────────────────────
-  const isOpen = !isMobile && (isAtTop || hovered || clickedOpen);
+  const isOpen = isMobile ? clickedOpen : isAtTop || hovered || clickedOpen;
 
-  // ── Event handlers ────────────────────────────────────────────────────────
+  // ── Event handlers ─────────────────────────────────────────────────────────
   function handleNavMouseEnter() {
     if (isMobile) return;
     isInsideNav.current = true;
@@ -509,18 +378,16 @@ export default function Navbar({
     if (isMobile) return;
     isInsideNav.current = false;
     if (isAtTop) return;
-   const rel = e.relatedTarget;
-
-   if (navRef.current && rel instanceof Node && navRef.current.contains(rel)) {
-     return;
-   }
+    const rel = e.relatedTarget;
+    if (navRef.current && rel instanceof Node && navRef.current.contains(rel))
+      return;
     setHovered(false);
     setClickedOpen(false);
   }
 
   function handleNavClick() {
     if (isMobile) {
-      setSidebarOpen(true);
+      setClickedOpen(true);
       return;
     }
     if (!isAtTop) setClickedOpen((p) => !p);
@@ -529,7 +396,7 @@ export default function Navbar({
   function handleBrandClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     if (isMobile) {
-      setSidebarOpen(true);
+      setClickedOpen(true);
       return;
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -537,66 +404,20 @@ export default function Navbar({
     setClickedOpen(false);
   }
 
-  // ── Shared floating user avatar (top-right, outside navbar) ───────────────
-  const floatingUser = (
-    <UserAvatar isDark={isDark} userName={userName} />
-  );
+  // ── Mobile pill width — snug but never overflows ───────────────────────────
+  // logo(110) + pl-2(8) + links(~180) + gap(8) + toggle(32) + pr-2(8) ≈ 346px
+  // safe at min(calc(100vw - 32px), 360px)
+  const mobilePillWidth = "min(calc(100vw - 32px), 360px)";
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // MOBILE render
-  // ══════════════════════════════════════════════════════════════════════════
-  if (isMobile) {
-    return (
-      <>
-        {floatingUser}
-
-        <MobileSidebar
-          open={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          isDark={isDark}
-          toggleTheme={toggleTheme}
-          sectionColor={sectionColor}
-          mounted={mounted}
-        />
-
-        {/* Hamburger pill — top-left */}
-        {!sidebarOpen && (
-          <div className="fixed z-50 left-4 top-4">
-            <motion.button
-              onClick={() => setSidebarOpen(true)}
-              whileTap={{ scale: 0.92 }}
-              className="relative flex items-center justify-center rounded-full overflow-hidden"
-              aria-label="Open navigation"
-              style={{
-                width: 52,
-                height: 52,
-                background: "var(--bg-nav)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                border: `1.5px solid ${sectionColor.color}`,
-                boxShadow: `0 0 0 1px ${sectionColor.color}40, 0 0 18px ${sectionColor.glow}, var(--shadow-nav)`,
-                color: sectionColor.color,
-                transition: "border-color 0.6s ease, box-shadow 0.6s ease",
-              }}
-            >
-              <BrandLogo isOpen={false} isDark={isDark} mounted={mounted} />
-            </motion.button>
-          </div>
-        )}
-      </>
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // DESKTOP render
-  // ══════════════════════════════════════════════════════════════════════════
   return (
     <>
       {/* Floating user avatar — top-right, independent of navbar */}
-      {floatingUser}
+      <UserAvatar isDark={isDark} userName={userName} />
 
       {/* Navbar pill — top-left */}
-      <div className="fixed z-50 left-5 top-5">
+      <div
+        className={`fixed z-50 ${isMobile ? "left-4 top-4" : "left-5 top-5"}`}
+      >
         <motion.nav
           ref={navRef}
           aria-label="Main navigation"
@@ -604,8 +425,14 @@ export default function Navbar({
           onMouseLeave={handleNavMouseLeave}
           onClick={handleNavClick}
           animate={{
-            width: isOpen ? 580 : 52,
-            height: isOpen ? 64 : 52,
+            width: isOpen
+              ? isMobile
+                ? mobilePillWidth
+                : 580
+              : isMobile
+                ? 40
+                : 52,
+            height: isOpen ? (isMobile ? 46 : 64) : isMobile ? 40 : 52,
           }}
           transition={{
             type: "spring",
@@ -627,8 +454,8 @@ export default function Navbar({
               ? `${sectionColor.color}40`
               : sectionColor.color,
             overflow: "visible",
-            paddingLeft:0,
-            paddingRight: isOpen ? 8 : 0,
+            paddingLeft: 0,
+            paddingRight: isOpen ? (isMobile ? 4 : 8) : 0,
             cursor: !isAtTop ? "pointer" : "default",
             transition: "border-color 0.6s ease, box-shadow 0.6s ease",
           }}
@@ -641,7 +468,7 @@ export default function Navbar({
                 type="button"
                 aria-label="Back to top"
                 onClick={handleBrandClick}
-                className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
+                className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300 "
                 style={
                   !isOpen
                     ? {
@@ -653,11 +480,17 @@ export default function Navbar({
                     : {}
                 }
               >
-                <BrandLogo isOpen={isOpen} isDark={isDark} mounted={mounted} />
+                {/* isMobile is passed as a prop — no window reads inside BrandLogo */}
+                <BrandLogo
+                  isOpen={isOpen}
+                  isDark={isDark}
+                  mounted={mounted}
+                  isMobile={isMobile}
+                />
               </button>
             </div>
 
-            {/* Expanded content — nav links + theme toggle ONLY (no user here) */}
+            {/* Expanded content */}
             <AnimatePresence>
               {isOpen && (
                 <motion.div
@@ -665,27 +498,32 @@ export default function Navbar({
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={{ duration: 0.18 }}
-                  className="flex items-center flex-1 justify-between pl-4 pr-2"
+                  className={`flex items-center flex-1 justify-between min-w-0 ${
+                    isMobile ? "pl-1 pr-1" : "pl-4 pr-2"
+                  }`}
                 >
                   {/* Nav links */}
-                  <div className="flex items-center gap-5 text-sm font-medium text-[var(--fg-primary)]">
-                    {[
-                      { href: "#programs", label: "Programs" },
-                      { href: "#subscriptions", label: "Subscriptions" },
-                      { href: "#resources", label: "Resources" },
-                    ].map(({ href, label }) => (
+                  <div
+                    className={`flex items-center min-w-0 ${
+                      isMobile ? "gap-2.5 text-[13px]" : "gap-5 text-sm"
+                    } font-medium text-[var(--fg-primary)]`}
+                  >
+                    {NAV_LINKS.map(({ href, label, short }) => (
                       <Link
                         key={href}
                         href={href}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setClickedOpen(false);
+                        }}
                         className="opacity-75 hover:opacity-100 transition-opacity whitespace-nowrap"
                       >
-                        {label}
+                        {isMobile ? short : label}
                       </Link>
                     ))}
                   </div>
 
-                  {/* Theme toggle — only right-side control in navbar */}
+                  {/* Theme toggle */}
                   {mounted && (
                     <motion.button
                       onClick={(e) => {
@@ -695,8 +533,10 @@ export default function Navbar({
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       aria-label="Toggle theme"
-                      className="cursor-pointer flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full transition-all duration-300"
+                      className="cursor-pointer flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ml-1"
                       style={{
+                        height: isMobile ? 30 : 32,
+                        width: isMobile ? 30 : 32,
                         background: isDark
                           ? "rgba(255,255,255,0.08)"
                           : "rgba(255,255,255,0.72)",
@@ -710,7 +550,11 @@ export default function Navbar({
                         backdropFilter: "blur(12px)",
                       }}
                     >
-                      {isDark ? <Sun size={16} /> : <Moon size={16} />}
+                      {isDark ? (
+                        <Sun size={isMobile ? 14 : 16} />
+                      ) : (
+                        <Moon size={isMobile ? 14 : 16} />
+                      )}
                     </motion.button>
                   )}
                 </motion.div>
