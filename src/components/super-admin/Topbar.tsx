@@ -1,79 +1,64 @@
 "use client";
 
-import { Bell, HelpCircle, Search, UserCircle2, Sun, Moon } from "lucide-react";
+import { Bell, HelpCircle, Moon, Sun } from "lucide-react";
 import { useTheme } from "../../lib/useTheme";
 
 interface Props {
-  meta: { title: string; sub: string };
+  meta: {
+    title: string;
+    sub: string;
+  };
 }
 
-export default function Topbar({ meta }: Props) {
+export default function Topbar({ meta = { title: "", sub: "" } }: Partial<Props>) {
   const { isDark, toggle } = useTheme();
+
   return (
-    <>
-      <style>{topbarStyles}</style>
-      <div className="sa-topbar">
-        <div className="sa-topbar-left">
-          <div>
-            <div className="sa-page-title">{meta.title}</div>
-            <div className="sa-page-sub">{meta.sub}</div>
-          </div>
-        </div>
-        <div className="sa-topbar-right">
-          <div className="sa-search-wrap">
-            <input className="sa-topbar-search" placeholder="Search admins, tenants…" />
-          </div>
-          <div className="sa-tb-icon"><HelpCircle size={16} /></div>
-          <div className="sa-tb-icon" title={isDark ? "Switch to light" : "Switch to dark"} onClick={toggle} style={{ cursor: "pointer" }}>
-            {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          </div>
-          <div className="sa-tb-icon" style={{ position: "relative" }}>
-            <Bell size={16} />
-            <div className="sa-notif-dot" />
-          </div>
-          <div
-            className="sa-av"
-            style={{ width: 36, height: 36, cursor: "pointer", fontSize: 12 }}
-          >
-            SA
-          </div>
-        </div>
+    <div className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-black/8 dark:border-white/8 bg-white/80 dark:bg-black/70 px-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+      {/* Left — page title */}
+      <div>
+        <h1 className="font-[Manrope] text-[17px] font-extrabold text-[var(--fg-primary)]">
+          {meta.title}
+        </h1>
+        <p className="text-[11px] text-[var(--fg-muted)]">{meta.sub}</p>
       </div>
-    </>
+
+      {/* Right — actions */}
+      <div className="flex items-center gap-2">
+        {/* Search */}
+        <div className="relative hidden sm:block">
+          <input
+            type="text"
+            placeholder="Search admins, tenants…"
+            className="w-[220px] rounded-lg border border-black/12 dark:border-white/12 bg-white/80 dark:bg-white/5 py-[7px] pl-4 pr-3 text-xs font-['Space_Grotesk'] text-[var(--fg-primary)] outline-none transition-all placeholder:text-[var(--fg-muted)] focus:border-[rgba(200,255,0,0.45)] focus:ring-4 focus:ring-[rgba(200,255,0,0.12)]"
+          />
+        </div>
+
+        {/* Help */}
+        <button className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[10px] border border-black/12 dark:border-white/12 bg-white/80 dark:bg-white/5 text-[var(--fg-primary)] transition-all hover:border-[rgba(200,255,0,0.45)] hover:bg-[rgba(200,255,0,0.08)]">
+          <HelpCircle size={16} />
+        </button>
+
+        {/* Theme toggle */}
+        <button
+          onClick={toggle}
+          title={isDark ? "Switch to light" : "Switch to dark"}
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[10px] border border-black/12 dark:border-white/12 bg-white/80 dark:bg-white/5 text-[var(--fg-primary)] transition-all hover:border-[rgba(200,255,0,0.45)] hover:bg-[rgba(200,255,0,0.08)]"
+        >
+          {isDark ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+
+        {/* Notifications */}
+        <button className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-[10px] border border-black/12 dark:border-white/12 bg-white/80 dark:bg-white/5 text-[var(--fg-primary)] transition-all hover:border-[rgba(200,255,0,0.45)] hover:bg-[rgba(200,255,0,0.08)]">
+          <Bell size={16} />
+          <span className="absolute right-[6px] top-[6px] h-[7px] w-[7px] rounded-full border-[1.5px] border-white bg-red-500" />
+        </button>
+
+        {/* Avatar */}
+        <button className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] text-[12px] font-extrabold text-[#06110c] shadow-sm">
+          SA
+        </button>
+      </div>
+    </div>
   );
 }
-
-const topbarStyles = `
-  .sa-topbar {
-    background:rgba(255,255,255,.78); border-bottom:1px solid var(--sa-bdr);
-    padding:0 24px; height:64px;
-    display:flex; align-items:center; justify-content:space-between;
-    position:sticky; top:0; z-index:20;
-    box-shadow:0 10px 30px rgba(15,23,42,.06);
-    backdrop-filter: blur(14px);
-  }
-  .sa-topbar-left { display:flex; align-items:center; gap:14px; }
-  .sa-page-title { font-family:"Manrope",sans-serif; font-size:17px; font-weight:800; color:var(--sa-text); }
-  .sa-page-sub { font-size:11px; color:var(--sa-muted); }
-  .sa-topbar-right { display:flex; align-items:center; gap:10px; }
-  .sa-search-wrap { position:relative; }
-  .sa-topbar-search {
-    background:rgba(255,255,255,.82); border:1px solid var(--sa-bdr2);
-    border-radius:8px; padding:7px 12px 7px 32px;
-    font-size:12px; color:var(--sa-text);
-    font-family:"Space Grotesk",sans-serif; width:220px;
-  }
-  .sa-topbar-search:focus { outline:none; border-color:rgba(200,255,0,.45); box-shadow:0 0 0 3px rgba(200,255,0,.12); }
-  .sa-tb-icon {
-    width:36px; height:36px; background:rgba(255,255,255,.82);
-    border:1px solid var(--sa-bdr2); border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; font-size:15px; transition:all .15s; color:var(--sa-text);
-  }
-  .sa-tb-icon:hover { border-color:rgba(200,255,0,.45); background:rgba(200,255,0,.08); }
-  .sa-notif-dot {
-    width:7px; height:7px; background:var(--sa-a4);
-    border-radius:50%; position:absolute; top:6px; right:6px;
-    border:1.5px solid #fff;
-  }
-`;

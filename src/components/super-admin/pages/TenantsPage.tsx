@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { BadgeCheck, Building2, CircleAlert, Search, TimerReset } from "lucide-react";
 
@@ -15,95 +15,122 @@ const tenants = [
   { init: "EN", name: "EduNext",     domain: "edunext.noblemanlearning.com", plan: "Starter",    admins: 1, students: 80,  courses: 3,  revenue: "₹0.9L",  status: "tr", statusLabel: "Suspended",joined: "Feb 2024" },
 ];
 
-const planColors: Record<string, string> = { Enterprise: "tp", Growth: "tb", Starter: "tg" };
+const planColors: Record<string, { bg: string; text: string }> = { 
+  Enterprise: { bg: "bg-purple-100", text: "text-purple-700" },
+  Growth: { bg: "bg-blue-100", text: "text-blue-700" },
+  Starter: { bg: "bg-green-100", text: "text-green-700" }
+};
+
+const statusColors: Record<string, { bg: string; text: string }> = {
+  tg: { bg: "bg-green-100", text: "text-green-700" },
+  ty: { bg: "bg-yellow-100", text: "text-yellow-800" },
+  tr: { bg: "bg-red-100", text: "text-red-700" },
+};
 
 export default function TenantsPage({ openAddTenant }: Props) {
   return (
     <div>
-      <div className="sa-stats sa-stats-4">
+      {/* Stats Grid */}
+      <div className="mb-6 grid grid-cols-4 gap-3.5">
         {[
-          { icon: <Building2 size={18} />, label: "Total Tenants",  val: "12", sub: "All organisations",  cls: "si-purple" },
-          { icon: <BadgeCheck size={18} />, label: "Active",          val: "10", sub: "Running smoothly",   cls: "si-green"  },
-          { icon: <TimerReset size={18} />, label: "Trial",           val: "2",  sub: "Expiring soon",      cls: "si-yellow" },
-          { icon: <CircleAlert size={18} />, label: "Suspended",       val: "1",  sub: "Needs resolution",   cls: "si-red"    },
+          { icon: <Building2 size={18} />, label: "Total Tenants",  val: "12", sub: "All organisations",  color: "from-purple-50 to-purple-100/50", dotColor: "bg-purple-400" },
+          { icon: <BadgeCheck size={18} />, label: "Active",          val: "10", sub: "Running smoothly",   color: "from-green-50 to-green-100/50", dotColor: "bg-green-400" },
+          { icon: <TimerReset size={18} />, label: "Trial",           val: "2",  sub: "Expiring soon",      color: "from-yellow-50 to-yellow-100/50", dotColor: "bg-yellow-400" },
+          { icon: <CircleAlert size={18} />, label: "Suspended",       val: "1",  sub: "Needs resolution",   color: "from-red-50 to-red-100/50", dotColor: "bg-red-400" },
         ].map((s) => (
-          <div className="sa-stat" key={s.label}>
-            <div className={`sa-si ${s.cls}`}>{s.icon}</div>
-            <div>
-              <div className="sa-sl">{s.label}</div>
-              <div className="sa-sv">{s.val}</div>
-              <div className="sa-ss"><span className="up">{s.sub}</span></div>
+          <div key={s.label} className={`rounded-2xl bg-gradient-to-br ${s.color} border border-[var(--border)] p-4 shadow-sm`}>
+            <div className="mb-3 flex items-start justify-between">
+              <div className={`rounded-full p-2 ${s.dotColor}`}>{s.icon}</div>
             </div>
+            <div className="text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)]">{s.label}</div>
+            <div className="mt-1 text-2xl font-bold text-[var(--fg-primary)]">{s.val}</div>
+            <div className="mt-2 text-xs text-[var(--fg-secondary)]">{s.sub}</div>
           </div>
         ))}
       </div>
 
-      <div className="sa-table-card">
-        <div className="sa-table-hd">
-          <input className="sa-search" placeholder="Search tenant, domain…" />
-          <select className="sa-sel">
+      {/* Table Card */}
+      <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white/70 shadow-sm">
+        <div className="flex flex-wrap gap-2.5 border-b border-[var(--border)] bg-white/50 p-4 md:flex-nowrap">
+          <input
+            type="text"
+            placeholder="Search tenant, domain…"
+            className="flex-1 rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
+          />
+          <select className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
             <option>All Plans</option>
             <option>Enterprise</option>
             <option>Growth</option>
             <option>Starter</option>
           </select>
-          <select className="sa-sel">
+          <select className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
             <option>All Status</option>
             <option>Active</option>
             <option>Trial</option>
             <option>Suspended</option>
           </select>
           <button
-            className="sa-btn sa-btn-primary sa-btn-sm"
-            style={{ marginLeft: "auto" }}
+            className="ml-auto rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-4 py-2 text-xs font-bold text-[#06110c] shadow-lg hover:shadow-xl transition-all"
             onClick={openAddTenant}
           >
             + Add Tenant
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Tenant</th>
-              <th>Domain</th>
-              <th>Plan</th>
-              <th>Admins</th>
-              <th>Students</th>
-              <th>Courses</th>
-              <th>Revenue</th>
-              <th>Joined</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tenants.map((t) => (
-              <tr key={t.domain}>
-                <td>
-                  <div className="sa-cu">
-                    <div className="sa-ca" style={{ background: "linear-gradient(135deg,var(--brand-green),var(--brand-yellow))", color: "#06110c" }}>{t.init}</div>
-                    <div className="sa-cn">{t.name}</div>
-                  </div>
-                </td>
-                <td style={{ fontSize: 11, color: "var(--sa-muted)" }}>{t.domain}</td>
-                <td><span className={`sa-tag ${planColors[t.plan] ?? "tb"}`}>{t.plan}</span></td>
-                <td>{t.admins}</td>
-                <td>{t.students.toLocaleString()}</td>
-                <td>{t.courses}</td>
-                <td style={{ fontWeight: 700, color: "var(--sa-a3)" }}>{t.revenue}</td>
-                <td style={{ fontSize: 11, color: "var(--sa-muted2)" }}>{t.joined}</td>
-                <td><span className={`sa-tag ${t.status}`}>{t.statusLabel}</span></td>
-                <td>
-                  <div className="sa-acts">
-                    <button className="sa-ab">View</button>
-                    <button className="sa-ab">Edit</button>
-                    <button className="sa-ab danger">Suspend</button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--border)] bg-white/50">
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Tenant</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Domain</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Plan</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Admins</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Students</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Courses</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Revenue</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Joined</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Status</th>
+                <th className="px-4 py-3 text-center font-bold text-[var(--fg-primary)]">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {tenants.map((t) => (
+                <tr key={t.domain} className="border-b border-[var(--border)] hover:bg-white/40 transition-colors">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] text-xs font-bold text-[#06110c]">
+                        {t.init}
+                      </div>
+                      <span className="font-semibold text-[var(--fg-primary)]">{t.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-xs text-[var(--fg-secondary)]">{t.domain}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex rounded-full px-2.5 py-0.75 text-xs font-bold uppercase tracking-widest ${planColors[t.plan]?.bg || "bg-gray-100"} ${planColors[t.plan]?.text || "text-gray-700"}`}>
+                      {t.plan}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{t.admins}</td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{t.students.toLocaleString()}</td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{t.courses}</td>
+                  <td className="px-4 py-3 font-bold text-green-600">{t.revenue}</td>
+                  <td className="px-4 py-3 text-xs text-[var(--fg-secondary)]">{t.joined}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex rounded-full px-2.5 py-0.75 text-xs font-bold uppercase tracking-widest ${statusColors[t.status as keyof typeof statusColors]?.bg || "bg-gray-100"} ${statusColors[t.status as keyof typeof statusColors]?.text || "text-gray-700"}`}>
+                      {t.statusLabel}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-center gap-1.5">
+                      <button className="rounded px-2 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors">View</button>
+                      <button className="rounded px-2 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors">Edit</button>
+                      <button className="rounded px-2 py-1 text-xs font-semibold text-orange-600 hover:bg-orange-50 transition-colors">Suspend</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

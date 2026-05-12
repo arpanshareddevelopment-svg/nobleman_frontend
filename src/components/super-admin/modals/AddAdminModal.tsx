@@ -1,7 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Building2, FileText, KeyRound, Plus, Sparkles, UserCircle2, Users, ShieldCheck } from "lucide-react";
+import clsx from "clsx";
+import {
+  BadgeCheck,
+  Building2,
+  FileText,
+  KeyRound,
+  Plus,
+  Sparkles,
+  UserCircle2,
+  Users,
+  ShieldCheck,
+} from "lucide-react";
 
 interface Props {
   onClose: () => void;
@@ -15,17 +26,29 @@ function genPass() {
 }
 
 const perms = [
-  { icon: <Sparkles size={16} />, label: "Manage Courses",    sub: "Create, edit, publish courses"    },
-  { icon: <Users size={16} />, label: "Manage Students",   sub: "Add, edit, revoke student access" },
-  { icon: <UserCircle2 size={16} />, label: "Manage Instructors",sub: "Add and configure instructors"   },
-  { icon: <BadgeCheck size={16} />, label: "View Revenue",      sub: "Access financial reports"         },
-  { icon: <FileText size={16} />, label: "Manage Exams",      sub: "Create and evaluate assessments"  },
-  { icon: <Plus size={16} />, label: "Support Tickets",   sub: "Reply and resolve tickets"        },
-  { icon: <Sparkles size={16} />, label: "Announcements",     sub: "Send messages to students"        },
-  { icon: <FileText size={16} />, label: "Download Reports",  sub: "Export data as PDF/CSV"           },
-  { icon: <Building2 size={16} />, label: "Tenant Settings",   sub: "Edit platform configuration"      },
-  { icon: <KeyRound size={16} />, label: "Access Control",    sub: "Lock/unlock student access"       },
+  { icon: <Sparkles size={15} />, label: "Manage Courses", sub: "Create, edit, publish courses" },
+  { icon: <Users size={15} />, label: "Manage Students", sub: "Add, edit, revoke student access" },
+  { icon: <UserCircle2 size={15} />, label: "Manage Instructors", sub: "Add and configure instructors" },
+  { icon: <BadgeCheck size={15} />, label: "View Revenue", sub: "Access financial reports" },
+  { icon: <FileText size={15} />, label: "Manage Exams", sub: "Create and evaluate assessments" },
+  { icon: <Plus size={15} />, label: "Support Tickets", sub: "Reply and resolve tickets" },
+  { icon: <Sparkles size={15} />, label: "Announcements", sub: "Send messages to students" },
+  { icon: <FileText size={15} />, label: "Download Reports", sub: "Export data as PDF/CSV" },
+  { icon: <Building2 size={15} />, label: "Tenant Settings", sub: "Edit platform configuration" },
+  { icon: <KeyRound size={15} />, label: "Access Control", sub: "Lock/unlock student access" },
 ];
+
+// Shared input/select styles
+const inputCls =
+  "w-full rounded-lg border border-black/12 dark:border-white/12 bg-white/90 dark:bg-white/5 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-muted)] outline-none transition-all focus:border-[rgba(200,255,0,0.5)] focus:ring-4 focus:ring-[rgba(200,255,0,0.12)]";
+
+const selectCls =
+  "w-full rounded-lg border border-black/12 dark:border-white/12 bg-white/90 dark:bg-white/5 px-3 py-2 text-sm text-[var(--fg-secondary)] outline-none transition-all focus:border-[rgba(200,255,0,0.5)] focus:ring-4 focus:ring-[rgba(200,255,0,0.12)] cursor-pointer";
+
+const labelCls = "block text-[10px] font-bold uppercase tracking-widest text-[var(--fg-secondary)] mb-1";
+
+const sectionLabelCls =
+  "flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)] mt-5 mb-3 pb-2 border-b border-black/8 dark:border-white/8";
 
 export default function AddAdminModal({ onClose }: Props) {
   const [password, setPassword] = useState("");
@@ -40,41 +63,72 @@ export default function AddAdminModal({ onClose }: Props) {
     });
 
   return (
-    <div className="sa-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="sa-modal sa-modal-lg">
-        <div className="sa-mh">
-          <div className="sa-mh-left">
-            <div className="sa-mh-icon" style={{ background: "rgba(0,196,255,.12)" }}><Users size={18} /></div>
-            <div>
-              <div className="sa-mt">Add New Admin</div>
-              <div className="sa-ms">Create admin account & assign to a tenant</div>
-            </div>
+    /* Overlay */
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      {/* Modal */}
+      <div className="relative w-full max-w-2xl rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 shadow-2xl flex flex-col max-h-[90vh]">
+
+        {/* Header */}
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-black/8 dark:border-white/8 shrink-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[rgba(0,196,255,0.12)] text-[var(--brand-blue)]">
+            <Users size={18} />
           </div>
-          <button className="sa-mc" onClick={onClose}>×</button>
+          <div className="flex-1">
+            <div className="text-sm font-bold text-[var(--fg-primary)] font-[Manrope]">Add New Admin</div>
+            <div className="text-xs text-[var(--fg-muted)]">Create admin account & assign to a tenant</div>
+          </div>
+          <button
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fg-muted)] hover:bg-black/5 dark:hover:bg-white/8 hover:text-[var(--fg-primary)] transition-all text-lg font-light cursor-pointer"
+          >
+            ×
+          </button>
         </div>
 
-        <div className="sa-mb" style={{ maxHeight: "70vh", overflowY: "auto" }}>
-          {/* Personal */}
-          <div className="sa-sec-lbl"><UserCircle2 size={16} /> Personal Details</div>
-          <div className="sa-fg-row c2">
-            <div className="sa-fg"><label>Full Name <span className="req">*</span></label><input type="text" placeholder="e.g. Rahul Kumar" /></div>
-            <div className="sa-fg"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX" /></div>
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+
+          {/* Personal Details */}
+          <div className={sectionLabelCls}>
+            <UserCircle2 size={14} /> Personal Details
           </div>
-          <div className="sa-fg-row c2">
-            <div className="sa-fg">
-              <label>Email Address <span className="req">*</span></label>
-              <input type="email" placeholder="admin@tenant.com" id="admin-email"
-                onChange={(e) => setUsername(e.target.value.split("@")[0])} />
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label className={labelCls}>Full Name <span className="text-red-500">*</span></label>
+              <input type="text" placeholder="e.g. Rahul Kumar" className={inputCls} />
             </div>
-            <div className="sa-fg"><label>Designation</label><input type="text" placeholder="e.g. LMS Administrator" /></div>
+            <div>
+              <label className={labelCls}>Phone Number</label>
+              <input type="tel" placeholder="+91 XXXXX XXXXX" className={inputCls} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Email Address <span className="text-red-500">*</span></label>
+              <input
+                type="email"
+                placeholder="admin@tenant.com"
+                className={inputCls}
+                onChange={(e) => setUsername(e.target.value.split("@")[0])}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Designation</label>
+              <input type="text" placeholder="e.g. LMS Administrator" className={inputCls} />
+            </div>
           </div>
 
-          {/* Tenant */}
-          <div className="sa-sec-lbl"><Building2 size={16} /> Tenant Assignment</div>
-          <div className="sa-fg-row c2">
-            <div className="sa-fg">
-              <label>Assign to Tenant <span className="req">*</span></label>
-              <select>
+          {/* Tenant Assignment */}
+          <div className={sectionLabelCls}>
+            <Building2 size={14} /> Tenant Assignment
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Assign to Tenant <span className="text-red-500">*</span></label>
+              <select className={selectCls}>
                 <option>Acme LMS</option>
                 <option>EdgeLearn</option>
                 <option>BrightPath</option>
@@ -82,84 +136,143 @@ export default function AddAdminModal({ onClose }: Props) {
                 <option>LearnPro</option>
               </select>
             </div>
-            <div className="sa-fg">
-              <label>Admin Role</label>
-              <select>
+            <div>
+              <label className={labelCls}>Admin Role</label>
+              <select className={selectCls}>
                 <option>Admin</option>
                 <option>Super Admin (Tenant-level)</option>
               </select>
             </div>
           </div>
 
-          {/* Credentials */}
-          <div className="sa-sec-lbl"><KeyRound size={16} /> Login Credentials</div>
-          <div className="sa-info-banner sa-info-yellow" style={{ marginBottom: 10 }}>
+          {/* Login Credentials */}
+          <div className={sectionLabelCls}>
+            <KeyRound size={14} /> Login Credentials
+          </div>
+          <div className="mb-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
             Admin can login via <strong>Email ID</strong>. Credentials will be sent via email.
           </div>
-          <div className="sa-fg-row c2">
-            <div className="sa-fg">
-              <label>Username</label>
-              <input type="text" value={username} readOnly style={{ background: "#f1f5f9", color: "var(--sa-muted)" }} placeholder="Auto from email" />
-              <div className="sa-hint">Derived from email address</div>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label className={labelCls}>Username</label>
+              <input
+                type="text"
+                value={username}
+                readOnly
+                placeholder="Auto from email"
+                className={clsx(inputCls, "bg-gray-50 dark:bg-white/3 text-[var(--fg-muted)] cursor-default")}
+              />
+              <p className="mt-1 text-[10px] text-[var(--fg-muted)]">Derived from email address</p>
             </div>
-            <div className="sa-fg">
-              <label>Password <span className="req">*</span></label>
-              <div className="sa-pw-row">
-                <input type="text" value={password} readOnly placeholder="Click Generate →"
-                  style={{ fontFamily: "monospace", letterSpacing: 1 }} />
-                <button className="sa-gen-btn" onClick={() => setPassword(genPass())}>Generate</button>
+            <div>
+              <label className={labelCls}>Password <span className="text-red-500">*</span></label>
+              <div className="flex gap-0">
+                <input
+                  type="text"
+                  value={password}
+                  readOnly
+                  placeholder="Click Generate →"
+                  className={clsx(inputCls, "rounded-r-none font-mono tracking-wider")}
+                />
+                <button
+                  onClick={() => setPassword(genPass())}
+                  className="shrink-0 rounded-r-lg border border-l-0 border-black/12 dark:border-white/12 bg-[var(--brand-green)] px-3 text-xs font-bold text-gray-900 hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  Generate
+                </button>
               </div>
             </div>
           </div>
-          <div className="sa-fg-row c2">
-            <div className="sa-fg">
-              <label>Send Credentials Via</label>
-              <select><option>Email</option><option>WhatsApp</option><option>Both</option></select>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Send Credentials Via</label>
+              <select className={selectCls}>
+                <option>Email</option>
+                <option>WhatsApp</option>
+                <option>Both</option>
+              </select>
             </div>
-            <div className="sa-fg">
-              <label>Force Password Change on First Login</label>
-              <select><option>Yes (recommended)</option><option>No</option></select>
+            <div>
+              <label className={labelCls}>Force Password Change on First Login</label>
+              <select className={selectCls}>
+                <option>Yes (recommended)</option>
+                <option>No</option>
+              </select>
             </div>
           </div>
 
           {/* Permissions */}
-          <div className="sa-sec-lbl"><ShieldCheck size={16} /> Platform Permissions</div>
-          <div className="sa-info-banner sa-info-blue" style={{ marginBottom: 10 }}>
+          <div className={sectionLabelCls}>
+            <ShieldCheck size={14} /> Platform Permissions
+          </div>
+          <div className="mb-3 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-3 py-2 text-xs text-blue-800 dark:text-blue-300">
             Select what this admin can do within their tenant. You can change these anytime.
           </div>
-          <div className="sa-perms">
+          <div className="grid grid-cols-2 gap-2">
             {perms.map((p, i) => (
               <div
                 key={p.label}
-                className={`sa-perm${checkedPerms.has(i) ? " checked" : ""}`}
                 onClick={() => togglePerm(i)}
+                className={clsx(
+                  "flex items-start gap-2.5 rounded-xl border p-3 cursor-pointer transition-all select-none",
+                  checkedPerms.has(i)
+                    ? "border-emerald-400/50 bg-emerald-50 dark:bg-emerald-500/10"
+                    : "border-black/8 dark:border-white/8 bg-white/50 dark:bg-white/3 hover:border-black/15 dark:hover:border-white/15",
+                )}
               >
-                  <div className="pi">{p.icon}</div>
-                <div>
-                  <div className="sa-perm-lbl">{p.label}</div>
-                  <div className="sa-perm-sub">{p.sub}</div>
+                <div className={clsx(
+                  "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors",
+                  checkedPerms.has(i)
+                    ? "bg-emerald-500 text-white"
+                    : "bg-black/5 dark:bg-white/8 text-[var(--fg-secondary)]",
+                )}>
+                  {p.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className={clsx(
+                    "text-xs font-semibold truncate",
+                    checkedPerms.has(i) ? "text-emerald-700 dark:text-emerald-400" : "text-[var(--fg-primary)]",
+                  )}>
+                    {p.label}
+                  </div>
+                  <div className="text-[10px] text-[var(--fg-muted)] truncate">{p.sub}</div>
                 </div>
                 <input
                   type="checkbox"
-                  className="sa-perm-cb"
                   checked={checkedPerms.has(i)}
                   onChange={() => togglePerm(i)}
                   onClick={(e) => e.stopPropagation()}
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-emerald-500 cursor-pointer"
                 />
               </div>
             ))}
           </div>
 
           {/* Notes */}
-          <div className="sa-fg">
-            <label>Internal Notes</label>
-            <textarea placeholder="Any notes about this admin account…" />
+          <div className="mt-4">
+            <label className={labelCls}>Internal Notes</label>
+            <textarea
+              placeholder="Any notes about this admin account…"
+              rows={3}
+              className={clsx(inputCls, "resize-none")}
+            />
           </div>
         </div>
 
-        <div className="sa-mf">
-          <button className="sa-btn sa-btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="sa-btn sa-btn-primary" onClick={onClose}>Create Admin Account</button>
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-2.5 px-5 py-4 border-t border-black/8 dark:border-white/8 shrink-0">
+          <button
+            onClick={onClose}
+            className="rounded-lg border border-black/12 dark:border-white/12 bg-transparent px-4 py-2 text-xs font-bold text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] transition-all cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onClose}
+            className="rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-5 py-2 text-xs font-bold text-[#06110c] shadow-lg hover:shadow-xl transition-all cursor-pointer"
+          >
+            Create Admin Account
+          </button>
         </div>
       </div>
     </div>

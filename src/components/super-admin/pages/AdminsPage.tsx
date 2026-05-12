@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { BookOpen, Users, FileText, Tag } from "lucide-react";
 
@@ -16,83 +16,96 @@ const courses = [
 export default function AdminsPage({ openAddAdmin }: Props) {
   return (
     <div>
-      <div className="sa-stats sa-stats-4">
+      {/* Stats Grid */}
+      <div className="mb-6 grid grid-cols-4 gap-3.5">
         {[
-          { icon: <BookOpen size={18} />, label: "Total Courses", val: "96", sub: "Published: 82", cls: "si-yellow" },
-          { icon: <Users size={18} />, label: "Instructors", val: "42", sub: "Active: 38", cls: "si-blue" },
-          { icon: <FileText size={18} />, label: "Active Enrollments", val: "4,820", sub: "+18% this month", cls: "si-green" },
-          { icon: <Tag size={18} />, label: "Drafts", val: "14", sub: "Needs review", cls: "si-red" },
+          { icon: <BookOpen size={18} />, label: "Total Courses", val: "96", sub: "Published: 82", color: "from-yellow-50 to-yellow-100/50", dotColor: "bg-yellow-400" },
+          { icon: <Users size={18} />, label: "Instructors", val: "42", sub: "Active: 38", color: "from-blue-50 to-blue-100/50", dotColor: "bg-blue-400" },
+          { icon: <FileText size={18} />, label: "Active Enrollments", val: "4,820", sub: "+18% this month", color: "from-green-50 to-green-100/50", dotColor: "bg-green-400" },
+          { icon: <Tag size={18} />, label: "Drafts", val: "14", sub: "Needs review", color: "from-red-50 to-red-100/50", dotColor: "bg-red-400" },
         ].map((s) => (
-          <div className="sa-stat" key={s.label}>
-            <div className={`sa-si ${s.cls}`}>{s.icon}</div>
-            <div>
-              <div className="sa-sl">{s.label}</div>
-              <div className="sa-sv">{s.val}</div>
-              <div className="sa-ss"><span className="up">{s.sub}</span></div>
+          <div key={s.label} className={`rounded-2xl bg-gradient-to-br ${s.color} border border-[var(--border)] p-4 shadow-sm`}>
+            <div className="mb-3 flex items-start justify-between">
+              <div className={`rounded-full p-2 ${s.dotColor}`}>{s.icon}</div>
             </div>
+            <div className="text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)]">{s.label}</div>
+            <div className="mt-1 text-2xl font-bold text-[var(--fg-primary)]">{s.val}</div>
+            <div className="mt-2 text-xs text-[var(--fg-secondary)]">{s.sub}</div>
           </div>
         ))}
       </div>
 
-      <div className="sa-table-card">
-        <div className="sa-table-hd">
-          <input className="sa-search" placeholder="Search courses, instructors…" />
-          <select className="sa-sel">
+      {/* Table Card */}
+      <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white/70 shadow-sm">
+        <div className="flex flex-wrap gap-2.5 border-b border-[var(--border)] bg-white/50 p-4 md:flex-nowrap">
+          <input
+            type="text"
+            placeholder="Search courses, instructors…"
+            className="flex-1 rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
+          />
+          <select className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
             <option>All Tenants</option>
             <option>Acme LMS</option>
             <option>EdgeLearn</option>
           </select>
-          <select className="sa-sel">
+          <select className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
             <option>All Status</option>
             <option>Published</option>
             <option>Draft</option>
           </select>
           <button
-            className="sa-btn sa-btn-primary sa-btn-sm"
-            style={{ marginLeft: "auto" }}
+            className="ml-auto rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-4 py-2 text-xs font-bold text-[#06110c] shadow-lg hover:shadow-xl transition-all"
             onClick={openAddAdmin}
           >
             + Add Course
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Course</th>
-              <th>Instructor</th>
-              <th>Students</th>
-              <th>Tenant</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((c) => (
-              <tr key={c.code}>
-                <td>
-                  <div className="sa-cu">
-                    <div className="sa-ca" style={{ background: "linear-gradient(135deg,var(--brand-green),var(--brand-yellow))", color: "#06110c" }}>{c.code}</div>
-                    <div>
-                      <div className="sa-cn">{c.title}</div>
-                      <div className="sa-cs">{c.code}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>{c.instructor}</td>
-                <td>{c.students}</td>
-                <td>{c.tenant}</td>
-                <td><span className={`sa-tag ${c.status === "Published" ? "tg" : "tr"}`}>{c.status}</span></td>
-                <td>
-                  <div className="sa-acts">
-                    <button className="sa-ab">View</button>
-                    <button className="sa-ab">Edit</button>
-                    <button className="sa-ab danger">Delete</button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--border)] bg-white/50">
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Course</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Instructor</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Students</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Tenant</th>
+                <th className="px-4 py-3 text-left font-bold text-[var(--fg-primary)]">Status</th>
+                <th className="px-4 py-3 text-center font-bold text-[var(--fg-primary)]">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {courses.map((c) => (
+                <tr key={c.code} className="border-b border-[var(--border)] hover:bg-white/40 transition-colors">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] text-xs font-bold text-[#06110c]">
+                        {c.code}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-[var(--fg-primary)]">{c.title}</div>
+                        <div className="text-xs text-[var(--fg-secondary)]">{c.code}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{c.instructor}</td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{c.students}</td>
+                  <td className="px-4 py-3 text-[var(--fg-primary)]">{c.tenant}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex rounded-full px-2.5 py-0.75 text-xs font-bold uppercase tracking-widest ${c.status === "Published" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                      {c.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-center gap-1.5">
+                      <button className="rounded px-2 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors">View</button>
+                      <button className="rounded px-2 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors">Edit</button>
+                      <button className="rounded px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

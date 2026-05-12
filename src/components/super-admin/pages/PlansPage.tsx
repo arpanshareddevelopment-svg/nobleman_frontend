@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgePlus, Sparkles } from "lucide-react";
+import { BadgePlus } from "lucide-react";
 
 const plans = [
   {
@@ -61,33 +61,66 @@ const plans = [
 export default function PlansPage() {
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <div style={{ fontFamily: '"Manrope",sans-serif', fontSize: 14, fontWeight: 800, color: "var(--sa-text)" }}>
+      <div className="mb-5 flex items-center justify-between">
+        <div
+          className="text-sm font-bold"
+          style={{ fontFamily: '"Manrope", sans-serif', color: "var(--fg-primary)" }}
+        >
           Subscription Plans
         </div>
-        <button className="sa-btn sa-btn-primary sa-btn-sm"><BadgePlus size={14} /> Create Plan</button>
+        <button
+          className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-4 py-2 text-xs font-bold text-[#06110c] shadow-lg hover:shadow-xl"
+          style={{ transition: "all 0.15s" }}
+        >
+          <BadgePlus size={14} /> Create Plan
+        </button>
       </div>
 
-      <div className="sa-plan-grid">
+      <div className="mb-5 grid grid-cols-3 gap-4">
         {plans.map((p) => (
-          <div key={p.name} className={`sa-plan-card${p.featured ? " featured" : ""}`}>
+          <div
+            key={p.name}
+            className="rounded-2xl border border-[var(--border)] bg-white/80 p-5 transition-all duration-200 hover:border-opacity-50 hover:shadow-lg"
+            style={{
+              borderColor: p.featured ? "rgba(200, 255, 0, 0.58)" : "var(--border)",
+              background: p.featured
+                ? "linear-gradient(135deg, rgba(200,255,0,.12), rgba(255,230,0,.12))"
+                : "rgba(255,255,255,0.82)",
+            }}
+          >
             {p.featured && (
-              <div style={{ background: "linear-gradient(135deg,var(--brand-green),var(--brand-yellow))", color: "#06110c", fontSize: 9, fontWeight: 800, padding: "3px 10px", borderRadius: 20, display: "inline-block", marginBottom: 10, letterSpacing: 1, textTransform: "uppercase" }}>
+              <div className="mb-2 inline-block rounded-full bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-2.5 py-0.5 text-xs font-bold text-[#06110c]" style={{ letterSpacing: "0.05em" }}>
                 Most Popular
               </div>
             )}
-            <div className="sa-plan-name">{p.name}</div>
-            <div className="sa-plan-price" style={{ color: p.color }}>
-              {p.price}<small>{p.period}</small>
+            <div
+              className="mb-1 text-lg font-bold"
+              style={{ fontFamily: '"Manrope", sans-serif', color: "var(--fg-primary)" }}
+            >
+              {p.name}
             </div>
-            <ul className="sa-plan-feat">
-              {p.features.map((f) => <li key={f}>{f}</li>)}
+            <div className="mb-3 text-3xl font-bold" style={{ color: p.color }}>
+              {p.price}
+              <span className="text-xs font-normal" style={{ color: "var(--fg-secondary)" }}>
+                {p.period}
+              </span>
+            </div>
+            <ul className="mb-4 flex flex-col gap-1.5">
+              {p.features.map((f) => (
+                <li key={f} className="text-xs" style={{ color: "var(--fg-primary)" }}>
+                  <span style={{ color: "var(--brand-green-dark)", fontWeight: 800 }}>✓</span> {f}
+                </li>
+              ))}
             </ul>
-            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-              <button className="sa-btn sa-btn-ghost sa-btn-sm" style={{ flex: 1 }}>Edit</button>
-              <button className="sa-btn sa-btn-primary sa-btn-sm" style={{ flex: 1 }}>Assign</button>
+            <div className="mb-3 flex gap-2">
+              <button className="flex-1 rounded-lg border border-[var(--border)] bg-white/70 px-3 py-1.5 text-xs font-bold transition-all hover:border-opacity-50 hover:bg-white" style={{ color: "var(--fg-secondary)" }}>
+                Edit
+              </button>
+              <button className="flex-1 rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-3 py-1.5 text-xs font-bold text-[#06110c] shadow-md hover:shadow-lg" style={{ transition: "all 0.15s" }}>
+                Assign
+              </button>
             </div>
-            <div style={{ fontSize: 11, color: "var(--sa-muted)", textAlign: "center" }}>
+            <div className="text-center text-xs" style={{ color: "var(--fg-secondary)" }}>
               <span style={{ fontWeight: 700, color: p.color }}>{p.tenants}</span> tenants on this plan
             </div>
           </div>
@@ -95,39 +128,58 @@ export default function PlansPage() {
       </div>
 
       {/* Feature matrix */}
-      <div className="sa-table-card">
-        <div className="sa-table-hd" style={{ padding: "14px 18px" }}>
-          <div style={{ fontFamily: '"Manrope",sans-serif', fontSize: 13, fontWeight: 800, color: "var(--sa-text)" }}>
+      <div className="rounded-2xl border border-[var(--border)] overflow-hidden bg-white/80 shadow-sm">
+        <div className="border-b border-[var(--border)] px-4.5 py-3.5 flex items-center gap-2.5">
+          <div
+            className="text-sm font-bold"
+            style={{ fontFamily: '"Manrope", sans-serif', color: "var(--fg-primary)" }}
+          >
             Feature Gate Matrix
           </div>
         </div>
-        <table>
+        <table className="w-full border-collapse">
           <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Starter</th>
-              <th>Growth</th>
-              <th>Enterprise</th>
+            <tr style={{ backgroundColor: "rgba(248,250,252,.8)" }}>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+                Feature
+              </th>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+                Starter
+              </th>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+                Growth
+              </th>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+                Enterprise
+              </th>
             </tr>
           </thead>
           <tbody>
             {[
-              ["Student limit",         "200",    "1,000",   "Unlimited"],
-              ["Course limit",          "5",      "20",      "Unlimited"],
-              ["Admin accounts",        "1",      "3",       "Unlimited"],
-              ["Exam builder",          "❌",     "✅",      "✅"],
-              ["Certificate gen.",      "❌",     "✅",      "✅"],
-              ["Custom domain",         "❌",     "✅",      "✅"],
-              ["White-label branding",  "❌",     "❌",      "✅"],
-              ["API access",            "❌",     "❌",      "✅"],
-              ["Priority support",      "❌",     "✅",      "✅ Dedicated"],
-              ["Analytics",             "Basic",  "Advanced","Full Suite"],
+              ["Student limit", "200", "1,000", "Unlimited"],
+              ["Course limit", "5", "20", "Unlimited"],
+              ["Admin accounts", "1", "3", "Unlimited"],
+              ["Exam builder", "❌", "✅", "✅"],
+              ["Certificate gen.", "❌", "✅", "✅"],
+              ["Custom domain", "❌", "✅", "✅"],
+              ["White-label branding", "❌", "❌", "✅"],
+              ["API access", "❌", "❌", "✅"],
+              ["Priority support", "❌", "✅", "✅ Dedicated"],
+              ["Analytics", "Basic", "Advanced", "Full Suite"],
             ].map(([feat, s, g, e]) => (
-              <tr key={feat}>
-                <td style={{ fontWeight: 600 }}>{feat}</td>
-                <td style={{ color: s === "❌" ? "var(--sa-a4)" : "var(--sa-a3)", fontWeight: 600 }}>{s}</td>
-                <td style={{ color: g === "❌" ? "var(--sa-a4)" : "var(--sa-a3)", fontWeight: 600 }}>{g}</td>
-                <td style={{ color: e.startsWith("❌") ? "var(--sa-a4)" : "var(--sa-a5)", fontWeight: 600 }}>{e}</td>
+              <tr key={feat} className="hover:bg-white/50">
+                <td className="border-b border-[var(--border)] px-4 py-2.75 text-xs font-semibold" style={{ color: "var(--fg-primary)" }}>
+                  {feat}
+                </td>
+                <td className="border-b border-[var(--border)] px-4 py-2.75 text-xs font-semibold" style={{ color: s === "❌" ? "#ef4444" : "var(--brand-green-dark)" }}>
+                  {s}
+                </td>
+                <td className="border-b border-[var(--border)] px-4 py-2.75 text-xs font-semibold" style={{ color: g === "❌" ? "#ef4444" : "var(--brand-green-dark)" }}>
+                  {g}
+                </td>
+                <td className="border-b border-[var(--border)] px-4 py-2.75 text-xs font-semibold" style={{ color: e.startsWith("❌") ? "#ef4444" : "var(--brand-blue)" }}>
+                  {e}
+                </td>
               </tr>
             ))}
           </tbody>
