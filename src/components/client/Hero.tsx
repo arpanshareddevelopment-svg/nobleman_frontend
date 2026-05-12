@@ -19,7 +19,7 @@ type Slide = {
   tag: string;
   titleTop: string;
   titleBottom: string;
-  summary: string;
+
   cta: string;
   solid: string;
   highlight: OrbKey;
@@ -88,9 +88,7 @@ const SLIDES: Slide[] = [
     tag: "Blue",
     titleTop: "Build AI-first skills",
     titleBottom: "that actually convert.",
-    summary:
-      "Live, hands-on programs designed to help you build real projects. Learn directly from industry veterans from top-tier companies like Boston Consulting (BCG), Amazon, Microsoft, and Deloitte through fully live interactive classes with real-time mentorship and practical project experience.",
-    cta: "Explore programs",
+    cta: "Explore Courses",
     solid: "#2ea8ff",
     highlight: "careers",
   },
@@ -99,9 +97,8 @@ const SLIDES: Slide[] = [
     tag: "Green",
     titleTop: "Mentorship that moves",
     titleBottom: "at the pace of momentum.",
-    summary:
-      "Structured practice, direct feedback, and interview prep that keep progress visible.",
-    cta: "Meet mentors",
+
+    cta: "Explore Courses",
     solid: "#84ff3d",
     highlight: "support",
   },
@@ -110,9 +107,8 @@ const SLIDES: Slide[] = [
     tag: "Yellow",
     titleTop: "Hiring outcomes",
     titleBottom: "with staying power.",
-    summary:
-      "Referrals, mock interviews, and partner access designed to keep the offer pipeline moving.",
-    cta: "See outcomes",
+
+    cta: "Explore Courses",
     solid: "#ffcf33",
     highlight: "partners",
   },
@@ -638,7 +634,6 @@ export default function Hero() {
             "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.92) 58%, transparent 100%)",
         }}
       />
-    
 
       <div className="mx-auto grid w-full max-w-[1800px]  grid-cols-1 items-center gap-6 px-3 md:px-6 xl:px-[7.5rem] lg:grid-cols-[1.35fr_0.65fr] lg:gap-2 ">
         {/* LEFT */}
@@ -712,17 +707,17 @@ export default function Hero() {
               </div>
 
               {/* Summary */}
-              <motion.p
-                key={`${slide.id}-summary`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3, delay: 0.08 }}
-                className="mt-5 max-w-full text-base font-medium leading-8 md:text-md"
-                style={{ color: "var(--hero-summary)" }}
-              >
-                {slide.summary}
-              </motion.p>
+              <p
+  className="mt-5 max-w-full text-base font-medium leading-8 md:text-md"
+  style={{ color: "var(--hero-summary)" }}
+>
+                Live, hands-on programs designed to help you build real
+                projects. Learn directly from industry veterans from top-tier
+                companies like Boston Consulting (BCG), Amazon, Microsoft, and
+                Deloitte through fully live interactive classes with real-time
+                mentorship and practical project experience.
+                programs
+              </p>
 
               {/* CTA */}
               <div className="mt-8 flex flex-wrap gap-3">
@@ -803,11 +798,7 @@ export default function Hero() {
             />
           </AnimatePresence>
           <div className="relative w-full max-w-[680px] aspect-square rounded-[2.5rem] p-3">
-            <OrbCluster
-              slide={slide}
-              isDark={isDark}
-              mounted={mounted}
-            />
+            <OrbCluster slide={slide} isDark={isDark} mounted={mounted} />
           </div>
         </div>
       </div>
