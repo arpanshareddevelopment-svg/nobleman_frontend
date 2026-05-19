@@ -3,17 +3,11 @@
 import Image from "next/image";
 import { Github, Linkedin, Twitter, Mail } from "lucide-react";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 
 const FOOTER_SECTIONS = [
   {
     title: "Programs",
-    links: [
-      "Data Analyst",
-      "Full-Stack Engineering",
-      "Product Management",
-      "AI & ML",
-    ],
+    links: ["Data Analyst", "Full-Stack Engineering", "Product Management", "AI & ML"],
   },
   {
     title: "Company",
@@ -32,46 +26,23 @@ const SOCIAL = [
   { icon: Mail, href: "#" },
 ];
 
-function FooterColumn({
-  title,
-  links,
-  isDark,
-}: {
-  title: string;
-  links: string[];
-  isDark: boolean;
-}) {
+function FooterColumn({ title, links }: { title: string; links: string[] }) {
   return (
     <div>
       <h5
         className="mb-5 text-sm font-bold uppercase tracking-[0.14em]"
-        style={{
-          color: isDark ? "white" : "#0f172a",
-        }}
+        style={{ color: "white" }}
       >
         {title}
       </h5>
-
       <ul className="space-y-3">
         {links.map((link) => (
           <li key={link}>
             <button
               className="cursor-pointer text-left text-sm transition-all duration-300"
-              style={{
-                color: isDark
-                  ? "rgba(255,255,255,0.55)"
-                  : "rgba(15,23,42,0.58)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = isDark
-                  ? "white"
-                  : "black";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = isDark
-                  ? "rgba(255,255,255,0.55)"
-                  : "rgba(15,23,42,0.58)";
-              }}
+              style={{ color: "rgba(255,255,255,0.55)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "white"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}
             >
               {link}
             </button>
@@ -82,34 +53,17 @@ function FooterColumn({
   );
 }
 
-function SocialButton({
-  icon: Icon,
-  href,
-  isDark,
-}: {
-  icon: React.ComponentType<{ size?: number }>;
-  href: string;
-  isDark: boolean;
-}) {
+function SocialButton({ icon: Icon, href }: { icon: React.ComponentType<{ size?: number }>; href: string }) {
   return (
     <motion.a
       href={href}
       whileHover={{ y: -4 }}
       className="flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-300"
       style={{
-        border: isDark
-          ? "1px solid rgba(255,255,255,0.1)"
-          : "1px solid rgba(15,23,42,0.08)",
-
-        background: isDark
-          ? "rgba(255,255,255,0.05)"
-          : "rgba(255,255,255,0.72)",
-
-        color: isDark ? "rgba(255,255,255,0.7)" : "rgba(15,23,42,0.65)",
-
+        border: "1px solid rgba(255,255,255,0.1)",
+        background: "rgba(255,255,255,0.05)",
+        color: "rgba(255,255,255,0.7)",
         backdropFilter: "blur(14px)",
-
-        boxShadow: isDark ? "none" : "0 8px 24px rgba(15,23,42,0.05)",
       }}
     >
       <Icon size={18} />
@@ -118,62 +72,18 @@ function SocialButton({
 }
 
 export default function Footer() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const darkMode = document.documentElement.classList.contains("dark");
-    setIsDark(darkMode);
-    setMounted(true);
-
-    const checkTheme = () =>
-      setIsDark(document.documentElement.classList.contains("dark"));
-
-    const observer = new MutationObserver(checkTheme);
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <footer
       className="relative isolate overflow-hidden border-t"
-      style={{
-        borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.06)",
-      }}
+      style={{ borderColor: "rgba(255,255,255,0.08)" }}
     >
       {/* BG */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: isDark
-            ? `
-    linear-gradient(
-      180deg,
-      rgba(2,6,23,0) 0%,
-      #020617 18%,
-      #000000 100%
-    )
-  `
-            : `
-    radial-gradient(circle at 15% 20%, rgba(46,168,255,0.10), transparent 28%),
-    radial-gradient(circle at 82% 75%, rgba(255,208,64,0.10), transparent 30%),
-    radial-gradient(circle at 50% 50%, rgba(132,255,61,0.08), transparent 38%),
-    linear-gradient(
-      180deg,
-      #f8fbff 0%,
-      #eef5ff 42%,
-      #edf7f1 100%
-    )
-  `,
+          background: `
+            linear-gradient(180deg, rgba(2,6,23,0) 0%, #020617 18%, #000000 100%)
+          `,
         }}
       />
 
@@ -181,16 +91,11 @@ export default function Footer() {
       <div
         className="absolute inset-0 z-[1]"
         style={{
-          opacity: isDark ? 0.05 : 0.035,
-          backgroundImage: isDark
-            ? `
-              linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)
-            `
-            : `
-              linear-gradient(rgba(15, 23, 42, 0.77) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(15, 23, 42, 0.88) 1px, transparent 1px)
-            `,
+          opacity: 0.05,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)
+          `,
           backgroundSize: "44px 44px",
         }}
       />
@@ -199,20 +104,12 @@ export default function Footer() {
       <div
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          filter: isDark ? "blur(90px)" : "blur(110px)",
-          opacity: isDark ? 1 : 0.95,
-
-          background: isDark
-            ? `
-              radial-gradient(circle at 10% 10%, rgba(255,220,0,0.18), transparent 30%),
-              radial-gradient(circle at 90% 20%, rgba(0,180,255,0.16), transparent 35%),
-              radial-gradient(circle at 50% 100%, rgba(0,255,180,0.12), transparent 45%)
-            `
-            : `
-              radial-gradient(circle at 10% 10%, rgba(255,220,0,0.16), transparent 30%),
-              radial-gradient(circle at 90% 20%, rgba(0,180,255,0.12), transparent 35%),
-              radial-gradient(circle at 50% 100%, rgba(160,255,0,0.12), transparent 45%)
-            `,
+          filter: "blur(90px)",
+          background: `
+            radial-gradient(circle at 10% 10%, rgba(255,220,0,0.18), transparent 30%),
+            radial-gradient(circle at 90% 20%, rgba(0,180,255,0.16), transparent 35%),
+            radial-gradient(circle at 50% 100%, rgba(0,255,180,0.12), transparent 45%)
+          `,
         }}
       />
 
@@ -222,11 +119,7 @@ export default function Footer() {
           <div>
             <a href="#home" className="inline-flex" aria-label="Go to home">
               <Image
-                src={
-                  isDark
-                    ? "/branding/brand_light.png"
-                    : "/branding/brand_dark.png"
-                }
+                src="/branding/brand_dark.png"
                 alt="brand"
                 width={170}
                 height={40}
@@ -236,11 +129,7 @@ export default function Footer() {
 
             <p
               className="mt-5 max-w-md text-sm leading-relaxed"
-              style={{
-                color: isDark
-                  ? "rgba(255,255,255,0.55)"
-                  : "rgba(0, 0, 0, 0.62)",
-              }}
+              style={{ color: "rgba(255,255,255,0.55)" }}
             >
               NobleMan Learning helps students and professionals break into
               high-growth careers through immersive learning and mentorship from
@@ -249,12 +138,7 @@ export default function Footer() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               {SOCIAL.map(({ icon, href }, i) => (
-                <SocialButton
-                  key={`${href}-${i}`}
-                  icon={icon}
-                  href={href}
-                  isDark={isDark}
-                />
+                <SocialButton key={`${href}-${i}`} icon={icon} href={href} />
               ))}
             </div>
           </div>
@@ -262,12 +146,7 @@ export default function Footer() {
           {/* RIGHT */}
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
             {FOOTER_SECTIONS.map((section) => (
-              <FooterColumn
-                key={section.title}
-                title={section.title}
-                links={section.links}
-                isDark={isDark}
-              />
+              <FooterColumn key={section.title} title={section.title} links={section.links} />
             ))}
           </div>
         </div>
@@ -276,11 +155,8 @@ export default function Footer() {
         <div
           className="flex flex-col items-start justify-between gap-4 border-t py-6 text-sm sm:flex-row sm:items-center"
           style={{
-            borderColor: isDark
-              ? "rgba(255,255,255,0.08)"
-              : "rgba(0, 2, 4, 0.08)",
-
-            color: isDark ? "rgba(255,255,255,0.4)" : "rgba(15,23,42,0.45)",
+            borderColor: "rgba(255,255,255,0.08)",
+            color: "rgba(255,255,255,0.4)",
           }}
         >
           <p>
@@ -293,21 +169,9 @@ export default function Footer() {
               <button
                 key={item}
                 className="cursor-pointer transition-all duration-300"
-                style={{
-                  color: isDark
-                    ? "rgba(255,255,255,0.45)"
-                    : "rgba(15,23,42,0.5)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = isDark
-                    ? "white"
-                    : "black";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = isDark
-                    ? "rgba(255,255,255,0.45)"
-                    : "rgba(15,23,42,0.5)";
-                }}
+                style={{ color: "rgba(255,255,255,0.45)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "white"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}
               >
                 {item}
               </button>

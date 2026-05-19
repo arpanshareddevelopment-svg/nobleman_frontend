@@ -10,8 +10,6 @@ const INSTRUCTORS = [
     role: "Senior Data Scientist",
     company: "Amazon",
     expertise: ["Python", "ML", "SQL"],
-
-    /* Replace with real portrait URLs */
     photo:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80",
     bio: "8 years building recommendation systems at Amazon. Helped 1,200+ students break into data science.",
@@ -25,7 +23,6 @@ const INSTRUCTORS = [
     role: "Principal Engineer",
     company: "Microsoft",
     expertise: ["React", "Node.js", "System Design"],
-
     photo:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80",
     bio: "Led full-stack teams at Microsoft for 10 years. Passionate about turning beginners into senior engineers.",
@@ -39,7 +36,6 @@ const INSTRUCTORS = [
     role: "Product Lead",
     company: "BCG Digital",
     expertise: ["Product Strategy", "Agile", "Analytics"],
-
     photo:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80",
     bio: "Shipped 30+ products across fintech and healthtech. Mentors aspiring PMs on strategy and execution.",
@@ -53,7 +49,6 @@ const INSTRUCTORS = [
     role: "ML Engineer",
     company: "Google DeepMind",
     expertise: ["Deep Learning", "NLP", "PyTorch"],
-
     photo:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80",
     bio: "Researcher turned engineer. Specialises in LLMs and making cutting-edge AI accessible to everyone.",
@@ -67,7 +62,6 @@ const INSTRUCTORS = [
     role: "UX Design Lead",
     company: "Flipkart",
     expertise: ["Figma", "Design Systems", "Research"],
-
     photo:
       "https://images.unsplash.com/photo-1614644147724-2d4785d69962?w=600&q=80",
     bio: "Designed experiences used by 300M+ users. Teaches design thinking with a product-first mindset.",
@@ -81,7 +75,6 @@ const INSTRUCTORS = [
     role: "DevOps Architect",
     company: "Infosys",
     expertise: ["Kubernetes", "AWS", "CI/CD"],
-
     photo:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
     bio: "Scaled infrastructure for Fortune 500 clients. Demystifies cloud and DevOps for working engineers.",
@@ -95,34 +88,16 @@ const INSTRUCTORS = [
 // Color rotation: blue → green → yellow
 const COLOR_THEMES = [
   {
-    light: {
-      accent: "var(--brand-blue-dark)",
-      accentDark: "var(--brand-blue-dark)",
-    },
-    dark: {
-      accent: "var(--brand-blue-light)",
-      accentDark: "var(--brand-blue-dark)",
-    },
+    accent: "var(--brand-blue-light)",
+    accentDark: "var(--brand-blue-dark)",
   },
   {
-    light: {
-      accent: "var(--brand-green-dark)",
-      accentDark: "var(--brand-green-dark)",
-    },
-    dark: {
-      accent: "var(--brand-green-light)",
-      accentDark: "var(--brand-green-dark)",
-    },
+    accent: "var(--brand-green-light)",
+    accentDark: "var(--brand-green-dark)",
   },
   {
-    light: {
-      accent: "var(--brand-yellow-dark)",
-      accentDark: "var(--brand-yellow-dark)",
-    },
-    dark: {
-      accent: "var(--brand-yellow-light)",
-      accentDark: "var(--brand-yellow-dark)",
-    },
+    accent: "var(--brand-yellow-light)",
+    accentDark: "var(--brand-yellow-dark)",
   },
 ];
 
@@ -143,44 +118,14 @@ function Stars({ rating, color }: { rating: number; color: string }) {
   );
 }
 
-function useThemeMode() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const update = () => setIsDark(root.classList.contains("dark"));
-    update();
-    setMounted(true);
-    const observer = new MutationObserver(update);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  return { isDark, mounted };
-}
-
 /* ─── Vertical thumb strip ─────────────────────────────────── */
 function ThumbStrip({
   active,
   onSelect,
-  isDark,
-  mounted,
 }: {
   active: number;
   onSelect: (i: number) => void;
-  isDark: boolean;
-  mounted: boolean;
 }) {
-  // Don't render until mounted
-  if (!mounted) {
-    return (
-      <div className="hidden lg:flex flex-col gap-3 h-[320px] flex-shrink-0" />
-    );
-  }
-
-  // Show a sliding window of up to 4 instructors that keeps the `active`
-  // instructor visible. Center the active one when possible.
   const visibleCount = 4;
   const total = INSTRUCTORS.length;
 
@@ -199,8 +144,7 @@ function ThumbStrip({
     <div className="hidden lg:flex flex-col gap-3 h-[320px] flex-shrink-0">
       {displayInstructors.map((inst, i) => {
         const globalIndex = start + i;
-        const themeSet = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
-        const theme = isDark ? themeSet.dark : themeSet.light;
+        const theme = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
 
         return (
           <button
@@ -224,7 +168,6 @@ function ThumbStrip({
               alt={inst.name}
               className="w-full h-full object-cover"
             />
-            {/* active overlay */}
             {globalIndex === active && (
               <motion.div
                 layoutId="thumb-glow"
@@ -243,14 +186,11 @@ function ThumbStrip({
 export default function InstructorCarousel() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const { isDark, mounted } = useThemeMode();
   const containerRef = useRef<HTMLElement | null>(null);
   const inView = useInView(containerRef, { once: false, margin: "-120px" });
 
   const total = INSTRUCTORS.length;
-
-  const themeSet = COLOR_THEMES[active % COLOR_THEMES.length];
-  const theme = isDark ? themeSet.dark : themeSet.light;
+  const theme = COLOR_THEMES[active % COLOR_THEMES.length];
 
   const advance = useCallback(
     (dir: 1 | -1) => setActive((i) => (i + dir + total) % total),
@@ -258,15 +198,11 @@ export default function InstructorCarousel() {
   );
 
   useEffect(() => {
-    // Only start if mounted
-    if (!mounted) return;
-
     const id = setInterval(() => {
       if (!paused) advance(1);
     }, 5000);
-
     return () => clearInterval(id);
-  }, [paused, advance, mounted]);
+  }, [paused, advance]);
 
   function select(i: number) {
     setActive(i);
@@ -281,29 +217,11 @@ export default function InstructorCarousel() {
   }
 
   const inst = INSTRUCTORS[active];
-
-  // Overlay theme colors onto the instructor
   const displayInst = {
     ...inst,
     accent: theme.accent,
     accentDark: theme.accentDark,
   };
-
-  // Don't render anything until client hydration is done
-  if (!mounted) {
-    return (
-      <section
-        id="instructors"
-        className="relative w-full overflow-hidden py-12 md:py-24"
-        style={{
-          background:
-            "linear-gradient(180deg, #eef4ff 0%, #f8fbff 20%, #eef4ff 80%, #ffffff 100%)",
-        }}
-      >
-        {/* Empty placeholder - no theme-dependent content */}
-      </section>
-    );
-  }
 
   return (
     <section
@@ -311,9 +229,8 @@ export default function InstructorCarousel() {
       className="relative w-full overflow-hidden py-12 md:py-24"
       ref={containerRef}
       style={{
-        background: isDark
-          ? "linear-gradient(180deg, #020617 0%, #030712 30%, #000000 70%, #020617 100%)"
-          : "linear-gradient(180deg, #eef4ff 0%, #f8fbff 20%, #eef4ff 80%, #ffffff 100%)",
+        background:
+          "linear-gradient(180deg, #020617 0%, #030712 30%, #000000 70%, #020617 100%)",
       }}
     >
       {/* ── Animated per-instructor accent glow ── */}
@@ -340,7 +257,7 @@ export default function InstructorCarousel() {
         style={{
           backgroundImage: `radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)`,
           backgroundSize: "28px 28px",
-          opacity: isDark ? 0.06 : 0.14,
+          opacity: 0.06,
         }}
       />
 
@@ -349,30 +266,25 @@ export default function InstructorCarousel() {
         className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
         style={{
           background: `radial-gradient(circle at center, ${displayInst.accent}22 0%, transparent 60%)`,
-          opacity: isDark ? 1 : 0.92,
         }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-14">
-        {/* Glass wrapper matching other sections */}
+        {/* Glass wrapper */}
         <div
           className="relative rounded-[2rem] border p-4 sm:p-6 overflow-hidden"
           style={{
-            background: isDark
-              ? "rgba(255,255,255,0.04)"
-              : "rgba(255,255,255,0.75)",
+            background: "rgba(255,255,255,0.04)",
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
             borderColor: "var(--border)",
-            boxShadow: isDark
-              ? "0 30px 100px rgba(0,0,0,0.6)"
-              : "0 30px 100px rgba(7,18,37,0.08)",
+            boxShadow: "0 30px 100px rgba(0,0,0,0.6)",
           }}
         >
           {/* ── Section header ── */}
           <div className="flex items-end justify-between mb-12">
             <div>
-              <div className="flex w-full  justify-between">
+              <div className="flex w-full justify-between">
                 <span
                   className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 transition-colors duration-500"
                   style={{
@@ -385,7 +297,7 @@ export default function InstructorCarousel() {
                 </span>
 
                 {/* Arrow controls */}
-                <div className="hidden sm:flex items-center gap-3 ">
+                <div className="hidden sm:flex items-center gap-3">
                   <span
                     className="text-xs font-mono tracking-widest"
                     style={{ color: "var(--fg-muted)" }}
@@ -428,17 +340,7 @@ export default function InstructorCarousel() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4 }}
                     style={{
-                      backgroundImage: isDark
-                        ? `linear-gradient(
-          125deg,
-          ${displayInst.accent},
-          ${displayInst.accentDark}
-        )`
-                        : `linear-gradient(
-          125deg,
-          ${themeSet.dark.accent},
-          ${themeSet.dark.accentDark}
-        )`,
+                      backgroundImage: `linear-gradient(125deg, ${displayInst.accent}, ${displayInst.accentDark})`,
                       WebkitBackgroundClip: "text",
                       backgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -455,14 +357,9 @@ export default function InstructorCarousel() {
           {/* ── Main content row ── */}
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* Vertical thumb strip */}
-            <ThumbStrip
-              active={active}
-              onSelect={select}
-              isDark={isDark}
-              mounted={mounted}
-            />
+            <ThumbStrip active={active} onSelect={select} />
 
-            {/* Portrait — large, dominant */}
+            {/* Portrait */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={`photo-${active}`}
@@ -475,12 +372,9 @@ export default function InstructorCarousel() {
                   width: "100%",
                   maxWidth: "320px",
                   height: "320px",
-                  boxShadow: isDark
-                    ? `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`
-                    : `0 20px 60px rgba(7,18,37,0.06), 0 0 0 1px ${displayInst.accent}14`,
+                  boxShadow: `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`,
                 }}
               >
-                {/* Photo */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={inst.photo}
@@ -488,21 +382,20 @@ export default function InstructorCarousel() {
                   className="w-full h-full object-cover object-top"
                 />
 
-                {/* Gradient overlay — bottom fade */}
                 {/* Cinematic readability overlay */}
                 <div
                   className="absolute inset-0"
                   style={{
                     background: `
-      linear-gradient(
-        to top,
-        rgba(0,0,0,0.92) 0%,
-        rgba(0,0,0,0.72) 18%,
-        rgba(0,0,0,0.38) 38%,
-        rgba(0,0,0,0.10) 58%,
-        transparent 78%
-      )
-    `,
+                      linear-gradient(
+                        to top,
+                        rgba(0,0,0,0.92) 0%,
+                        rgba(0,0,0,0.72) 18%,
+                        rgba(0,0,0,0.38) 38%,
+                        rgba(0,0,0,0.10) 58%,
+                        transparent 78%
+                      )
+                    `,
                   }}
                 />
 
@@ -510,13 +403,7 @@ export default function InstructorCarousel() {
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: `
-      linear-gradient(
-        to top,
-        ${displayInst.accentDark}44 0%,
-        transparent 45%
-      )
-    `,
+                    background: `linear-gradient(to top, ${displayInst.accentDark}44 0%, transparent 45%)`,
                     mixBlendMode: "screen",
                   }}
                 />
@@ -537,7 +424,7 @@ export default function InstructorCarousel() {
                   </div>
                 </div>
 
-                {/* Index badge — top right */}
+                {/* Index badge */}
                 <div
                   className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-black"
                   style={{
@@ -644,7 +531,7 @@ export default function InstructorCarousel() {
                   </div>
                 </div>
 
-                {/* Star rating + CTA */}
+                {/* Star rating */}
                 <div className="flex items-center justify-between flex-wrap gap-4 pt-2">
                   <div className="flex items-center gap-2">
                     <Stars rating={inst.rating} color={displayInst.accent} />
@@ -663,7 +550,7 @@ export default function InstructorCarousel() {
                   </div>
                 </div>
 
-                {/* Progress bar — autoplay indicator */}
+                {/* Progress bar */}
                 <div
                   className="h-px w-full rounded-full overflow-hidden mt-auto"
                   style={{ background: "var(--border)" }}
@@ -688,9 +575,7 @@ export default function InstructorCarousel() {
           {/* ── Mobile dot strip ── */}
           <div className="flex items-center justify-center gap-2 mt-10 lg:hidden">
             {INSTRUCTORS.map((inst, i) => {
-              const themeSet = COLOR_THEMES[i % COLOR_THEMES.length];
-              const mobileTheme = isDark ? themeSet.dark : themeSet.light;
-
+              const mobileTheme = COLOR_THEMES[i % COLOR_THEMES.length];
               return (
                 <button
                   key={i}

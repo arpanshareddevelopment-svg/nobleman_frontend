@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Award, BookOpen, Briefcase } from "lucide-react";
 
@@ -33,44 +33,9 @@ const CERTIFICATIONS = [
   },
 ];
 
-function useThemeMode() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const update = () => setIsDark(root.classList.contains("dark"));
-    update();
-    setMounted(true);
-    const observer = new MutationObserver(update);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  return { isDark, mounted };
-}
-
 export default function CertificationsShowcase() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: false, margin: "-100px" });
-  const { isDark, mounted } = useThemeMode();
-
-  // Early return placeholder to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <section
-        id="certifications"
-        ref={ref}
-        className="relative w-full overflow-hidden py-12 md:py-28"
-        style={{
-          background:
-            "linear-gradient(155deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
-        }}
-      >
-        {/* Placeholder - invisible until hydrated */}
-      </section>
-    );
-  }
 
   return (
     <section
@@ -78,19 +43,8 @@ export default function CertificationsShowcase() {
       ref={ref}
       className="relative w-full overflow-hidden py-12 md:py-28"
       style={{
-        background: isDark
-          ? "linear-gradient(155deg, #010b27ff 0%, #00090489 45%, #000000 100%)"
-          : `
-  radial-gradient(circle at 15% 20%, rgba(46,168,255,0.12), transparent 28%),
-  radial-gradient(circle at 85% 75%, rgba(255,208,64,0.10), transparent 30%),
-  radial-gradient(circle at 50% 50%, rgba(132,255,61,0.08), transparent 38%),
-  linear-gradient(
-    155deg,
-    #f8fbff 0%,
-    #eef5ff 35%,
-    #edf7f1 100%
-  )
-`,
+        background:
+          "linear-gradient(155deg, #010b27ff 0%, #00090489 45%, #000000 100%)",
       }}
     >
       {/* Dot-grid texture */}
@@ -100,7 +54,7 @@ export default function CertificationsShowcase() {
           backgroundImage:
             "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
-          opacity: isDark ? 0.08 : 0.06,
+          opacity: 0.08,
         }}
       />
 
@@ -113,7 +67,6 @@ export default function CertificationsShowcase() {
             radial-gradient(circle at 85% 75%, var(--brand-yellow-glow), transparent 45%),
             radial-gradient(circle at 50% 50%, var(--brand-green-glow), transparent 55%)
           `,
-          opacity: isDark ? 1 : 0.72,
         }}
       />
 
@@ -144,9 +97,8 @@ export default function CertificationsShowcase() {
             <span
               className="bg-clip-text text-transparent"
               style={{
-                backgroundImage: isDark
-                  ? "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)"
-                  : "linear-gradient(135deg, #1da1ff 0%, #32d74b 50%, #ffb000 100%)",
+                backgroundImage:
+                  "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)",
               }}
             >
               matter
@@ -177,40 +129,13 @@ export default function CertificationsShowcase() {
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
                 className="group rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] cursor-pointer"
                 style={{
-                  background: isDark
-                    ? `
-      linear-gradient(
-        135deg,
-        rgba(255,255,255,0.06) 0%,
-        rgba(255,255,255,0.03) 100%
-      )
-    `
-                    : `
-      linear-gradient(
-        135deg,
-        rgba(255,255,255,0.34) 0%,
-        rgba(255,255,255,0.16) 42%,
-        rgba(240,248,255,0.12) 100%
-      )
-    `,
-
+                  background:
+                    "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)",
                   backdropFilter: "blur(28px)",
                   WebkitBackdropFilter: "blur(28px)",
-
-                  border: isDark
-                    ? "1px solid rgba(255,255,255,0.08)"
-                    : "1px solid rgba(255,255,255,0.42)",
-
-                  boxShadow: isDark
-                    ? `
-      0 10px 40px rgba(0,0,0,0.35),
-      inset 0 1px 0 rgba(255,255,255,0.08)
-    `
-                    : `
-      0 12px 40px rgba(120,140,180,0.12),
-      0 2px 8px rgba(0,0,0,0.05),
-      inset 0 1px 0 rgba(255,255,255,0.75)
-    `,
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow:
+                    "0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
                 }}
               >
                 {/* Gradient overlay on hover */}
@@ -221,10 +146,9 @@ export default function CertificationsShowcase() {
                   }}
                 />
                 <div className="flex gap-2 items-center">
-                  {" "}
                   {/* Icon */}
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center  transition-all duration-300 group-hover:scale-110 "
+                    className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                     style={{
                       background: `${cert.color}15`,
                       color: cert.color,
@@ -233,23 +157,16 @@ export default function CertificationsShowcase() {
                     <Icon size={28} strokeWidth={1.5} />
                   </div>
                   {/* Content */}
-                  <div className="">
+                  <div>
                     <div
-                      className="text-xs font-bold tracking-widest uppercase  bg-clip-text text-transparent"
+                      className="text-xs font-bold tracking-widest uppercase bg-clip-text text-transparent"
                       style={{
                         backgroundImage:
                           cert.id === 1
-                            ? isDark
-                              ? "var(--blue-gradient-dark)"
-                              : "var(--blue-gradient-light)"
+                            ? "var(--blue-gradient-dark)"
                             : cert.id === 2
-                              ? isDark
-                                ? "var(--green-gradient-dark)"
-                                : "var(--green-gradient-light)"
-                              : isDark
-                                ? "var(--yellow-gradient-dark)"
-                                : "var(--yellow-gradient-light)",
-
+                              ? "var(--green-gradient-dark)"
+                              : "var(--yellow-gradient-dark)",
                         WebkitBackgroundClip: "text",
                         backgroundClip: "text",
                       }}

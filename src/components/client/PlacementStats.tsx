@@ -11,125 +11,28 @@ type Company = {
 };
 
 const COMPANIES: Company[] = [
-  {
-    name: "Amazon",
-    role: "Cloud Architect",
-    logo: "/companies/amazon-com-logo.png",
-  },
-  {
-    name: "Microsoft",
-    role: "Data Scientist",
-    logo: "/companies/microsoft-com-logo.png",
-  },
-  {
-    name: "Deloitte",
-    role: "Analytics Consultant",
-    logo: "/companies/deloitte-com-logo.png",
-  },
-  {
-    name: "Tech Mahindra",
-    role: "DevOps Engineer",
-    logo: "/companies/techmahindra-com-br-logo.png",
-  },
-
-  {
-    name: "IOPEX",
-    role: "Data Engineer",
-    logo: "/companies/iopex-com-logo.png",
-  },
-  {
-    name: "Sony Pictures",
-    role: "Media Tech Lead",
-    logo: "/companies/sonypictures-com-logo.png",
-  },
-  {
-    name: "AT&T",
-    role: "Platform Engineer",
-    logo: "/companies/att-com-logo.png",
-  },
-
+  { name: "Amazon", role: "Cloud Architect", logo: "/companies/amazon-com-logo.png" },
+  { name: "Microsoft", role: "Data Scientist", logo: "/companies/microsoft-com-logo.png" },
+  { name: "Deloitte", role: "Analytics Consultant", logo: "/companies/deloitte-com-logo.png" },
+  { name: "Tech Mahindra", role: "DevOps Engineer", logo: "/companies/techmahindra-com-br-logo.png" },
+  { name: "IOPEX", role: "Data Engineer", logo: "/companies/iopex-com-logo.png" },
+  { name: "Sony Pictures", role: "Media Tech Lead", logo: "/companies/sonypictures-com-logo.png" },
+  { name: "AT&T", role: "Platform Engineer", logo: "/companies/att-com-logo.png" },
   { name: "AXA", role: "ML Operations", logo: "/companies/axa-com-logo.png" },
-  {
-    name: "Juniper",
-    role: "Network Automation",
-    logo: "/companies/juniper-net-logo.png",
-  },
-  {
-    name: "HUL",
-    role: "Supply Chain AI",
-    logo: "/companies/hul-co-in-logo.png",
-  },
-
-  {
-    name: "Sprinklr",
-    role: "NLP Engineer",
-    logo: "/companies/sprinklr-com-logo.png",
-  },
-
+  { name: "Juniper", role: "Network Automation", logo: "/companies/juniper-net-logo.png" },
+  { name: "HUL", role: "Supply Chain AI", logo: "/companies/hul-co-in-logo.png" },
+  { name: "Sprinklr", role: "NLP Engineer", logo: "/companies/sprinklr-com-logo.png" },
   { name: "MUFG", role: "Quant Analyst", logo: "/companies/mufg-jp-logo.png" },
-  {
-    name: "MiQ",
-    role: "Programmatic Data",
-    logo: "/companies/wearemiq-com-logo.png",
-  },
-
-  {
-    name: "Genpact",
-    role: "Process Automation",
-    logo: "/companies/genpact-digital-logo.png",
-  },
-  {
-    name: "Bandhan Bank",
-    role: "Credit Risk ML",
-    logo: "/companies/bandhanbank-com-logo.png",
-  },
-
-  {
-    name: "Booking.com",
-    role: "Data Analyst",
-    logo: "/companies/booking-com-logo.png",
-  },
-  {
-    name: "EaseMyTrip",
-    role: "BI Developer",
-    logo: "/companies/easemytrip-co-uk-logo.png",
-  },
-  {
-    name: "Razorpay",
-    role: "Backend Engineer",
-    logo: "/companies/razorpay-com-logo.png",
-  },
-  {
-    name: "Capgemini",
-    role: "Data Architect",
-    logo: "/companies/capgemini-engineering-com-ua-logo.png",
-  },
+  { name: "MiQ", role: "Programmatic Data", logo: "/companies/wearemiq-com-logo.png" },
+  { name: "Genpact", role: "Process Automation", logo: "/companies/genpact-digital-logo.png" },
+  { name: "Bandhan Bank", role: "Credit Risk ML", logo: "/companies/bandhanbank-com-logo.png" },
+  { name: "Booking.com", role: "Data Analyst", logo: "/companies/booking-com-logo.png" },
+  { name: "EaseMyTrip", role: "BI Developer", logo: "/companies/easemytrip-co-uk-logo.png" },
+  { name: "Razorpay", role: "Backend Engineer", logo: "/companies/razorpay-com-logo.png" },
+  { name: "Capgemini", role: "Data Architect", logo: "/companies/capgemini-engineering-com-ua-logo.png" },
 ];
 
-function useThemeMode() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const update = () => setIsDark(root.classList.contains("dark"));
-    update();
-    setMounted(true);
-    const observer = new MutationObserver(update);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  return { isDark, mounted };
-}
-
-function CircularProgress({
-  trigger,
-  isDark,
-}: {
-  trigger: boolean;
-  isDark: boolean;
-}) {
+function CircularProgress({ trigger }: { trigger: boolean }) {
   const radius = 102;
   const circumference = 2 * Math.PI * radius;
   const [progress, setProgress] = useState(0);
@@ -164,12 +67,7 @@ function CircularProgress({
         }}
       />
 
-      <svg
-        width="260"
-        height="260"
-        viewBox="0 0 260 260"
-        className="-rotate-90"
-      >
+      <svg width="260" height="260" viewBox="0 0 260 260" className="-rotate-90">
         <defs>
           <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#00ffcc" />
@@ -191,100 +89,20 @@ function CircularProgress({
         </defs>
 
         {/* depth shadow */}
-        <circle
-          cx="130"
-          cy="133"
-          r={radius}
-          fill="none"
-          stroke={isDark ? "#000" : "#bfefff"}
-          strokeWidth="30"
-          strokeOpacity={isDark ? 0.75 : 0.35}
-        />
-
+        <circle cx="130" cy="133" r={radius} fill="none" stroke="#000" strokeWidth="30" strokeOpacity="0.75" />
         {/* track */}
-        <circle
-          cx="130"
-          cy="130"
-          r={radius}
-          fill="none"
-          stroke={isDark ? "#0e1e20" : "#dff8ff"}
-          strokeWidth="24"
-        />
-
+        <circle cx="130" cy="130" r={radius} fill="none" stroke="#0e1e20" strokeWidth="24" />
         {/* outer track rims */}
-        <circle
-          cx="130"
-          cy="130"
-          r={radius - 11}
-          fill="none"
-          stroke={isDark ? "#0d1e1e" : "#b7ecff"}
-          strokeWidth="0.8"
-          strokeOpacity={isDark ? 0.7 : 0.5}
-        />
-
-        <circle
-          cx="130"
-          cy="130"
-          r={radius + 11}
-          fill="none"
-          stroke={isDark ? "#0d1e1e" : "#b7ecff"}
-          strokeWidth="0.8"
-          strokeOpacity={isDark ? 0.5 : 0.35}
-        />
-
+        <circle cx="130" cy="130" r={radius - 11} fill="none" stroke="#0d1e1e" strokeWidth="0.8" strokeOpacity="0.7" />
+        <circle cx="130" cy="130" r={radius + 11} fill="none" stroke="#0d1e1e" strokeWidth="0.8" strokeOpacity="0.5" />
         {/* wide halo glow */}
-        <circle
-          cx="130"
-          cy="130"
-          r={radius}
-          fill="none"
-          stroke="#00ccff"
-          strokeWidth="42"
-          strokeOpacity="0.08"
-          strokeDasharray={`${filled} ${gap}`}
-          strokeLinecap="round"
-          style={{ filter: "blur(10px)" }}
-        />
-
+        <circle cx="130" cy="130" r={radius} fill="none" stroke="#00ccff" strokeWidth="42" strokeOpacity="0.08" strokeDasharray={`${filled} ${gap}`} strokeLinecap="round" style={{ filter: "blur(10px)" }} />
         {/* mid glow */}
-        <circle
-          cx="130"
-          cy="130"
-          r={radius}
-          fill="none"
-          stroke="#00e5ff"
-          strokeWidth="30"
-          strokeOpacity="0.15"
-          strokeDasharray={`${filled} ${gap}`}
-          strokeLinecap="round"
-          style={{ filter: "blur(5px)" }}
-        />
-
+        <circle cx="130" cy="130" r={radius} fill="none" stroke="#00e5ff" strokeWidth="30" strokeOpacity="0.15" strokeDasharray={`${filled} ${gap}`} strokeLinecap="round" style={{ filter: "blur(5px)" }} />
         {/* main arc */}
-        <circle
-          cx="130"
-          cy="130"
-          r={radius}
-          fill="none"
-          stroke="url(#arcGrad)"
-          strokeWidth="22"
-          strokeDasharray={`${filled} ${gap}`}
-          strokeLinecap="round"
-          filter="url(#glowF)"
-        />
-
+        <circle cx="130" cy="130" r={radius} fill="none" stroke="url(#arcGrad)" strokeWidth="22" strokeDasharray={`${filled} ${gap}`} strokeLinecap="round" filter="url(#glowF)" />
         {/* highlight ribbon */}
-        <circle
-          cx="130"
-          cy="130"
-          r={radius}
-          fill="none"
-          stroke="url(#arcHL)"
-          strokeWidth="5"
-          strokeOpacity="0.8"
-          strokeDasharray={`${filled} ${gap}`}
-          strokeLinecap="round"
-        />
+        <circle cx="130" cy="130" r={radius} fill="none" stroke="url(#arcHL)" strokeWidth="5" strokeOpacity="0.8" strokeDasharray={`${filled} ${gap}`} strokeLinecap="round" />
       </svg>
 
       {/* inner well */}
@@ -293,13 +111,9 @@ function CircularProgress({
         style={{
           width: 176,
           height: 176,
-          background: isDark ? "#05090b" : "#ffffff",
-          border: isDark
-            ? "1px solid rgba(0,229,255,0.2)"
-            : "1px solid rgba(2,6,23,0.06)",
-          boxShadow: isDark
-            ? "inset 0 0 30px rgba(0,180,255,0.05)"
-            : "inset 0 6px 18px rgba(7,18,37,0.04)",
+          background: "#05090b",
+          border: "1px solid rgba(0,229,255,0.2)",
+          boxShadow: "inset 0 0 30px rgba(0,180,255,0.05)",
         }}
       >
         <span
@@ -307,9 +121,8 @@ function CircularProgress({
           style={{
             fontSize: 48,
             color: "#00e5ff",
-            textShadow: isDark
-              ? "0 0 18px rgba(0,220,255,0.7), 0 0 40px rgba(0,180,255,0.35)"
-              : "0 0 8px rgba(82,216,79,0.06)",
+            textShadow:
+              "0 0 18px rgba(0,220,255,0.7), 0 0 40px rgba(0,180,255,0.35)",
           }}
         >
           {progress}%
@@ -319,7 +132,7 @@ function CircularProgress({
             fontSize: 11,
             letterSpacing: 3,
             marginTop: 4,
-            color: isDark ? "#3ab8cc" : "var(--fg-muted)",
+            color: "#3ab8cc",
             fontFamily: "'Space Grotesk', sans-serif",
           }}
         >
@@ -344,27 +157,8 @@ function CircularProgress({
 export default function PlacementSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { margin: "-100px" });
-  const { isDark, mounted } = useThemeMode();
 
-  // Early return placeholder to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <section
-        id="placement"
-        ref={ref}
-        className="relative py-12 md:py-28 overflow-hidden isolate"
-        style={{
-          background: "linear-gradient(180deg, transparent 0%, #ffffff 100%)",
-        }}
-      >
-        {/* Placeholder - invisible until hydrated */}
-      </section>
-    );
-  }
-
-  /*  columns logic OUTSIDE map */
   const columns: Company[][] = Array.from({ length: 4 }, () => []);
-
   COMPANIES.forEach((item, index) => {
     columns[index % 4].push(item);
   });
@@ -380,16 +174,10 @@ export default function PlacementSection() {
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
           filter: "blur(90px)",
-          background: isDark
-            ? `
+          background: `
             radial-gradient(ellipse 50% 45% at 8% 15%,  rgba(255,230,0,0.13)  0%, transparent 55%),
             radial-gradient(ellipse 45% 40% at 92% 12%, rgba(160,255,0,0.11)  0%, transparent 52%),
             radial-gradient(ellipse 55% 50% at 50% 92%, rgba(0,196,255,0.15)  0%, transparent 58%)
-          `
-            : `
-            radial-gradient(ellipse 50% 45% at 8% 15%,  rgba(255,230,0,0.08)  0%, transparent 55%),
-            radial-gradient(ellipse 45% 40% at 92% 12%, rgba(160,255,0,0.07)  0%, transparent 52%),
-            radial-gradient(ellipse 55% 50% at 50% 92%, rgba(0,196,255,0.08)  0%, transparent 58%)
           `,
         }}
       />
@@ -401,7 +189,7 @@ export default function PlacementSection() {
           backgroundImage:
             "linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
-          opacity: isDark ? 0.04 : 0.06,
+          opacity: 0.04,
         }}
       />
 
@@ -410,26 +198,21 @@ export default function PlacementSection() {
           initial={{ opacity: 0, y: 22 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col lg:flex-row items-center gap-14 "
+          className="flex flex-col lg:flex-row items-center gap-14"
         >
-          <CircularProgress trigger={inView} isDark={isDark} />
+          <CircularProgress trigger={inView} />
 
           <div className="max-w-full">
             <h2
-              className="text-[clamp(2rem,3.2vw,3.5rem)] font-black leading-tight text-white"
+              className="text-[clamp(2rem,3.2vw,3.5rem)] font-black leading-tight"
               style={{ color: "var(--fg-primary)" }}
             >
               91% of our graduates <br />
               <span
                 className="bg-clip-text text-transparent"
                 style={{
-                  backgroundImage: isDark
-                    ? "linear-gradient(120deg, #84ff3d 0%, #c8ff74 60%, #55c9ff 100%)"
-                    : "linear-gradient(120deg, #52d84f 0%, #8ee85f 55%, #2ea8ff 100%)",
-
-                  filter: isDark
-                    ? "none"
-                    : "drop-shadow(0 0 10px rgba(82,216,79,0.18))",
+                  backgroundImage:
+                    "linear-gradient(120deg, #84ff3d 0%, #c8ff74 60%, #55c9ff 100%)",
                 }}
               >
                 are placed at top companies
@@ -452,7 +235,7 @@ export default function PlacementSection() {
           className="text-center mb-10"
         >
           <h4
-            className="text-2xl font-black "
+            className="text-2xl font-black"
             style={{ color: "var(--fg-secondary)" }}
           >
             <span className="text-[var(--brand-blue-light)]">Top teams</span>{" "}
@@ -462,7 +245,7 @@ export default function PlacementSection() {
 
         <div className="relative overflow-hidden mt-12">
           <div
-            className="pointer-events-none absolute inset-0 z-10 
+            className="pointer-events-none absolute inset-0 z-10
             [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
           />
 
@@ -486,48 +269,17 @@ export default function PlacementSection() {
                         <motion.div
                           key={`${groupIndex}-${i}`}
                           initial={{ opacity: 0, y: 10 }}
-                          animate={
-                            inView
-                              ? { opacity: 1, y: 0 }
-                              : { opacity: 0, y: 10 }
-                          }
+                          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                           transition={{ duration: 0.35, delay: (i % 4) * 0.04 }}
                           className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:-translate-y-1 will-change-transform"
                           style={{
-                            background: isDark
-                              ? `
-      linear-gradient(
-        135deg,
-        rgba(255,255,255,0.06) 0%,
-        rgba(255,255,255,0.03) 100%
-      )
-    `
-                              : `
-      linear-gradient(
-        135deg,
-        rgba(255,255,255,0.52) 0%,
-        rgba(255,255,255,0.28) 45%,
-        rgba(240,248,255,0.22) 100%
-      )
-    `,
-
-                            border: isDark
-                              ? "1px solid rgba(255,255,255,0.08)"
-                              : "1px solid rgba(255,255,255,0.55)",
-
+                            background:
+                              "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)",
+                            border: "1px solid rgba(255,255,255,0.08)",
                             backdropFilter: "blur(18px)",
                             WebkitBackdropFilter: "blur(18px)",
-
-                            boxShadow: isDark
-                              ? `
-      0 8px 24px rgba(0,0,0,0.25),
-      inset 0 1px 0 rgba(255,255,255,0.06)
-    `
-                              : `
-      0 10px 28px rgba(120,140,180,0.10),
-      0 2px 8px rgba(0,0,0,0.04),
-      inset 0 1px 0 rgba(255,255,255,0.85)
-    `,
+                            boxShadow:
+                              "0 8px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)",
                           }}
                         >
                           <Image
@@ -538,16 +290,10 @@ export default function PlacementSection() {
                             className="w-8 h-8 object-contain"
                           />
                           <div>
-                            <p
-                              className="text-sm font-semibold "
-                              style={{ color: "var(--fg-primary)" }}
-                            >
+                            <p className="text-sm font-semibold" style={{ color: "var(--fg-primary)" }}>
                               {c.name}
                             </p>
-                            <p
-                              className="text-xs"
-                              style={{ color: "var(--fg-secondary)" }}
-                            >
+                            <p className="text-xs" style={{ color: "var(--fg-secondary)" }}>
                               {c.role}
                             </p>
                           </div>
@@ -563,7 +309,6 @@ export default function PlacementSection() {
           <div className="md:hidden flex flex-col gap-3 overflow-hidden">
             {Array.from({ length: 4 }).map((_, rowIndex) => {
               const rowItems = COMPANIES.slice(rowIndex * 5, rowIndex * 5 + 5);
-
               return (
                 <div key={rowIndex} className="relative overflow-hidden">
                   <motion.div
@@ -583,15 +328,8 @@ export default function PlacementSection() {
                           <motion.div
                             key={`${group}-${i}`}
                             initial={{ opacity: 0, y: 8 }}
-                            animate={
-                              inView
-                                ? { opacity: 1, y: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            transition={{
-                              duration: 0.3,
-                              delay: (i % 5) * 0.03,
-                            }}
+                            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                            transition={{ duration: 0.3, delay: (i % 5) * 0.03 }}
                             className="flex w-[220px] flex-shrink-0 items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300"
                           >
                             <Image
@@ -601,21 +339,11 @@ export default function PlacementSection() {
                               height={32}
                               className="h-8 w-8 object-contain"
                             />
-
                             <div>
-                              <p
-                                className="text-sm font-semibold"
-                                style={{ color: "var(--fg-primary)" }}
-                              >
+                              <p className="text-sm font-semibold" style={{ color: "var(--fg-primary)" }}>
                                 {c.name}
                               </p>
-
-                              <p
-                                className="text-xs"
-                                style={{
-                                  color: "var(--fg-secondary)",
-                                }}
-                              >
+                              <p className="text-xs" style={{ color: "var(--fg-secondary)" }}>
                                 {c.role}
                               </p>
                             </div>

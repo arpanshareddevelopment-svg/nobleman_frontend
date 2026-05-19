@@ -1,7 +1,6 @@
 ﻿"use client";
 
-import { Bell, HelpCircle, Moon, Sun } from "lucide-react";
-import { useTheme } from "../../lib/useTheme";
+import { Bell, HelpCircle } from "lucide-react";
 
 interface Props {
   meta: {
@@ -11,8 +10,6 @@ interface Props {
 }
 
 export default function Topbar({ meta = { title: "", sub: "" } }: Partial<Props>) {
-  const { isDark, toggle } = useTheme();
-
   return (
     <div
       className="sticky top-0 z-20 flex h-16 items-center justify-between px-6 backdrop-blur-xl"
@@ -56,19 +53,6 @@ export default function Topbar({ meta = { title: "", sub: "" } }: Partial<Props>
           <HelpCircle size={16} />
         </button>
 
-        {/* Theme toggle */}
-        <button
-          onClick={toggle}
-          title={isDark ? "Switch to light" : "Switch to dark"}
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[10px] border text-[var(--fg-primary)] transition-all hover:border-[rgba(200,255,0,0.45)] hover:bg-[rgba(200,255,0,0.08)]"
-          style={{
-            borderColor: "var(--topbar-control-border)",
-            background: "var(--topbar-control-bg)",
-          }}
-        >
-          {isDark ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
-
         {/* Notifications */}
         <button
           className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-[10px] border text-[var(--fg-primary)] transition-all hover:border-[rgba(200,255,0,0.45)] hover:bg-[rgba(200,255,0,0.08)]"
@@ -92,4 +76,3 @@ export default function Topbar({ meta = { title: "", sub: "" } }: Partial<Props>
     </div>
   );
 }
-

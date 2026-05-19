@@ -19,7 +19,6 @@ type Slide = {
   tag: string;
   titleTop: string;
   titleBottom: string;
-
   cta: string;
   solid: string;
   highlight: OrbKey;
@@ -60,27 +59,6 @@ function formatCounterValue(value: number, parsed: ParsedCounter): string {
   return `${base}${parsed.suffix}`;
 }
 
-// ─── Dark-mode detector ───────────────────────────────────────────────────────
-function useThemeMode() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const update = () => setIsDark(root.classList.contains("dark"));
-    update();
-    const frame = requestAnimationFrame(() => setMounted(true));
-    const observer = new MutationObserver(update);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-    };
-  }, []);
-
-  return { isDark, mounted };
-}
-
 // ─── Data ────────────────────────────────────────────────────────────────────
 const SLIDES: Slide[] = [
   {
@@ -97,7 +75,6 @@ const SLIDES: Slide[] = [
     tag: "Green",
     titleTop: "Mentorship that moves",
     titleBottom: "at the pace of momentum.",
-
     cta: "Explore Courses",
     solid: "#84ff3d",
     highlight: "support",
@@ -107,7 +84,6 @@ const SLIDES: Slide[] = [
     tag: "Yellow",
     titleTop: "Hiring outcomes",
     titleBottom: "with staying power.",
-
     cta: "Explore Courses",
     solid: "#ffcf33",
     highlight: "partners",
@@ -144,40 +120,19 @@ const ORBS: Orb[] = [
 // ─── Mentor accent map ────────────────────────────────────────────────────────
 const MENTOR_ACCENT = {
   blue: {
-    dark: {
-      text: "#ffcf33",
-      border: "#ffcf3399",
-      gradient: "linear-gradient(135deg, #ffcf33, #ffe98a)",
-    },
-    light: {
-      text: "#ffb800",
-      border: "#ffd54a88",
-      gradient: "linear-gradient(135deg, #ffb800, #ffd84d)",
-    },
+    text: "#ffcf33",
+    border: "#ffcf3399",
+    gradient: "linear-gradient(135deg, #ffcf33, #ffe98a)",
   },
   green: {
-    dark: {
-      text: "#2ea8ff",
-      border: "#2ea8ff99",
-      gradient: "linear-gradient(135deg, #2ea8ff, #7ed8ff)",
-    },
-    light: {
-      text: "#1b8fff",
-      border: "#66b8ff88",
-      gradient: "linear-gradient(135deg, #1b8fff, #64c7ff)",
-    },
+    text: "#2ea8ff",
+    border: "#2ea8ff99",
+    gradient: "linear-gradient(135deg, #2ea8ff, #7ed8ff)",
   },
   yellow: {
-    dark: {
-      text: "#84ff3d",
-      border: "#84ff3d99",
-      gradient: "linear-gradient(135deg, #84ff3d, #c8ff74)",
-    },
-    light: {
-      text: "#4fd14f",
-      border: "#8df58d88",
-      gradient: "linear-gradient(135deg, #4fd14f, #8cff66)",
-    },
+    text: "#84ff3d",
+    border: "#84ff3d99",
+    gradient: "linear-gradient(135deg, #84ff3d, #c8ff74)",
   },
 } as const;
 
@@ -199,7 +154,7 @@ function LiveCohortChip() {
       initial={{ opacity: 0, y: -8, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="mt-16 inline-flex items-center gap-2 rounded-full px-4 py-2 select-none cursor-default "
+      className="mt-16 inline-flex items-center gap-2 rounded-full px-4 py-2 select-none cursor-default"
       style={{
         background:
           "linear-gradient(135deg, #ff2d55 0%, #ff3b30 50%, #ff6b6b 100%)",
@@ -213,13 +168,9 @@ function LiveCohortChip() {
         {ping && (
           <span
             className="absolute inline-flex h-full w-full rounded-full animate-ping"
-            style={{
-              background: "#ffffff",
-              opacity: 0.8,
-            }}
+            style={{ background: "#ffffff", opacity: 0.8 }}
           />
         )}
-
         <span
           className="relative inline-flex h-2.5 w-2.5 rounded-full"
           style={{
@@ -232,40 +183,24 @@ function LiveCohortChip() {
       {/* Label */}
       <span
         className="text-[11px] font-bold tracking-[0.24em] uppercase"
-        style={{
-          color: "#ffffff",
-          textShadow: "0 1px 4px rgba(0,0,0,0.18)",
-        }}
+        style={{ color: "#ffffff", textShadow: "0 1px 4px rgba(0,0,0,0.18)" }}
       >
         Live Cohorts
       </span>
 
       <Radio
         size={13}
-        style={{
-          color: "#ffffff",
-          opacity: 0.9,
-          flexShrink: 0,
-        }}
+        style={{ color: "#ffffff", opacity: 0.9, flexShrink: 0 }}
       />
     </motion.div>
   );
 }
 
 // ─── Per-orb fixed color palettes ────────────────────────────────────────────
-const ORB_GRADIENTS: Record<OrbKey, { dark: [string, string]; light: [string, string] }> = {
-  careers: {
-    dark: ["#2ea8ff", "#7ed8ff"],
-    light: ["#1da1ff", "#5ecbff"],
-  },
-  support: {
-    dark: ["#84ff3d", "#c8ff74"],
-    light: ["#32d74b", "#7dff5a"],
-  },
-  partners: {
-    dark: ["#ffcf33", "#ffe98a"],
-    light: ["#ffb000", "#ffe14d"],
-  },
+const ORB_GRADIENTS: Record<OrbKey, [string, string]> = {
+  careers: ["#2ea8ff", "#7ed8ff"],
+  support: ["#84ff3d", "#c8ff74"],
+  partners: ["#ffcf33", "#ffe98a"],
 };
 
 // ─── FloatingOrb ─────────────────────────────────────────────────────────────
@@ -273,16 +208,12 @@ function FloatingOrb({
   orb,
   active,
   registerRef,
-  isDark,
-  mounted,
 }: {
   orb: Orb;
   active: boolean;
   registerRef: (node: HTMLDivElement | null, key: OrbKey) => void;
-  isDark: boolean;
-  mounted: boolean;
 }) {
-  const gradient = ORB_GRADIENTS[orb.key][isDark ? "dark" : "light"];
+  const gradient = ORB_GRADIENTS[orb.key];
   const parsed = useMemo(() => parseCounter(orb.value), [orb.value]);
   const [displayValue, setDisplayValue] = useState(parsed.target);
 
@@ -304,15 +235,6 @@ function FloatingOrb({
     return () => cancelAnimationFrame(frame);
   }, [active, parsed.target]);
 
-  if (!mounted) {
-    return (
-      <div
-        className="absolute"
-        style={{ width: orb.size, height: orb.size, ...orb.position }}
-      />
-    );
-  }
-
   const [g0, g1] = gradient;
 
   const activeBg = `radial-gradient(circle at 35% 32%,
@@ -322,28 +244,16 @@ function FloatingOrb({
         ${g1}cc 80%,
         ${g1}99 100%)`;
 
-  const inactiveBg = activeBg;
-
-  const activeBoxShadow = isDark
-    ? `0 0 60px 18px ${g0}50,
+  const activeBoxShadow = `0 0 60px 18px ${g0}50,
        0 0 120px 40px ${g0}22,
        0 0 0 2px ${g0}70,
        inset 0 0 40px 10px #000000cc,
-       inset 0 0 0 1.5px ${g0}40`
-    : `0 8px 40px 4px ${g0}88,
-       0 0 0 2.5px ${g0}cc,
-       0 20px 60px ${g0}44,
-       inset 0 2px 12px rgba(255,255,255,0.6)`;
-
-  const inactiveBoxShadow = activeBoxShadow;
+       inset 0 0 0 1.5px ${g0}40`;
 
   const valueColor = "#0d1117";
-
-  const valueShadow = isDark ? `0 0 14px ${g0}, 0 0 28px ${g0}99` : "none";
-
+  const valueShadow = `0 0 14px ${g0}, 0 0 28px ${g0}99`;
   const labelColor = "#0d1117bb";
-
-  const labelShadow = isDark ? `0 0 8px ${g0}88` : "none";
+  const labelShadow = `0 0 8px ${g0}88`;
 
   return (
     <div
@@ -354,14 +264,8 @@ function FloatingOrb({
       <motion.div
         animate={
           active
-            ? {
-              scale: [1, 1.08, 1],
-              opacity: [0.96, 1, 0.96],
-            }
-            : {
-              scale: 1,
-              opacity: 0.92,
-            }
+            ? { scale: [1, 1.08, 1], opacity: [0.96, 1, 0.96] }
+            : { scale: 1, opacity: 0.92 }
         }
         transition={{
           duration: 2.8,
@@ -370,11 +274,11 @@ function FloatingOrb({
         }}
         className="relative flex h-full w-full items-center justify-center rounded-full"
         style={{
-          background: active ? activeBg : inactiveBg,
-          boxShadow: active ? activeBoxShadow : inactiveBoxShadow,
+          background: activeBg,
+          boxShadow: active ? activeBoxShadow : activeBoxShadow,
         }}
       >
-        {active && isDark && (
+        {active && (
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
@@ -388,18 +292,6 @@ function FloatingOrb({
             }}
           />
         )}
-        {active && !isDark && (
-          <div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 50% 50%,
-                transparent 50%,
-                ${g0}30 72%,
-                ${g1}50 84%,
-                transparent 100%)`,
-            }}
-          />
-        )}
         <div
           className="absolute rounded-full pointer-events-none"
           style={{
@@ -409,11 +301,11 @@ function FloatingOrb({
             left: "14%",
             background: active
               ? `radial-gradient(ellipse at 40% 40%,
-                  rgba(255,255,255,${isDark ? "0.55" : "0.85"}) 0%,
-                  rgba(255,255,255,${isDark ? "0.18" : "0.40"}) 45%,
+                  rgba(255,255,255,0.55) 0%,
+                  rgba(255,255,255,0.18) 45%,
                   transparent 75%)`
               : `radial-gradient(ellipse at 40% 40%,
-                  rgba(255,255,255,${isDark ? "0.20" : "0.75"}) 0%,
+                  rgba(255,255,255,0.20) 0%,
                   transparent 70%)`,
             filter: "blur(1.5px)",
           }}
@@ -426,7 +318,7 @@ function FloatingOrb({
               height: "30%",
               bottom: "8%",
               left: "20%",
-              background: `radial-gradient(ellipse, ${g0}${isDark ? "35" : "25"} 0%, transparent 70%)`,
+              background: `radial-gradient(ellipse, ${g0}35 0%, transparent 70%)`,
               filter: "blur(4px)",
             }}
           />
@@ -453,9 +345,9 @@ function FloatingOrb({
             bottom: "-12%",
             width: "70%",
             height: "14%",
-            background: `radial-gradient(ellipse, ${g0}${isDark ? "60" : "44"} 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse, ${g0}60 0%, transparent 70%)`,
             filter: "blur(6px)",
-            opacity: isDark ? 0.6 : 0.5,
+            opacity: 0.6,
           }}
         />
       )}
@@ -464,15 +356,7 @@ function FloatingOrb({
 }
 
 // ─── OrbCluster ───────────────────────────────────────────────────────────────
-function OrbCluster({
-  slide,
-  isDark,
-  mounted,
-}: {
-  slide: Slide;
-  isDark: boolean;
-  mounted: boolean;
-}) {
+function OrbCluster({ slide }: { slide: Slide }) {
   const orbRefs = useRef<Record<OrbKey, HTMLDivElement | null>>({
     careers: null,
     support: null,
@@ -501,24 +385,22 @@ function OrbCluster({
 
   return (
     <div className="relative mx-auto aspect-square w-[clamp(16rem,82vw,500px)] sm:w-[min(62vw,500px)]">
-      {mounted && (
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.id}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-[12%] rounded-full blur-3xl"
-            style={{
-              background: `radial-gradient(circle at center,
-              ${ORB_GRADIENTS[slide.highlight][isDark ? "dark" : "light"][0]}${isDark ? "33" : "44"} 0%,
-              ${ORB_GRADIENTS[slide.highlight][isDark ? "dark" : "light"][1]}${isDark ? "22" : "30"} 38%,
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slide.id}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-[12%] rounded-full blur-3xl"
+          style={{
+            background: `radial-gradient(circle at center,
+              ${ORB_GRADIENTS[slide.highlight][0]}33 0%,
+              ${ORB_GRADIENTS[slide.highlight][1]}22 38%,
               transparent 72%)`,
-            }}
-          />
-        </AnimatePresence>
-      )}
+          }}
+        />
+      </AnimatePresence>
 
       {ORBS.map((orb) => (
         <FloatingOrb
@@ -528,8 +410,6 @@ function OrbCluster({
           registerRef={(node, key) => {
             orbRefs.current[key] = node;
           }}
-          isDark={isDark}
-          mounted={mounted}
         />
       ))}
     </div>
@@ -541,16 +421,11 @@ function useTypewriter(text: string, speed = 45) {
 
   useEffect(() => {
     let index = 0;
-
     const clearFrame = requestAnimationFrame(() => setDisplay(""));
-
     const interval = setInterval(() => {
       setDisplay(text.slice(0, index + 1));
       index++;
-
-      if (index >= text.length) {
-        clearInterval(interval);
-      }
+      if (index >= text.length) clearInterval(interval);
     }, speed);
 
     return () => {
@@ -565,7 +440,6 @@ function useTypewriter(text: string, speed = 45) {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const { isDark, mounted } = useThemeMode();
 
   useEffect(() => {
     const id = window.setInterval(
@@ -578,29 +452,19 @@ export default function Hero() {
   const slide = SLIDES[activeIndex];
 
   const gradientMap = {
-    blue: isDark ? ["#2ea8ff", "#7ed8ff"] : ["#1da1ff", "#5ecbff"],
-    green: isDark ? ["#84ff3d", "#c8ff74"] : ["#32d74b", "#7dff5a"],
-    yellow: isDark ? ["#ffcf33", "#ffe98a"] : ["#ffb000", "#ffe14d"],
+    blue: ["#2ea8ff", "#7ed8ff"],
+    green: ["#84ff3d", "#c8ff74"],
+    yellow: ["#ffcf33", "#ffe98a"],
   } as const;
 
   const currentGradient = gradientMap[slide.id] as [string, string];
   const typedBottom = useTypewriter(slide.titleBottom, 55);
-  const accent = MENTOR_ACCENT[slide.id][isDark ? "dark" : "light"];
-
-  if (!mounted) {
-    return (
-      <section
-        id="home"
-        className="relative isolate overflow-hidden py-10 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
-        style={{ background: "var(--hero-bg)" }}
-      />
-    );
-  }
+  const accent = MENTOR_ACCENT[slide.id];
 
   return (
     <section
       id="home"
-      className="relative isolate overflow-hidden py-0 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center "
+      className="relative isolate overflow-hidden py-0 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
       style={{ background: "var(--hero-bg)" }}
     >
       {/* Ambient blobs */}
@@ -635,11 +499,11 @@ export default function Hero() {
         }}
       />
 
-      <div className="mx-auto grid w-full max-w-[1800px]  grid-cols-1 items-center gap-6 px-3 md:px-6 xl:px-[7.5rem] lg:grid-cols-[1.35fr_0.65fr] lg:gap-2 ">
+      <div className="mx-auto grid w-full max-w-[1800px] grid-cols-1 items-center gap-6 px-3 md:px-6 xl:px-[7.5rem] lg:grid-cols-[1.35fr_0.65fr] lg:gap-2">
         {/* LEFT */}
-        <div className="relative w-full min-w-0 ">
+        <div className="relative w-full min-w-0">
           <AnimatePresence mode="wait">
-            <div className="rounded-[2rem] p-2 md:p-3 lg:p-4 xl:py-10 ">
+            <div className="rounded-[2rem] p-2 md:p-3 lg:p-4 xl:py-10">
               {/* ── Live Cohort Chip ── */}
               <LiveCohortChip />
 
@@ -657,7 +521,6 @@ export default function Hero() {
                 }}
               >
                 <span>{slide.titleTop} </span>
-
                 <span
                   className="bg-clip-text text-transparent"
                   style={{
@@ -674,10 +537,8 @@ export default function Hero() {
                 className="relative mt-6 inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-500 overflow-hidden"
                 style={{
                   background: "var(--mentor-bg)",
-                  border: `1px solid ${isDark ? accent.border : "var(--mentor-border)"}`,
-                  boxShadow: isDark
-                    ? `0 0 0 1px ${accent.text}18, 0 4px 28px ${accent.text}40, inset 0 1px 0 rgba(255,255,255,0.12)`
-                    : "var(--mentor-shadow)",
+                  border: `1px solid ${accent.border}`,
+                  boxShadow: `0 0 0 1px ${accent.text}18, 0 4px 28px ${accent.text}40, inset 0 1px 0 rgba(255,255,255,0.12)`,
                 }}
               >
                 <div
@@ -708,15 +569,14 @@ export default function Hero() {
 
               {/* Summary */}
               <p
-  className="mt-5 max-w-full text-base font-medium leading-8 md:text-md"
-  style={{ color: "var(--hero-summary)" }}
->
+                className="mt-5 max-w-full text-base font-medium leading-8 md:text-md"
+                style={{ color: "var(--hero-summary)" }}
+              >
                 Live, hands-on programs designed to help you build real
                 projects. Learn directly from industry veterans from top-tier
                 companies like Boston Consulting (BCG), Amazon, Microsoft, and
                 Deloitte through fully live interactive classes with real-time
                 mentorship and practical project experience.
-                programs
               </p>
 
               {/* CTA */}
@@ -781,7 +641,7 @@ export default function Hero() {
         </div>
 
         {/* RIGHT */}
-        <div className="relative flex items-center justify-center ">
+        <div className="relative flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={`${slide.id}-halo`}
@@ -791,14 +651,12 @@ export default function Hero() {
               transition={{ duration: 0.4 }}
               className="absolute inset-0 rounded-[2.5rem]"
               style={{
-                background: isDark
-                  ? `radial-gradient(circle at center, ${currentGradient[0]}18 0%, ${currentGradient[1]}10 42%, transparent 72%)`
-                  : `radial-gradient(circle at center, ${currentGradient[0]}55 0%, ${currentGradient[1]}18 45%, transparent 75%)`,
+                background: `radial-gradient(circle at center, ${currentGradient[0]}18 0%, ${currentGradient[1]}10 42%, transparent 72%)`,
               }}
             />
           </AnimatePresence>
           <div className="relative w-full max-w-[680px] aspect-square rounded-[2.5rem] p-3">
-            <OrbCluster slide={slide} isDark={isDark} mounted={mounted} />
+            <OrbCluster slide={slide} />
           </div>
         </div>
       </div>

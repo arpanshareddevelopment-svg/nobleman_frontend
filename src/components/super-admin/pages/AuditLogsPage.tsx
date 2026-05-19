@@ -14,18 +14,18 @@ const logs = [
 ];
 
 const stats = [
-  { icon: <FileText size={18} />, label: "Total Events", val: "2,840", sub: "All time", bgColor: "bg-purple-100" },
-  { icon: <Shield size={18} />, label: "Security Events", val: "14", sub: "Last 7 days", bgColor: "bg-red-100" },
-  { icon: <Download size={18} />, label: "Data Exports", val: "38", sub: "Last 30 days", bgColor: "bg-yellow-100" },
-  { icon: <Users size={18} />, label: "Course Actions", val: "420", sub: "Last 30 days", bgColor: "bg-blue-100" },
+  { icon: <FileText size={18} />, label: "Total Events", val: "2,840", sub: "All time", iconStyle: { background: "rgba(167,139,250,0.15)", color: "#a78bfa" } },
+  { icon: <Shield size={18} />, label: "Security Events", val: "14", sub: "Last 7 days", iconStyle: { background: "rgba(239,68,68,0.15)", color: "#f87171" } },
+  { icon: <Download size={18} />, label: "Data Exports", val: "38", sub: "Last 30 days", iconStyle: { background: "rgba(255,207,51,0.15)", color: "#ffcf33" } },
+  { icon: <Users size={18} />, label: "Course Actions", val: "420", sub: "Last 30 days", iconStyle: { background: "rgba(59,130,246,0.15)", color: "#60a5fa" } },
 ];
 
-const tagColors = {
-  tg: "bg-green-100 text-green-700",
-  tb: "bg-blue-100 text-blue-700",
-  tr: "bg-red-100 text-red-700",
-  ty: "bg-yellow-100 text-yellow-800",
-  tp: "bg-blue-100 text-blue-700",
+const tagStyles: Record<string, React.CSSProperties> = {
+  tg: { background: "rgba(52,211,153,0.15)", color: "#34d399" },
+  tb: { background: "rgba(59,130,246,0.15)", color: "#60a5fa" },
+  tr: { background: "rgba(239,68,68,0.15)", color: "#f87171" },
+  ty: { background: "rgba(255,207,51,0.15)", color: "#ffcf33" },
+  tp: { background: "rgba(59,130,246,0.15)", color: "#60a5fa" },
 };
 
 export default function AuditLogsPage() {
@@ -34,15 +34,15 @@ export default function AuditLogsPage() {
       {/* Stats */}
       <div className="mb-5 grid grid-cols-4 gap-3.5">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-2xl border border-[var(--border)] bg-white/70 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <div key={s.label} className="rounded-2xl border border-[var(--border)] p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all" style={{ background: "var(--bg-card)" }}>
             <div className="flex items-center gap-3">
-              <div className={`flex h-10 w-10 items-center justify-center flex-shrink-0 rounded-lg text-gray-900 ${s.bgColor}`}>
+              <div className="flex h-10 w-10 items-center justify-center flex-shrink-0 rounded-lg" style={s.iconStyle}>
                 {s.icon}
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-500">{s.label}</div>
-                <div className="text-2xl font-extrabold text-gray-900">{s.val}</div>
-                <div className="text-xs text-gray-500">{s.sub}</div>
+                <div className="text-xs font-semibold" style={{ color: "var(--fg-muted)" }}>{s.label}</div>
+                <div className="text-2xl font-extrabold" style={{ color: "var(--fg-primary)" }}>{s.val}</div>
+                <div className="text-xs" style={{ color: "var(--fg-muted)" }}>{s.sub}</div>
               </div>
             </div>
           </div>
@@ -50,20 +50,26 @@ export default function AuditLogsPage() {
       </div>
 
       {/* Audit table */}
-      <div className="rounded-2xl border border-[var(--border)] overflow-hidden bg-white/80 shadow-sm">
-        <div className="flex flex-wrap items-center gap-2.5 border-b border-[var(--border)] bg-white/80 px-4.5 py-3.5">
+      <div className="rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm" style={{ background: "var(--bg-card)" }}>
+        <div className="flex flex-wrap items-center gap-2.5 border-b border-[var(--border)] px-4.5 py-3.5" style={{ background: "var(--bg-card)" }}>
           <input
             placeholder="Search course, action…"
-            className="rounded-lg border border-[rgba(15,23,42,0.14)] bg-white/80 px-2.5 py-1.5 text-xs font-medium text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
-            style={{ width: "200px" }}
+            className="rounded-lg px-2.5 py-1.5 text-xs font-medium placeholder-[var(--fg-secondary)] transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
+            style={{ width: "200px", background: "var(--bg-page)", border: "1px solid var(--border)", color: "var(--fg-primary)" }}
           />
-          <select className="rounded-lg border border-[rgba(15,23,42,0.14)] bg-white/80 px-2.5 py-1.5 text-xs font-medium text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
+          <select
+            className="rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer"
+            style={{ background: "var(--bg-page)", border: "1px solid var(--border)", color: "var(--fg-secondary)" }}
+          >
             <option>All Students</option>
             <option>Acme LMS</option>
             <option>EdgeLearn</option>
             <option>Platform</option>
           </select>
-          <select className="rounded-lg border border-[rgba(15,23,42,0.14)] bg-white/80 px-2.5 py-1.5 text-xs font-medium text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
+          <select
+            className="rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer"
+            style={{ background: "var(--bg-page)", border: "1px solid var(--border)", color: "var(--fg-secondary)" }}
+          >
             <option>All Types</option>
             <option>Create</option>
             <option>Update</option>
@@ -71,27 +77,38 @@ export default function AuditLogsPage() {
             <option>Security</option>
             <option>Export</option>
           </select>
-          <select className="rounded-lg border border-[rgba(15,23,42,0.14)] bg-white/80 px-2.5 py-1.5 text-xs font-medium text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer">
+          <select
+            className="rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer"
+            style={{ background: "var(--bg-page)", border: "1px solid var(--border)", color: "var(--fg-secondary)" }}
+          >
             <option>Last 7 days</option>
             <option>Last 30 days</option>
             <option>Last 90 days</option>
             <option>All time</option>
           </select>
-          <button className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-[rgba(15,23,42,0.14)] bg-transparent px-3 py-1.5 text-xs font-bold text-[var(--fg-secondary)] transition-all hover:text-[var(--fg-primary)] hover:border-opacity-50">
+          <button className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-1.5 text-xs font-bold transition-all hover:text-[var(--fg-primary)]" style={{ color: "var(--fg-secondary)" }}>
             <Download size={14} /> Export Logs
           </button>
         </div>
 
         <div>
           {logs.map((l, i) => (
-            <div key={i} className="flex items-start gap-3 border-b border-[var(--border)] px-4 py-2.5 last:border-b-0 hover:bg-white/50 transition-colors">
+            <div
+              key={i}
+              className="flex items-start gap-3 border-b border-[var(--border)] px-4 py-2.5 last:border-b-0 transition-colors"
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
               <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full" style={{ background: l.dot }} />
               <div className="flex-1 min-w-0">
                 <div className="mb-0.5 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-bold text-gray-900">{l.course}</span>
-                  <span className="text-xs text-[var(--fg-secondary)]">·</span>
-                  <span className="text-xs text-[var(--fg-secondary)]">{l.student}</span>
-                  <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-widest ${tagColors[l.type as keyof typeof tagColors]}`}>
+                  <span className="text-xs font-bold" style={{ color: "var(--fg-primary)" }}>{l.course}</span>
+                  <span className="text-xs" style={{ color: "var(--fg-secondary)" }}>·</span>
+                  <span className="text-xs" style={{ color: "var(--fg-secondary)" }}>{l.student}</span>
+                  <span
+                    className="inline-flex rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-widest"
+                    style={tagStyles[l.type as keyof typeof tagStyles]}
+                  >
                     {l.typeLabel}
                   </span>
                 </div>
@@ -112,4 +129,3 @@ export default function AuditLogsPage() {
     </div>
   );
 }
-

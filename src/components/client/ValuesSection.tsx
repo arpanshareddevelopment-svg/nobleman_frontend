@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Radio, MessageCircle, Zap, Users } from "lucide-react";
-import { useEffect, useState } from "react";
 
 const VALUES = [
   {
@@ -41,51 +40,22 @@ const VALUES = [
   },
 ];
 
-/* 🔥 SSR-safe theme hook */
-function useThemeMode() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-
-    const update = () => {
-      setIsDark(root.classList.contains("dark"));
-    };
-
-    update();
-
-    const observer = new MutationObserver(update);
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  return isDark;
-}
-
 export default function ValuesSection() {
-  const isDark = useThemeMode();
-
   return (
     <section
       id="values"
       className="relative isolate overflow-hidden py-12 md:py-28"
       style={{
-        background: isDark
-          ? "linear-gradient(180deg, #000000 0%, #030712 40%, #020617 100%)"
-          : "linear-gradient(180deg, #ffffff 0%, #f8fbff 40%, #eef4ff 100%)",
+        background:
+          "linear-gradient(180deg, #000000 0%, #030712 40%, #020617 100%)",
       }}
     >
-      {/* ── seamless blend from MissionStatement above ── */}
+      {/* seamless blend from MissionStatement above */}
       <div
         className="absolute inset-x-0 top-0 h-40 -z-10 pointer-events-none"
         style={{
-          background: isDark
-            ? "linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)"
-            : "linear-gradient(to bottom, rgba(248,251,255,1), transparent)",
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)",
         }}
       />
 
@@ -98,7 +68,7 @@ export default function ValuesSection() {
             linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
           `,
           backgroundSize: "40px 40px",
-          opacity: isDark ? 0.08 : 0.12,
+          opacity: 0.08,
         }}
       />
 
@@ -110,7 +80,7 @@ export default function ValuesSection() {
             radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),
             radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 50%)
           `,
-          opacity: isDark ? 0.9 : 0.85,
+          opacity: 0.9,
         }}
       />
 
@@ -136,11 +106,10 @@ export default function ValuesSection() {
           way
         </motion.h2>
 
-        {/*  CARDS */}
+        {/* CARDS */}
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {VALUES.map((value, i) => {
             const Icon = value.icon;
-
             return (
               <motion.div
                 key={value.id}
@@ -162,10 +131,10 @@ export default function ValuesSection() {
                     background: `radial-gradient(circle, ${value.glow}, transparent 70%)`,
                   }}
                 />
-                <div className="flex gap-3 ">
+                <div className="flex gap-3">
                   {/* Icon */}
                   <div
-                    className="relative z-10  flex h-14 w-14 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+                    className="relative z-10 flex h-14 w-14 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
                     style={{
                       background: `${value.color}20`,
                       color: value.color,

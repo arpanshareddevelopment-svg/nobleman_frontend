@@ -3,26 +3,26 @@
 import { useState } from "react";
 import { Badge, Braces, Building2, CreditCard, Database, FileCog, Globe2, KeyRound, Mail, ShieldCheck, Smartphone, Users } from "lucide-react";
 
-const tagColors = {
-  tg: "bg-green-100 text-green-700",
-  ty: "bg-yellow-100 text-yellow-800",
-  tgr: "bg-gray-100 text-gray-700",
+const tagStyles: Record<string, React.CSSProperties> = {
+  tg: { background: "rgba(52,211,153,0.15)", color: "#34d399" },
+  ty: { background: "rgba(255,207,51,0.15)", color: "#ffcf33" },
+  tgr: { background: "rgba(255,255,255,0.08)", color: "var(--fg-muted)" },
 };
 
 export default function SystemSettingsPage() {
   const [tab, setTab] = useState<"general" | "security" | "email" | "integrations">("general");
 
-  const FormField = ({ label, required, children }: any) => (
+  const FormField = ({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) => (
     <div className="mb-3.5 flex flex-col gap-1">
-      <label className="text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)]">
+      <label className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)" }}>
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
     </div>
   );
 
-  const Card = ({ icon, title, children }: any) => (
-    <div className="rounded-2xl border border-[var(--border)] bg-white/80 p-4.5 shadow-sm">
+  const Card = ({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) => (
+    <div className="rounded-2xl border border-[var(--border)] p-4.5 shadow-sm" style={{ background: "var(--bg-card)" }}>
       <div className="mb-4 flex items-center gap-2" style={{ fontFamily: '"Manrope", sans-serif' }}>
         {icon}
         <div className="text-sm font-bold" style={{ color: "var(--fg-primary)" }}>
@@ -34,28 +34,46 @@ export default function SystemSettingsPage() {
     </div>
   );
 
-  const InputField = (props: any) => (
+  const inputStyle: React.CSSProperties = {
+    background: "var(--bg-page)",
+    border: "1px solid var(--border)",
+    color: "var(--fg-primary)",
+  };
+
+  const selectStyle: React.CSSProperties = {
+    background: "var(--bg-page)",
+    border: "1px solid var(--border)",
+    color: "var(--fg-secondary)",
+  };
+
+  const InputField = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
     <input
       {...props}
-      className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
+      className="rounded-lg px-3 py-2 text-sm placeholder-[var(--fg-secondary)] transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)]"
+      style={inputStyle}
     />
   );
 
-  const SelectField = (props: any) => (
+  const SelectField = (props: React.SelectHTMLAttributes<HTMLSelectElement>) => (
     <select
       {...props}
-      className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer"
+      className="rounded-lg px-3 py-2 text-sm transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] cursor-pointer"
+      style={selectStyle}
     />
   );
 
-  const PrimaryButton = ({ children, ...props }: any) => (
+  const PrimaryButton = ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button {...props} className="w-full rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-4 py-2 text-xs font-bold text-[#06110c] shadow-lg hover:shadow-xl transition-all">
       {children}
     </button>
   );
 
-  const SecondaryButton = ({ children, ...props }: any) => (
-    <button {...props} className="rounded-lg border border-[rgba(15,23,42,0.14)] bg-transparent px-3 py-2 text-xs font-bold text-[var(--fg-secondary)] transition-all hover:text-[var(--fg-primary)] hover:border-opacity-50">
+  const SecondaryButton = ({ children, style, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+    <button
+      {...props}
+      className="rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-bold transition-all hover:text-[var(--fg-primary)]"
+      style={{ color: "var(--fg-secondary)", ...style }}
+    >
       {children}
     </button>
   );
@@ -63,7 +81,7 @@ export default function SystemSettingsPage() {
   return (
     <div>
       {/* Tabs */}
-      <div className="mb-5 flex gap-0.5 rounded-xl border border-[var(--border)] bg-white/70 p-1">
+      <div className="mb-5 flex gap-0.5 rounded-xl border border-[var(--border)] p-1" style={{ background: "var(--bg-card)" }}>
         {(["general", "security", "email", "integrations"] as const).map((t) => (
           <button
             key={t}
@@ -78,7 +96,7 @@ export default function SystemSettingsPage() {
       {/* General Tab */}
       {tab === "general" && (
         <div className="grid grid-cols-2 gap-4">
-          <Card icon={<Building2 size={16} className="text-gray-900" />} title="Platform Details">
+          <Card icon={<Building2 size={16} style={{ color: "var(--fg-secondary)" }} />} title="Platform Details">
             <FormField label="Platform Name" required>
               <InputField type="text" defaultValue="Nobleman Learning" />
             </FormField>
@@ -98,7 +116,7 @@ export default function SystemSettingsPage() {
             <PrimaryButton>Save Changes</PrimaryButton>
           </Card>
 
-          <Card icon={<Globe2 size={16} className="text-gray-900" />} title="Domain & Branding">
+          <Card icon={<Globe2 size={16} style={{ color: "var(--fg-secondary)" }} />} title="Domain & Branding">
             <FormField label="Root Domain" required>
               <InputField type="text" defaultValue="noblemanlearning.com" />
             </FormField>
@@ -114,13 +132,13 @@ export default function SystemSettingsPage() {
             <FormField label="Maintenance Mode">
               <SelectField>
                 <option>Off</option>
-                <option>On � show maintenance page</option>
+                <option>On — show maintenance page</option>
               </SelectField>
             </FormField>
             <PrimaryButton>Save Changes</PrimaryButton>
           </Card>
 
-          <Card icon={<FileCog size={16} className="text-gray-900" />} title="Platform Defaults">
+          <Card icon={<FileCog size={16} style={{ color: "var(--fg-secondary)" }} />} title="Platform Defaults">
             <FormField label="Default Access Duration">
               <SelectField defaultValue="90">
                 <option value="30">30 Days</option>
@@ -130,7 +148,7 @@ export default function SystemSettingsPage() {
             </FormField>
             <FormField label="Auto-lock on Expiry">
               <SelectField>
-                <option>Yes � immediate</option>
+                <option>Yes — immediate</option>
                 <option>3 day grace period</option>
               </SelectField>
             </FormField>
@@ -143,7 +161,7 @@ export default function SystemSettingsPage() {
             <PrimaryButton>Save Defaults</PrimaryButton>
           </Card>
 
-          <Card icon={<CreditCard size={16} className="text-gray-900" />} title="Billing Defaults">
+          <Card icon={<CreditCard size={16} style={{ color: "var(--fg-secondary)" }} />} title="Billing Defaults">
             <FormField label="Platform Fee (%)" required>
               <InputField type="number" defaultValue={15} />
             </FormField>
@@ -156,7 +174,7 @@ export default function SystemSettingsPage() {
             </FormField>
             <FormField label="Invoice Currency">
               <SelectField>
-                <option>INR (?)</option>
+                <option>INR (₹)</option>
                 <option>USD ($)</option>
               </SelectField>
             </FormField>
@@ -168,7 +186,7 @@ export default function SystemSettingsPage() {
       {/* Security Tab */}
       {tab === "security" && (
         <div className="grid grid-cols-2 gap-4">
-          <Card icon={<KeyRound size={16} className="text-gray-900" />} title="Authentication">
+          <Card icon={<KeyRound size={16} style={{ color: "var(--fg-secondary)" }} />} title="Authentication">
             <FormField label="2FA for Admins">
               <SelectField>
                 <option>Mandatory</option>
@@ -188,12 +206,12 @@ export default function SystemSettingsPage() {
             <PrimaryButton>Save Security</PrimaryButton>
           </Card>
 
-          <Card icon={<ShieldCheck size={16} className="text-gray-900" />} title="Access Policies">
+          <Card icon={<ShieldCheck size={16} style={{ color: "var(--fg-secondary)" }} />} title="Access Policies">
             <FormField label="IP Whitelist (Super Admin)">
               <textarea
-                placeholder="Enter IPs, one per line�"
-                className="rounded-lg border-1.5 border-[rgba(15,23,42,0.14)] bg-white/90 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-secondary)] transition-all focus:border-[rgba(200,255,0,.5)] focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] resize-none"
-                style={{ minHeight: 80 }}
+                placeholder="Enter IPs, one per line…"
+                className="rounded-lg px-3 py-2 text-sm placeholder-[var(--fg-secondary)] transition-all focus:outline-none focus:shadow-[0_0_0_3px_rgba(200,255,0,.12)] resize-none"
+                style={{ minHeight: 80, background: "var(--bg-page)", border: "1px solid var(--border)", color: "var(--fg-primary)" }}
               />
             </FormField>
             <FormField label="Audit Log Retention">
@@ -218,7 +236,7 @@ export default function SystemSettingsPage() {
       {/* Email Tab */}
       {tab === "email" && (
         <div className="grid grid-cols-2 gap-4">
-          <Card icon={<Mail size={16} className="text-gray-900" />} title="SMTP Configuration">
+          <Card icon={<Mail size={16} style={{ color: "var(--fg-secondary)" }} />} title="SMTP Configuration">
             <FormField label="SMTP Host" required>
               <InputField type="text" placeholder="smtp.gmail.com" />
             </FormField>
@@ -229,7 +247,7 @@ export default function SystemSettingsPage() {
               <InputField type="email" placeholder="noreply@noblemanlearning.com" />
             </FormField>
             <FormField label="Password" required>
-              <InputField type="password" placeholder="��������" />
+              <InputField type="password" placeholder="••••••••" />
             </FormField>
             <div className="flex gap-2.5">
               <SecondaryButton style={{ flex: 1 }}>Test Connection</SecondaryButton>
@@ -237,7 +255,7 @@ export default function SystemSettingsPage() {
             </div>
           </Card>
 
-          <Card icon={<Mail size={16} className="text-gray-900" />} title="Email Templates">
+          <Card icon={<Mail size={16} style={{ color: "var(--fg-secondary)" }} />} title="Email Templates">
             {["Welcome Email", "Password Reset", "Course Access", "Certificate Ready", "Payment Receipt"].map((t) => (
               <div
                 key={t}
@@ -269,9 +287,10 @@ export default function SystemSettingsPage() {
           ].map((int) => (
             <div
               key={int.name}
-              className="flex items-center gap-3.5 rounded-2xl border border-[var(--border)] bg-white/80 p-4 shadow-sm"
+              className="flex items-center gap-3.5 rounded-2xl border border-[var(--border)] p-4 shadow-sm"
+              style={{ background: "var(--bg-card)" }}
             >
-              <div className="flex-shrink-0 text-gray-900">{int.icon}</div>
+              <div className="flex-shrink-0" style={{ color: "var(--fg-secondary)" }}>{int.icon}</div>
               <div className="flex-1">
                 <div className="mb-0.5 text-sm font-bold" style={{ fontFamily: '"Manrope", sans-serif', color: "var(--fg-primary)" }}>
                   {int.name}
@@ -281,7 +300,10 @@ export default function SystemSettingsPage() {
                 </div>
               </div>
               <div className="flex flex-shrink-0 flex-col items-end gap-1.5">
-                <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-widest ${tagColors[int.status as keyof typeof tagColors]}`}>
+                <span
+                  className="inline-flex rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-widest"
+                  style={tagStyles[int.status as keyof typeof tagStyles]}
+                >
                   {int.sl}
                 </span>
                 <SecondaryButton>{int.sl === "Connected" ? "Configure" : "Connect"}</SecondaryButton>
@@ -293,4 +315,3 @@ export default function SystemSettingsPage() {
     </div>
   );
 }
-

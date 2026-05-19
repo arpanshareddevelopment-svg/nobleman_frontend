@@ -80,12 +80,12 @@ export default function PlansPage() {
         {plans.map((p) => (
           <div
             key={p.name}
-            className="rounded-2xl border border-[var(--border)] bg-white/80 p-5 transition-all duration-200 hover:border-opacity-50 hover:shadow-lg"
+            className="rounded-2xl border border-[var(--border)] p-5 transition-all duration-200 hover:shadow-lg"
             style={{
               borderColor: p.featured ? "rgba(200, 255, 0, 0.58)" : "var(--border)",
               background: p.featured
                 ? "linear-gradient(135deg, rgba(200,255,0,.12), rgba(255,230,0,.12))"
-                : "rgba(255,255,255,0.82)",
+                : "var(--bg-card)",
             }}
           >
             {p.featured && (
@@ -113,7 +113,12 @@ export default function PlansPage() {
               ))}
             </ul>
             <div className="mb-3 flex gap-2">
-              <button className="flex-1 rounded-lg border border-[var(--border)] bg-white/70 px-3 py-1.5 text-xs font-bold transition-all hover:border-opacity-50 hover:bg-white" style={{ color: "var(--fg-secondary)" }}>
+              <button
+                className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-3 py-1.5 text-xs font-bold transition-all"
+                style={{ color: "var(--fg-secondary)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)")}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+              >
                 Edit
               </button>
               <button className="flex-1 rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-yellow)] px-3 py-1.5 text-xs font-bold text-[#06110c] shadow-md hover:shadow-lg" style={{ transition: "all 0.15s" }}>
@@ -128,7 +133,7 @@ export default function PlansPage() {
       </div>
 
       {/* Feature matrix */}
-      <div className="rounded-2xl border border-[var(--border)] overflow-hidden bg-white/80 shadow-sm">
+      <div className="rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm" style={{ background: "var(--bg-card)" }}>
         <div className="border-b border-[var(--border)] px-4.5 py-3.5 flex items-center gap-2.5">
           <div
             className="text-sm font-bold"
@@ -139,17 +144,17 @@ export default function PlansPage() {
         </div>
         <table className="w-full border-collapse">
           <thead>
-            <tr style={{ backgroundColor: "rgba(248,250,252,.8)" }}>
-              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+            <tr style={{ background: "rgba(255,255,255,0.03)" }}>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
                 Feature
               </th>
-              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
                 Starter
               </th>
-              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
                 Growth
               </th>
-              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
+              <th className="border-b border-[var(--border)] px-4 py-2.5 text-left font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)", fontSize: "10px" }}>
                 Enterprise
               </th>
             </tr>
@@ -167,7 +172,11 @@ export default function PlansPage() {
               ["Priority support", "❌", "✅", "✅ Dedicated"],
               ["Analytics", "Basic", "Advanced", "Full Suite"],
             ].map(([feat, s, g, e]) => (
-              <tr key={feat} className="hover:bg-white/50">
+              <tr
+                key={feat}
+                onMouseEnter={(ev) => (ev.currentTarget.style.background = "rgba(255,255,255,0.03)")}
+                onMouseLeave={(ev) => (ev.currentTarget.style.background = "transparent")}
+              >
                 <td className="border-b border-[var(--border)] px-4 py-2.75 text-xs font-semibold" style={{ color: "var(--fg-primary)" }}>
                   {feat}
                 </td>
@@ -188,4 +197,3 @@ export default function PlansPage() {
     </div>
   );
 }
-

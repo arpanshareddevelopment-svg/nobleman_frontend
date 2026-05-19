@@ -14,10 +14,10 @@ const topStudents = [
 ];
 
 const stats = [
-  { icon: <BadgeDollarSign size={18} />, label: "Total Revenue", val: "₹84L", sub: "↑ 31% YoY", bg: "from-purple-50 to-purple-100/50", dot: "bg-purple-400" },
-  { icon: <ShoppingCart size={18} />, label: "New Enrollments", val: "1,240", sub: "This month", bg: "from-green-50 to-green-100/50", dot: "bg-green-400" },
-  { icon: <TrendingUp size={18} />, label: "MoM Growth", val: "+26%", sub: "vs last month", bg: "from-blue-50 to-blue-100/50", dot: "bg-blue-400" },
-  { icon: <Users size={18} />, label: "Active Students", val: "10", sub: "Paying customers", bg: "from-amber-50 to-amber-100/50", dot: "bg-amber-400" },
+  { icon: <BadgeDollarSign size={18} />, label: "Total Revenue", val: "₹84L", sub: "↑ 31% YoY", dotStyle: { background: "#a78bfa" } },
+  { icon: <ShoppingCart size={18} />, label: "New Enrollments", val: "1,240", sub: "This month", dotStyle: { background: "#34d399" } },
+  { icon: <TrendingUp size={18} />, label: "MoM Growth", val: "+26%", sub: "vs last month", dotStyle: { background: "#60a5fa" } },
+  { icon: <Users size={18} />, label: "Active Students", val: "10", sub: "Paying customers", dotStyle: { background: "#fb923c" } },
 ];
 
 const maxVal = Math.max(...revenueData);
@@ -28,31 +28,34 @@ export default function SalesDashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3.5">
         {stats.map((s) => (
-          <div key={s.label} className={`rounded-2xl bg-gradient-to-br ${s.bg} border border-[var(--border)] p-4 shadow-sm`}>
+          <div key={s.label} className="rounded-2xl border border-[var(--border)] p-4 shadow-sm" style={{ background: "var(--bg-card)" }}>
             <div className="mb-3 flex items-start justify-between">
-              <div className={`rounded-full p-2 ${s.dot} text-white`}>{s.icon}</div>
+              <div className="rounded-full p-2 text-white" style={s.dotStyle}>{s.icon}</div>
             </div>
-            <div className="text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)]">{s.label}</div>
-            <div className="mt-1 text-2xl font-bold text-[var(--fg-primary)]">{s.val}</div>
-            <div className="mt-2 text-xs text-[var(--fg-secondary)]">{s.sub}</div>
+            <div className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--fg-secondary)" }}>{s.label}</div>
+            <div className="mt-1 text-2xl font-bold" style={{ color: "var(--fg-primary)" }}>{s.val}</div>
+            <div className="mt-2 text-xs" style={{ color: "var(--fg-secondary)" }}>{s.sub}</div>
           </div>
         ))}
       </div>
 
       <div className="grid gap-4" style={{ gridTemplateColumns: "1.6fr 1fr" }}>
         {/* Revenue Bar Chart */}
-        <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-5 shadow-sm">
+        <div className="rounded-2xl border border-[var(--border)] p-5 shadow-sm" style={{ background: "var(--bg-card)" }}>
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-2 text-sm font-extrabold text-[var(--fg-primary)]">
+              <div className="flex items-center gap-2 text-sm font-extrabold" style={{ color: "var(--fg-primary)" }}>
                 <BadgeDollarSign size={16} /> Monthly Revenue
               </div>
-              <p className="mt-0.5 text-xs text-[var(--fg-secondary)]">
+              <p className="mt-0.5 text-xs" style={{ color: "var(--fg-secondary)" }}>
                 ₹8.4L this month
-                <span className="ml-2 font-bold text-emerald-600">+22%</span>
+                <span className="ml-2 font-bold" style={{ color: "#34d399" }}>+22%</span>
               </p>
             </div>
-            <select className="rounded-lg border border-[var(--border)] bg-white/70 px-2 py-1 text-xs text-[var(--fg-secondary)] cursor-pointer">
+            <select
+              className="rounded-lg px-2 py-1 text-xs cursor-pointer"
+              style={{ background: "var(--bg-page)", border: "1px solid var(--border)", color: "var(--fg-secondary)" }}
+            >
               <option>This Year</option>
               <option>Last Year</option>
             </select>
@@ -75,7 +78,7 @@ export default function SalesDashboardPage() {
                       }}
                     />
                   </div>
-                  <span className="text-[9px] text-[var(--fg-muted)]">{m}</span>
+                  <span className="text-[9px]" style={{ color: "var(--fg-muted)" }}>{m}</span>
                 </div>
               );
             })}
@@ -83,8 +86,8 @@ export default function SalesDashboardPage() {
         </div>
 
         {/* Top Students */}
-        <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-5 shadow-sm">
-          <div className="mb-4 text-sm font-extrabold text-[var(--fg-primary)]">Top Students by Revenue</div>
+        <div className="rounded-2xl border border-[var(--border)] p-5 shadow-sm" style={{ background: "var(--bg-card)" }}>
+          <div className="mb-4 text-sm font-extrabold" style={{ color: "var(--fg-primary)" }}>Top Students by Revenue</div>
           <div className="space-y-2.5">
             {topStudents.map((t) => (
               <div key={t.name} className="flex items-center gap-3">
@@ -92,12 +95,12 @@ export default function SalesDashboardPage() {
                   {t.init}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-[var(--fg-primary)] truncate">{t.name}</div>
-                  <div className="text-[10px] text-[var(--fg-muted)]">{t.plan}</div>
+                  <div className="text-xs font-semibold truncate" style={{ color: "var(--fg-primary)" }}>{t.name}</div>
+                  <div className="text-[10px]" style={{ color: "var(--fg-muted)" }}>{t.plan}</div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-xs font-bold text-[var(--fg-primary)]">{t.revenue}</div>
-                  <div className={`text-[10px] font-semibold ${t.positive ? "text-emerald-600" : "text-red-500"}`}>{t.growth}</div>
+                  <div className="text-xs font-bold" style={{ color: "var(--fg-primary)" }}>{t.revenue}</div>
+                  <div className="text-[10px] font-semibold" style={{ color: t.positive ? "#34d399" : "#f87171" }}>{t.growth}</div>
                 </div>
               </div>
             ))}
@@ -106,8 +109,8 @@ export default function SalesDashboardPage() {
       </div>
 
       {/* Plan Distribution */}
-      <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-5 shadow-sm">
-        <div className="mb-4 text-sm font-extrabold text-[var(--fg-primary)]">Revenue by Plan Tier</div>
+      <div className="rounded-2xl border border-[var(--border)] p-5 shadow-sm" style={{ background: "var(--bg-card)" }}>
+        <div className="mb-4 text-sm font-extrabold" style={{ color: "var(--fg-primary)" }}>Revenue by Plan Tier</div>
         <div className="space-y-3">
           {[
             { label: "Enterprise", val: "₹36.6L", pct: 87, color: "from-[var(--brand-green)] to-[var(--brand-yellow)]" },
@@ -116,10 +119,10 @@ export default function SalesDashboardPage() {
           ].map((r) => (
             <div key={r.label}>
               <div className="mb-1.5 flex justify-between text-xs">
-                <span className="font-semibold text-[var(--fg-secondary)]">{r.label}</span>
-                <span className="font-bold text-[var(--fg-primary)]">{r.val}</span>
+                <span className="font-semibold" style={{ color: "var(--fg-secondary)" }}>{r.label}</span>
+                <span className="font-bold" style={{ color: "var(--fg-primary)" }}>{r.val}</span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-black/6 dark:bg-white/8">
+              <div className="h-2 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
                 <div
                   className={`h-full rounded-full bg-gradient-to-r ${r.color} transition-all duration-500`}
                   style={{ width: `${r.pct}%` }}
@@ -132,4 +135,3 @@ export default function SalesDashboardPage() {
     </div>
   );
 }
-

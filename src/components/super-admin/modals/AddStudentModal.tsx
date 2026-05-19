@@ -16,15 +16,24 @@ function genPass() {
 }
 
 const inputCls =
-  "w-full rounded-lg border border-black/12 dark:border-white/12 bg-white/90 dark:bg-white/5 px-3 py-2 text-sm text-[var(--fg-primary)] placeholder-[var(--fg-muted)] outline-none transition-all focus:border-[rgba(200,255,0,0.5)] focus:ring-4 focus:ring-[rgba(200,255,0,0.12)]";
+  "w-full rounded-lg px-3 py-2 text-sm placeholder-[var(--fg-muted)] outline-none transition-all focus:ring-4 focus:ring-[rgba(200,255,0,0.12)]";
 
-const selectCls =
-  "w-full rounded-lg border border-black/12 dark:border-white/12 bg-white/90 dark:bg-white/5 px-3 py-2 text-sm text-[var(--fg-secondary)] outline-none transition-all focus:border-[rgba(200,255,0,0.5)] focus:ring-4 focus:ring-[rgba(200,255,0,0.12)] cursor-pointer";
+const inputStyle: React.CSSProperties = {
+  background: "var(--bg-page)",
+  border: "1px solid rgba(255,255,255,0.12)",
+  color: "var(--fg-primary)",
+};
+
+const selectStyle: React.CSSProperties = {
+  background: "var(--bg-page)",
+  border: "1px solid rgba(255,255,255,0.12)",
+  color: "var(--fg-secondary)",
+};
 
 const labelCls = "block text-[10px] font-bold uppercase tracking-widest text-[var(--fg-secondary)] mb-1";
 
 const sectionLabelCls =
-  "flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)] mt-5 mb-3 pb-2 border-b border-black/8 dark:border-white/8";
+  "flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[var(--fg-secondary)] mt-5 mb-3 pb-2";
 
 export default function AddStudentModal({ onClose }: Props) {
   const [password, setPassword] = useState("");
@@ -37,10 +46,13 @@ export default function AddStudentModal({ onClose }: Props) {
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       {/* Modal */}
-      <div className="relative w-full max-w-2xl rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 shadow-2xl flex flex-col max-h-[90vh]">
+      <div
+        className="relative w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]"
+        style={{ background: "var(--bg-card)", border: "1px solid rgba(255,255,255,0.1)" }}
+      >
 
         {/* Header */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-black/8 dark:border-white/8 shrink-0">
+        <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[rgba(200,255,0,0.12)] text-[var(--brand-green)]">
             <Building2 size={18} />
           </div>
@@ -50,7 +62,9 @@ export default function AddStudentModal({ onClose }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fg-muted)] hover:bg-black/5 dark:hover:bg-white/8 hover:text-[var(--fg-primary)] transition-all text-lg font-light cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--fg-muted)] hover:text-[var(--fg-primary)] transition-all text-lg font-light cursor-pointer"
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
           >
             ×
           </button>
@@ -60,7 +74,7 @@ export default function AddStudentModal({ onClose }: Props) {
         <div className="flex-1 overflow-y-auto px-5 py-4">
 
           {/* Organisation Details */}
-          <div className={sectionLabelCls}>
+          <div className={sectionLabelCls} style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
             <Building2 size={14} /> Organisation Details
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -70,6 +84,7 @@ export default function AddStudentModal({ onClose }: Props) {
                 type="text"
                 placeholder="e.g. Acme Learning Solutions"
                 className={inputCls}
+                style={inputStyle}
                 onChange={(e) =>
                   setSubdomain(e.target.value.toLowerCase().replace(/\s+/g, "").slice(0, 20))
                 }
@@ -77,7 +92,7 @@ export default function AddStudentModal({ onClose }: Props) {
             </div>
             <div>
               <label className={labelCls}>Industry / Sector</label>
-              <select className={selectCls}>
+              <select className={clsx(inputCls, "cursor-pointer")} style={selectStyle}>
                 <option>EdTech</option>
                 <option>Corporate Training</option>
                 <option>K-12 Education</option>
@@ -90,20 +105,20 @@ export default function AddStudentModal({ onClose }: Props) {
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <label className={labelCls}>Contact Email <span className="text-red-500">*</span></label>
-              <input type="email" placeholder="contact@organisation.com" className={inputCls} />
+              <input type="email" placeholder="contact@organisation.com" className={inputCls} style={inputStyle} />
             </div>
             <div>
               <label className={labelCls}>Contact Phone</label>
-              <input type="tel" placeholder="+91 XXXXX XXXXX" className={inputCls} />
+              <input type="tel" placeholder="+91 XXXXX XXXXX" className={inputCls} style={inputStyle} />
             </div>
           </div>
           <div>
             <label className={labelCls}>Address / Location</label>
-            <input type="text" placeholder="e.g. Mumbai, Maharashtra" className={inputCls} />
+            <input type="text" placeholder="e.g. Mumbai, Maharashtra" className={inputCls} style={inputStyle} />
           </div>
 
           {/* Domain & Branding */}
-          <div className={sectionLabelCls}>
+          <div className={sectionLabelCls} style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
             <Globe2 size={14} /> Domain & Branding
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -115,9 +130,13 @@ export default function AddStudentModal({ onClose }: Props) {
                   value={subdomain}
                   onChange={(e) => setSubdomain(e.target.value)}
                   placeholder="acme"
-                  className={clsx(inputCls, "rounded-r-none border-r-0")}
+                  className={clsx(inputCls, "rounded-r-none")}
+                  style={{ ...inputStyle, borderRight: "none" }}
                 />
-                <div className="flex items-center shrink-0 rounded-r-lg border border-black/12 dark:border-white/12 bg-gray-50 dark:bg-white/5 px-3 text-xs text-[var(--fg-muted)] whitespace-nowrap">
+                <div
+                  className="flex items-center shrink-0 rounded-r-lg px-3 text-xs whitespace-nowrap"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderLeft: "none", color: "var(--fg-muted)" }}
+                >
                   .noblemanlearning.com
                 </div>
               </div>
@@ -127,7 +146,7 @@ export default function AddStudentModal({ onClose }: Props) {
             </div>
             <div>
               <label className={labelCls}>Custom Domain (optional)</label>
-              <input type="text" placeholder="lms.acme.com" className={inputCls} />
+              <input type="text" placeholder="lms.acme.com" className={inputCls} style={inputStyle} />
               <p className="mt-1 text-[10px] text-[var(--fg-muted)]">
                 Point your CNAME to platform.noblemanlearning.com
               </p>
@@ -136,26 +155,27 @@ export default function AddStudentModal({ onClose }: Props) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelCls}>Brand Colour (Hex)</label>
-              <input type="text" placeholder="#2563eb" className={inputCls} />
+              <input type="text" placeholder="#2563eb" className={inputCls} style={inputStyle} />
             </div>
             <div>
               <label className={labelCls}>Logo Upload</label>
               <input
                 type="file"
                 accept="image/*"
-                className={clsx(inputCls, "py-1.5 file:mr-3 file:rounded file:border-0 file:bg-[var(--brand-green)] file:px-2 file:py-1 file:text-xs file:font-bold file:text-gray-900 file:cursor-pointer")}
+                className={clsx(inputCls, "py-1.5 file:mr-3 file:rounded file:border-0 file:bg-[var(--brand-green)] file:px-2 file:py-1 file:text-xs file:font-bold file:text-[#06110c] file:cursor-pointer")}
+                style={inputStyle}
               />
             </div>
           </div>
 
           {/* Subscription Plan */}
-          <div className={sectionLabelCls}>
+          <div className={sectionLabelCls} style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
             <Sparkles size={14} /> Subscription Plan
           </div>
           <div className="grid grid-cols-3 gap-3 mb-3">
             <div>
               <label className={labelCls}>Plan <span className="text-red-500">*</span></label>
-              <select className={selectCls}>
+              <select className={clsx(inputCls, "cursor-pointer")} style={selectStyle}>
                 <option>Starter — ₹4,999/mo</option>
                 <option>Growth — ₹12,999/mo</option>
                 <option>Enterprise — Custom</option>
@@ -163,7 +183,7 @@ export default function AddStudentModal({ onClose }: Props) {
             </div>
             <div>
               <label className={labelCls}>Billing Cycle</label>
-              <select className={selectCls}>
+              <select className={clsx(inputCls, "cursor-pointer")} style={selectStyle}>
                 <option>Monthly</option>
                 <option>Quarterly</option>
                 <option>Annual</option>
@@ -171,36 +191,39 @@ export default function AddStudentModal({ onClose }: Props) {
             </div>
             <div>
               <label className={labelCls}>Trial Period (days)</label>
-              <input type="number" placeholder="0" defaultValue={14} className={inputCls} />
+              <input type="number" placeholder="0" defaultValue={14} className={inputCls} style={inputStyle} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelCls}>Start Date</label>
-              <input type="date" className={inputCls} />
+              <input type="date" className={inputCls} style={inputStyle} />
             </div>
             <div>
               <label className={labelCls}>Platform Fee Override (%)</label>
-              <input type="number" placeholder="15" defaultValue={15} className={inputCls} />
+              <input type="number" placeholder="15" defaultValue={15} className={inputCls} style={inputStyle} />
               <p className="mt-1 text-[10px] text-[var(--fg-muted)]">Default is 15%. Override for special deals.</p>
             </div>
           </div>
 
           {/* Primary Admin Account */}
-          <div className={sectionLabelCls}>
+          <div className={sectionLabelCls} style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
             <UserCircle2 size={14} /> Primary Admin Account
           </div>
-          <div className="mb-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
+          <div
+            className="mb-3 rounded-lg px-3 py-2 text-xs"
+            style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.2)", color: "#fb923c" }}
+          >
             This will be the first admin for this student. They can add more admins later.
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <label className={labelCls}>Admin Full Name <span className="text-red-500">*</span></label>
-              <input type="text" placeholder="e.g. Rahul Kumar" className={inputCls} />
+              <input type="text" placeholder="e.g. Rahul Kumar" className={inputCls} style={inputStyle} />
             </div>
             <div>
               <label className={labelCls}>Admin Email <span className="text-red-500">*</span></label>
-              <input type="email" placeholder="admin@acme.com" className={inputCls} />
+              <input type="email" placeholder="admin@acme.com" className={inputCls} style={inputStyle} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -213,10 +236,12 @@ export default function AddStudentModal({ onClose }: Props) {
                   readOnly
                   placeholder="Click Generate →"
                   className={clsx(inputCls, "rounded-r-none font-mono tracking-wider")}
+                  style={inputStyle}
                 />
                 <button
                   onClick={() => setPassword(genPass())}
-                  className="shrink-0 rounded-r-lg border border-l-0 border-black/12 dark:border-white/12 bg-[var(--brand-green)] px-3 text-xs font-bold text-gray-900 hover:opacity-90 transition-opacity cursor-pointer"
+                  className="shrink-0 rounded-r-lg px-3 text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
+                  style={{ background: "var(--brand-green)", color: "var(--fg-primary)", border: "1px solid rgba(255,255,255,0.12)", borderLeft: "none" }}
                 >
                   Generate
                 </button>
@@ -224,7 +249,7 @@ export default function AddStudentModal({ onClose }: Props) {
             </div>
             <div>
               <label className={labelCls}>Send Credentials Via</label>
-              <select className={selectCls}>
+              <select className={clsx(inputCls, "cursor-pointer")} style={selectStyle}>
                 <option>Email</option>
                 <option>WhatsApp</option>
                 <option>Both</option>
@@ -239,21 +264,26 @@ export default function AddStudentModal({ onClose }: Props) {
               placeholder="Any special requirements, deal notes, or onboarding instructions…"
               rows={3}
               className={clsx(inputCls, "resize-none")}
+              style={inputStyle}
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 px-5 py-4 border-t border-black/8 dark:border-white/8 shrink-0">
+        <div className="flex items-center justify-end gap-2.5 px-5 py-4 shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
           <button
             onClick={onClose}
-            className="rounded-lg border border-black/12 dark:border-white/12 bg-transparent px-4 py-2 text-xs font-bold text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] transition-all cursor-pointer"
+            className="rounded-lg bg-transparent px-4 py-2 text-xs font-bold transition-all cursor-pointer hover:text-[var(--fg-primary)]"
+            style={{ border: "1px solid rgba(255,255,255,0.12)", color: "var(--fg-secondary)" }}
           >
             Cancel
           </button>
           <button
             onClick={onClose}
-            className="rounded-lg border border-[rgba(0,196,255,0.25)] bg-transparent px-4 py-2 text-xs font-bold text-[var(--brand-blue)] hover:bg-[rgba(0,196,255,0.08)] transition-all cursor-pointer"
+            className="rounded-lg bg-transparent px-4 py-2 text-xs font-bold transition-all cursor-pointer"
+            style={{ border: "1px solid rgba(0,196,255,0.25)", color: "var(--brand-blue)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,196,255,0.08)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
           >
             Save as Draft
           </button>
@@ -268,4 +298,3 @@ export default function AddStudentModal({ onClose }: Props) {
     </div>
   );
 }
-
