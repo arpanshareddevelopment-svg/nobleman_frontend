@@ -1,598 +1,319 @@
 "use client";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
-/* ─── Instructor data ──────────────────────────────────────── */
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Star } from "lucide-react";
+
 const INSTRUCTORS = [
+  {
+    name: "Ashish Gambhir",
+    role: "Engineering Lead",
+    company: "WINZO",
+    photo:
+      "https://images.unsplash.com/photo-1758560572645-0f7fa62ab59f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    expertise: ["React", "Leadership", "Systems"],
+    rating: 4.9,
+    students: "1.2k",
+  },
+  {
+    name: "Kartik Kannan",
+    role: "Group Product Manager",
+    company: "AJIO",
+    photo:
+      "https://images.unsplash.com/photo-1632812662039-916d700e23ee?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    expertise: ["Product", "Strategy", "Analytics"],
+    rating: 4.8,
+    students: "980",
+  },
+  {
+    name: "Rohit V",
+    role: "Group Product Manager",
+    company: "AngelOne",
+    photo:
+      "https://media.istockphoto.com/id/1417967324/photo/white-man-making-gestures-with-cell-phone.jpg?s=1024x1024&w=is&k=20&c=Zu_iBNC1IFzucZEq5Xu4ETRyHWaMZe6h5Jt6W8mCcV4=",
+    expertise: ["Payments", "Growth", "PM"],
+    rating: 4.7,
+    students: "2.1k",
+  },
+  {
+    name: "Palash Somani",
+    role: "Director of Product",
+    company: "DREAM11",
+    photo:
+      "https://media.istockphoto.com/id/1475088196/photo/mature-man-looking-at-the-camera-while-working-on-a-laptop-standing-near-a-cubicle-in-an.jpg?s=1024x1024&w=is&k=20&c=6p4vqb5V_GCcPWERrzv3jtovL0fnAlf2NKhlQ7fn0X8=",
+    expertise: ["Product", "SportsTech", "Leadership"],
+    rating: 4.9,
+    students: "3.4k",
+  },
   {
     name: "Priya Sharma",
     role: "Senior Data Scientist",
     company: "Amazon",
-    expertise: ["Python", "ML", "SQL"],
     photo:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80",
-    bio: "8 years building recommendation systems at Amazon. Helped 1,200+ students break into data science.",
-    rating: 4.9,
-    students: "1,200+",
-    experience: "8 yrs",
-    index: "01",
-  },
-  {
-    name: "Arjun Mehta",
-    role: "Principal Engineer",
-    company: "Microsoft",
-    expertise: ["React", "Node.js", "System Design"],
-    photo:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80",
-    bio: "Led full-stack teams at Microsoft for 10 years. Passionate about turning beginners into senior engineers.",
+    expertise: ["Python", "ML", "SQL"],
     rating: 4.8,
-    students: "980+",
-    experience: "10 yrs",
-    index: "02",
-  },
-  {
-    name: "Neha Kapoor",
-    role: "Product Lead",
-    company: "BCG Digital",
-    expertise: ["Product Strategy", "Agile", "Analytics"],
-    photo:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80",
-    bio: "Shipped 30+ products across fintech and healthtech. Mentors aspiring PMs on strategy and execution.",
-    rating: 5.0,
-    students: "740+",
-    experience: "12 yrs",
-    index: "03",
-  },
-  {
-    name: "Rohan Verma",
-    role: "ML Engineer",
-    company: "Google DeepMind",
-    expertise: ["Deep Learning", "NLP", "PyTorch"],
-    photo:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80",
-    bio: "Researcher turned engineer. Specialises in LLMs and making cutting-edge AI accessible to everyone.",
-    rating: 4.9,
-    students: "860+",
-    experience: "6 yrs",
-    index: "04",
-  },
-  {
-    name: "Divya Nair",
-    role: "UX Design Lead",
-    company: "Flipkart",
-    expertise: ["Figma", "Design Systems", "Research"],
-    photo:
-      "https://images.unsplash.com/photo-1614644147724-2d4785d69962?w=600&q=80",
-    bio: "Designed experiences used by 300M+ users. Teaches design thinking with a product-first mindset.",
-    rating: 4.8,
-    students: "620+",
-    experience: "9 yrs",
-    index: "05",
-  },
-  {
-    name: "Karan Singh",
-    role: "DevOps Architect",
-    company: "Infosys",
-    expertise: ["Kubernetes", "AWS", "CI/CD"],
-    photo:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
-    bio: "Scaled infrastructure for Fortune 500 clients. Demystifies cloud and DevOps for working engineers.",
-    rating: 4.7,
-    students: "530+",
-    experience: "11 yrs",
-    index: "06",
+    students: "1.7k",
   },
 ];
 
-// Color rotation: blue → green → yellow
-const COLOR_THEMES = [
-  {
-    accent: "var(--brand-blue-light)",
-    accentDark: "var(--brand-blue-dark)",
-  },
-  {
-    accent: "var(--brand-green-light)",
-    accentDark: "var(--brand-green-dark)",
-  },
-  {
-    accent: "var(--brand-yellow-light)",
-    accentDark: "var(--brand-yellow-dark)",
-  },
-];
-
-/* ─── Star rating ──────────────────────────────────────────── */
-function Stars({ rating, color }: { rating: number; color: string }) {
-  return (
-    <span className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star
-          key={s}
-          size={11}
-          fill={s <= Math.round(rating) ? color : "none"}
-          stroke={color}
-          strokeWidth="2.5"
-        />
-      ))}
-    </span>
-  );
-}
-
-/* ─── Vertical thumb strip ─────────────────────────────────── */
-function ThumbStrip({
-  active,
-  onSelect,
+function InstructorCard({
+  inst,
+  hovered,
 }: {
-  active: number;
-  onSelect: (i: number) => void;
+  inst: (typeof INSTRUCTORS)[0];
+  hovered: boolean;
 }) {
-  const visibleCount = 4;
-  const total = INSTRUCTORS.length;
-
-  let start = 0;
-  if (total <= visibleCount) start = 0;
-  else if (active <= 1) start = 0;
-  else if (active >= total - 2) start = total - visibleCount;
-  else start = active - 1;
-
-  const displayInstructors = INSTRUCTORS.slice(
-    start,
-    Math.min(start + visibleCount, total),
-  );
-
   return (
-    <div className="hidden lg:flex flex-col gap-3 h-[320px] flex-shrink-0">
-      {displayInstructors.map((inst, i) => {
-        const globalIndex = start + i;
-        const theme = COLOR_THEMES[globalIndex % COLOR_THEMES.length];
+    <div
+      className="group relative shrink-0 overflow-hidden rounded-[28px] p-5 transition-all duration-500"
+      style={{
+        width: 300,
+        background: hovered
+          ? "linear-gradient(135deg, rgba(200,255,0,0.08), rgba(0,196,255,0.08))"
+          : "var(--card)",
+        border: hovered
+          ? "1px solid rgba(200,255,0,0.2)"
+          : "1px solid var(--card-border)",
+        boxShadow: hovered
+          ? "0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(200,255,0,0.08)"
+          : "var(--card-shadow)",
+        backdropFilter: "blur(18px)",
+      }}
+    >
+      {/* glow */}
+      <div
+        className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            "radial-gradient(circle at top, rgba(200,255,0,0.12), transparent 60%)",
+        }}
+      />
 
-        return (
-          <button
-            key={globalIndex}
-            onClick={() => onSelect(globalIndex)}
-            className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden flex-shrink-0 transition-all duration-300 group"
-            style={{
-              outline:
-                globalIndex === active
-                  ? `2px solid ${theme.accent}`
-                  : "2px solid transparent",
-              outlineOffset: 2,
-              opacity: globalIndex === active ? 1 : 0.38,
-              transform: globalIndex === active ? "scale(1.06)" : "scale(1)",
-            }}
-            aria-label={inst.name}
+      {/* image */}
+      <div className="relative mb-4 h-[180px] overflow-hidden rounded-2xl">
+        <img
+          src={inst.photo}
+          alt={inst.name}
+          className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+        {/* arrow */}
+        <div
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full opacity-0 transition-all duration-300 group-hover:opacity-100"
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+         
+        </div>
+
+        {/* company */}
+        <div
+          className="absolute bottom-3 left-3 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+          style={{
+            background: "rgba(0,0,0,0.45)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            color: "rgba(255,255,255,0.7)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          {inst.company}
+        </div>
+      </div>
+
+      {/* content */}
+      <div className="space-y-3">
+        <div>
+          <h3
+            className="text-[18px] font-bold"
+            style={{ color: "var(--fg-primary)" }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={inst.photo}
-              alt={inst.name}
-              className="w-full h-full object-cover"
-            />
-            {globalIndex === active && (
-              <motion.div
-                layoutId="thumb-glow"
-                className="absolute inset-0 rounded-2xl"
-                style={{ background: `${theme.accent}22` }}
-              />
-            )}
-          </button>
-        );
-      })}
+            {inst.name}
+          </h3>
+
+          <p className="text-[13px]" style={{ color: "var(--fg-secondary)" }}>
+            {inst.role}
+          </p>
+        </div>
+
+        {/* stats */}
+        <div className="flex items-center gap-2">
+          <Star
+            size={13}
+            fill="var(--brand-green)"
+            stroke="var(--brand-green)"
+          />
+
+          <span
+            className="text-[13px] font-semibold"
+            style={{ color: "var(--brand-green-light)" }}
+          >
+            {inst.rating}
+          </span>
+
+          <span className="text-[12px]" style={{ color: "var(--fg-muted)" }}>
+            · {inst.students} students
+          </span>
+        </div>
+
+        {/* tags */}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {inst.expertise.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full px-3 py-1 text-[11px] font-semibold"
+              style={{
+                background: hovered
+                  ? "rgba(200,255,0,0.08)"
+                  : "rgba(255,255,255,0.04)",
+                border: hovered
+                  ? "1px solid rgba(200,255,0,0.16)"
+                  : "1px solid rgba(255,255,255,0.06)",
+                color: hovered
+                  ? "var(--brand-green-light)"
+                  : "rgba(255,255,255,0.72)",
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* bottom line */}
+      <div
+        className="absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-500 group-hover:w-full"
+        style={{
+          background:
+            "linear-gradient(90deg,var(--brand-green),var(--brand-blue))",
+        }}
+      />
     </div>
   );
 }
 
-/* ─── Main carousel ────────────────────────────────────────── */
-export default function InstructorCarousel() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const containerRef = useRef<HTMLElement | null>(null);
-  const inView = useInView(containerRef, { once: false, margin: "-120px" });
+function Track() {
+  const [hovered, setHovered] = useState<number | null>(null);
 
-  const total = INSTRUCTORS.length;
-  const theme = COLOR_THEMES[active % COLOR_THEMES.length];
+  const items = [...INSTRUCTORS, ...INSTRUCTORS, ...INSTRUCTORS];
 
-  const advance = useCallback(
-    (dir: 1 | -1) => setActive((i) => (i + dir + total) % total),
-    [total],
+  return (
+    <motion.div
+      animate={{
+        x: [0, -1620],
+      }}
+      transition={{
+        duration: 22,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+      className="flex w-max gap-6"
+    >
+      {items.map((inst, i) => (
+        <div
+          key={i}
+          onMouseEnter={() => setHovered(i)}
+          onMouseLeave={() => setHovered(null)}
+        >
+          <InstructorCard inst={inst} hovered={hovered === i} />
+        </div>
+      ))}
+    </motion.div>
   );
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      if (!paused) advance(1);
-    }, 5000);
-    return () => clearInterval(id);
-  }, [paused, advance]);
-
-  function select(i: number) {
-    setActive(i);
-    setPaused(true);
-    setTimeout(() => setPaused(false), 2500);
-  }
-
-  function handleArrow(dir: 1 | -1) {
-    advance(dir);
-    setPaused(true);
-    setTimeout(() => setPaused(false), 2500);
-  }
-
-  const inst = INSTRUCTORS[active];
-  const displayInst = {
-    ...inst,
-    accent: theme.accent,
-    accentDark: theme.accentDark,
-  };
-
+}
+export default function InstructorCarousel() {
   return (
     <section
       id="instructors"
-      className="relative w-full overflow-hidden py-12 md:py-24"
-      ref={containerRef}
+      className="relative isolate overflow-hidden py-16 md:py-28"
       style={{
         background:
-          "linear-gradient(180deg, #020617 0%, #030712 30%, #000000 70%, #020617 100%)",
+          "linear-gradient(180deg, #06040f 0%, #071220 55%, #060a12 100%)",
       }}
     >
-      {/* ── Animated per-instructor accent glow ── */}
-      <AnimatePresence>
-        <motion.div
-          key={`bg-${active}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2 }}
-          className="absolute inset-0 -z-10 pointer-events-none"
-          style={{
-            background: `
-              radial-gradient(ellipse 70% 60% at 30% 50%, ${displayInst.accent}0d 0%, transparent 65%),
-              radial-gradient(ellipse 50% 40% at 75% 30%, ${displayInst.accentDark}12 0%, transparent 60%)
-            `,
-          }}
-        />
-      </AnimatePresence>
-
-      {/* Dot-grid texture */}
+      {/* bg glow */}
       <div
-        className="absolute inset-0 -z-20 pointer-events-none"
+        className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)`,
-          backgroundSize: "28px 28px",
-          opacity: 0.06,
+          background: `
+            radial-gradient(circle at 10% 20%, rgba(255,230,0,0.08), transparent 35%),
+            radial-gradient(circle at 80% 0%, rgba(0,196,255,0.12), transparent 35%),
+            radial-gradient(circle at 50% 100%, rgba(200,255,0,0.08), transparent 40%)
+          `,
+          filter: "blur(90px)",
         }}
       />
 
-      {/* Ambient glow behind content */}
+      {/* grid */}
       <div
-        className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
+        className="absolute inset-0 -z-20"
         style={{
-          background: `radial-gradient(circle at center, ${displayInst.accent}22 0%, transparent 60%)`,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+          opacity: 0.08,
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-14">
-        {/* Glass wrapper */}
-        <div
-          className="relative rounded-[2rem] border p-4 sm:p-6 overflow-hidden"
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            backdropFilter: "blur(18px)",
-            WebkitBackdropFilter: "blur(18px)",
-            borderColor: "var(--border)",
-            boxShadow: "0 30px 100px rgba(0,0,0,0.6)",
-          }}
-        >
-          {/* ── Section header ── */}
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <div className="flex w-full justify-between">
-                <span
-                  className="inline-block px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 transition-colors duration-500"
-                  style={{
-                    background: `${displayInst.accent}14`,
-                    borderColor: `${displayInst.accent}40`,
-                    color: displayInst.accent,
-                  }}
-                >
-                  Meet the Mentors
-                </span>
-
-                {/* Arrow controls */}
-                <div className="hidden sm:flex items-center gap-3">
-                  <span
-                    className="text-xs font-mono tracking-widest"
-                    style={{ color: "var(--fg-muted)" }}
-                  >
-                    {String(active + 1).padStart(2, "0")} /{" "}
-                    {String(total).padStart(2, "0")}
-                  </span>
-                  {([-1, 1] as const).map((dir, di) => (
-                    <button
-                      key={di}
-                      onClick={() => handleArrow(dir)}
-                      aria-label={dir === -1 ? "Previous" : "Next"}
-                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
-                      style={{
-                        background: "var(--bg-card)",
-                        border: `1px solid ${displayInst.accent}50`,
-                        color: displayInst.accent,
-                      }}
-                    >
-                      {dir === -1 ? (
-                        <ChevronLeft size={15} strokeWidth={2.5} />
-                      ) : (
-                        <ChevronRight size={15} strokeWidth={2.5} />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <h2
-                className="text-[clamp(2.2rem,3.2vw,3.5rem)] font-black leading-[1.05] tracking-tight"
-                style={{ color: "var(--fg-primary)" }}
-              >
-                Learn from people who&apos;ve{" "}
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={`grad-${active}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
-                    style={{
-                      backgroundImage: `linear-gradient(125deg, ${displayInst.accent}, ${displayInst.accentDark})`,
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      color: "transparent",
-                    }}
-                  >
-                    been there.
-                  </motion.span>
-                </AnimatePresence>
-              </h2>
-            </div>
-          </div>
-
-          {/* ── Main content row ── */}
-          <div className="flex flex-col lg:flex-row gap-6 items-start">
-            {/* Vertical thumb strip */}
-            <ThumbStrip active={active} onSelect={select} />
-
-            {/* Portrait */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`photo-${active}`}
-                initial={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full lg:flex-shrink-0 rounded-3xl overflow-hidden self-stretch"
+      <div className="mx-auto mb-14 max-w-7xl px-6 md:px-10">
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2
+              className="text-[clamp(2.3rem,4vw,4rem)] font-black leading-[1.05]"
+              style={{ color: "var(--fg-primary)" }}
+            >
+              Learn from the{" "}
+              <span
+                className="bg-clip-text text-transparent"
                 style={{
-                  width: "100%",
-                  maxWidth: "320px",
-                  height: "320px",
-                  boxShadow: `0 32px 80px ${displayInst.accent}28, 0 0 0 1px ${displayInst.accent}20`,
+                  backgroundImage:
+                    "linear-gradient(120deg,var(--brand-green-light),var(--brand-blue-light))",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={inst.photo}
-                  alt={inst.name}
-                  className="w-full h-full object-cover object-top"
-                />
+                best in the field
+              </span>
+            </h2>
 
-                {/* Cinematic readability overlay */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `
-                      linear-gradient(
-                        to top,
-                        rgba(0,0,0,0.92) 0%,
-                        rgba(0,0,0,0.72) 18%,
-                        rgba(0,0,0,0.38) 38%,
-                        rgba(0,0,0,0.10) 58%,
-                        transparent 78%
-                      )
-                    `,
-                  }}
-                />
-
-                {/* subtle accent tint */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(to top, ${displayInst.accentDark}44 0%, transparent 45%)`,
-                    mixBlendMode: "screen",
-                  }}
-                />
-
-                {/* Name overlay on photo */}
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <div
-                    className="text-[10px] font-black tracking-[0.2em] uppercase mb-1"
-                    style={{ color: displayInst.accent }}
-                  >
-                    {inst.company}
-                  </div>
-                  <div className="text-xl font-black text-white leading-tight">
-                    {inst.name}
-                  </div>
-                  <div className="text-xs mt-0.5 text-white/60">
-                    {inst.role}
-                  </div>
-                </div>
-
-                {/* Index badge */}
-                <div
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-black"
-                  style={{
-                    background: `${displayInst.accent}22`,
-                    border: `1px solid ${displayInst.accent}55`,
-                    color: displayInst.accent,
-                    backdropFilter: "blur(8px)",
-                  }}
-                >
-                  {inst.index}
-                </div>
-
-                {/* Accent corner glow */}
-                <div
-                  className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full pointer-events-none"
-                  style={{
-                    background: displayInst.accent,
-                    filter: "blur(40px)",
-                    opacity: 0.3,
-                  }}
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Info panel */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`info-${active}`}
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 flex flex-col gap-5 min-w-0 w-full"
-              >
-                {/* Stats row */}
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { label: "Students", value: inst.students },
-                    { label: "Experience", value: inst.experience },
-                    { label: "Rating", value: inst.rating.toFixed(1) },
-                  ].map(({ label, value }) => (
-                    <div
-                      key={label}
-                      className="rounded-2xl px-4 py-3 flex flex-col gap-1"
-                      style={{
-                        background: `${displayInst.accent}0e`,
-                        border: `1px solid ${displayInst.accent}25`,
-                      }}
-                    >
-                      <span
-                        className="text-[22px] font-black leading-none"
-                        style={{ color: displayInst.accent }}
-                      >
-                        {value}
-                      </span>
-                      <span
-                        className="text-[10px] tracking-widest uppercase"
-                        style={{ color: "var(--fg-muted)" }}
-                      >
-                        {label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Bio */}
-                <div
-                  className="rounded-2xl p-5"
-                  style={{
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  <p
-                    className="text-sm leading-relaxed"
-                    style={{ color: "var(--fg-secondary)" }}
-                  >
-                    {inst.bio}
-                  </p>
-                </div>
-
-                {/* Expertise */}
-                <div>
-                  <div
-                    className="text-[10px] font-bold tracking-[0.15em] uppercase mb-2.5"
-                    style={{ color: "var(--fg-muted)" }}
-                  >
-                    Expertise
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {inst.expertise.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1.5 rounded-full text-xs font-semibold"
-                        style={{
-                          background: `${displayInst.accent}14`,
-                          color: displayInst.accent,
-                          border: `1px solid ${displayInst.accent}30`,
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Star rating */}
-                <div className="flex items-center justify-between flex-wrap gap-4 pt-2">
-                  <div className="flex items-center gap-2">
-                    <Stars rating={inst.rating} color={displayInst.accent} />
-                    <span
-                      className="text-sm font-bold"
-                      style={{ color: displayInst.accent }}
-                    >
-                      {inst.rating.toFixed(1)}
-                    </span>
-                    <span
-                      className="text-xs"
-                      style={{ color: "var(--fg-muted)" }}
-                    >
-                      · {inst.students} students
-                    </span>
-                  </div>
-                </div>
-
-                {/* Progress bar */}
-                <div
-                  className="h-px w-full rounded-full overflow-hidden mt-auto"
-                  style={{ background: "var(--border)" }}
-                >
-                  {!paused && (
-                    <motion.div
-                      key={`bar-${active}`}
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 5, ease: "linear" }}
-                      className="h-full rounded-full"
-                      style={{
-                        background: `linear-gradient(90deg, ${displayInst.accent}, ${displayInst.accentDark})`,
-                      }}
-                    />
-                  )}
-                </div>
-              </motion.div>
-            </AnimatePresence>
+            <p
+              className="mt-4 max-w-2xl text-[15px]"
+              style={{ color: "var(--fg-secondary)" }}
+            >
+              Learn directly from engineers, product leaders and data experts
+              working at the world's top companies.
+            </p>
           </div>
 
-          {/* ── Mobile dot strip ── */}
-          <div className="flex items-center justify-center gap-2 mt-10 lg:hidden">
-            {INSTRUCTORS.map((inst, i) => {
-              const mobileTheme = COLOR_THEMES[i % COLOR_THEMES.length];
-              return (
-                <button
-                  key={i}
-                  onClick={() => select(i)}
-                  aria-label={`Go to ${inst.name}`}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    height: 7,
-                    width: i === active ? 24 : 7,
-                    background:
-                      i === active ? mobileTheme.accent : "var(--border)",
-                    opacity: i === active ? 1 : 0.4,
-                  }}
-                />
-              );
-            })}
-          </div>
+        </div>
+      </div>
+
+      {/* carousel */}
+      <div className="relative overflow-hidden">
+        {/* left fade */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24"
+          style={{
+            background:
+              "linear-gradient(to right, var(--bg-page), transparent)",
+          }}
+        />
+
+        {/* right fade */}
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24"
+          style={{
+            background: "linear-gradient(to left, var(--bg-page), transparent)",
+          }}
+        />
+
+        <div className="py-6">
+          <Track />
         </div>
       </div>
     </section>

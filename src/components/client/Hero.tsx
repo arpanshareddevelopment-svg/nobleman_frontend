@@ -5,14 +5,10 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
 } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import gsap from "gsap";
 import { ArrowRight, Radio, Sparkles } from "lucide-react";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-type OrbKey = "careers" | "support" | "partners";
 
 type Slide = {
   id: "blue" | "green" | "yellow";
@@ -21,51 +17,21 @@ type Slide = {
   titleBottom: string;
   cta: string;
   solid: string;
-  highlight: OrbKey;
+  highlight: "careers" | "support" | "partners";
 };
 
-type Orb = {
-  key: OrbKey;
-  value: string;
-  label: string;
-  tone: string;
-  size: string;
-  position: CSSProperties;
+type Certificate = {
+  src: string;
+  alt: string;
+  orientation: "portrait" | "landscape";
 };
 
-type ParsedCounter = {
-  target: number;
-  suffix: string;
-  useCommas: boolean;
-};
-
-function parseCounter(value: string): ParsedCounter {
-  const digits = value.replace(/[^\d]/g, "");
-  const target = Number(digits) || 0;
-  const suffix = value.includes("%")
-    ? "%"
-    : value.trim().endsWith("+")
-      ? "+"
-      : "";
-  return {
-    target,
-    suffix,
-    useCommas: value.includes(",") || target >= 1000,
-  };
-}
-
-function formatCounterValue(value: number, parsed: ParsedCounter): string {
-  const base = parsed.useCommas ? value.toLocaleString() : String(value);
-  return `${base}${parsed.suffix}`;
-}
-
-// ─── Data ────────────────────────────────────────────────────────────────────
 const SLIDES: Slide[] = [
   {
     id: "blue",
     tag: "Blue",
-    titleTop: "Build AI-first skills",
-    titleBottom: "that actually convert.",
+    titleTop: "Build AI skills",
+    titleBottom: "that Actually matters.",
     cta: "Explore Courses",
     solid: "#2ea8ff",
     highlight: "careers",
@@ -90,32 +56,38 @@ const SLIDES: Slide[] = [
   },
 ];
 
-const ORBS: Orb[] = [
+const CERTIFICATES: Certificate[] = [
   {
-    key: "careers",
-    value: "12,000+",
-    label: "Careers transformed",
-    tone: "#57f0a2",
-    size: "clamp(7.5rem, 18vw, 11rem)",
-    position: { top: "10%", left: "8%" },
+    src: "/certificates/course.jpeg",
+    alt: "Course completion certificate",
+    orientation: "landscape",
   },
   {
-    key: "support",
-    value: "100%",
-    label: "Placement support",
-    tone: "#55c9ff",
-    size: "clamp(7.5rem, 18vw, 11rem)",
-    position: { top: "6%", right: "8%" },
+    src: "/certificates/internship.jpeg",
+    alt: "Internship certificate",
+    orientation: "portrait",
   },
   {
-    key: "partners",
-    value: "400+",
-    label: "Hiring partners",
-    tone: "#ffd84d",
-    size: "clamp(7.5rem, 18vw, 11rem)",
-    position: { left: "50%", bottom: "8%", transform: "translateX(-50%)" },
+    src: "/certificates/project_report.jpeg",
+    alt: "Project report certificate",
+    orientation: "portrait",
   },
 ];
+
+const HERO_STATS = [
+  { value: "15000+", label: "Careers Transformed" },
+  { value: "100%", label: "Placement Support" },
+  { value: "400+", label: "Hiring Partners" },
+  { value: "97%", label: "Reported Salary Hike" },
+];
+
+function parseStat(value: string) {
+  const target = Number(value.replace(/[^\d]/g, "")) || 0;
+  const suffix = value.includes("%") ? "%" : value.includes("+") ? "+" : "";
+  return { target, suffix };
+}
+
+
 
 // ─── Mentor accent map ────────────────────────────────────────────────────────
 const MENTOR_ACCENT = {
@@ -196,225 +168,6 @@ function LiveCohortChip() {
   );
 }
 
-// ─── Per-orb fixed color palettes ────────────────────────────────────────────
-const ORB_GRADIENTS: Record<OrbKey, [string, string]> = {
-  careers: ["#2ea8ff", "#7ed8ff"],
-  support: ["#84ff3d", "#c8ff74"],
-  partners: ["#ffcf33", "#ffe98a"],
-};
-
-// ─── FloatingOrb ─────────────────────────────────────────────────────────────
-function FloatingOrb({
-  orb,
-  active,
-  registerRef,
-}: {
-  orb: Orb;
-  active: boolean;
-  registerRef: (node: HTMLDivElement | null, key: OrbKey) => void;
-}) {
-  const gradient = ORB_GRADIENTS[orb.key];
-  const parsed = useMemo(() => parseCounter(orb.value), [orb.value]);
-  const [displayValue, setDisplayValue] = useState(parsed.target);
-
-  useEffect(() => {
-    if (!active) return;
-    const duration = 2200;
-    let frame = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setDisplayValue(Math.round(parsed.target * eased));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame((now) => {
-      setDisplayValue(0);
-      tick(now);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [active, parsed.target]);
-
-  const [g0, g1] = gradient;
-
-  const activeBg = `radial-gradient(circle at 35% 32%,
-        #ffffff 0%,
-        ${g0}ee 22%,
-        ${g0} 55%,
-        ${g1}cc 80%,
-        ${g1}99 100%)`;
-
-  const activeBoxShadow = `0 0 60px 18px ${g0}50,
-       0 0 120px 40px ${g0}22,
-       0 0 0 2px ${g0}70,
-       inset 0 0 40px 10px #000000cc,
-       inset 0 0 0 1.5px ${g0}40`;
-
-  const valueColor = "#0d1117";
-  const valueShadow = `0 0 14px ${g0}, 0 0 28px ${g0}99`;
-  const labelColor = "#0d1117bb";
-  const labelShadow = `0 0 8px ${g0}88`;
-
-  return (
-    <div
-      ref={(node) => registerRef(node, orb.key)}
-      className="absolute"
-      style={{ width: orb.size, height: orb.size, ...orb.position }}
-    >
-      <motion.div
-        animate={
-          active
-            ? { scale: [1, 1.08, 1], opacity: [0.96, 1, 0.96] }
-            : { scale: 1, opacity: 0.92 }
-        }
-        transition={{
-          duration: 2.8,
-          repeat: active ? Infinity : 0,
-          ease: "easeInOut",
-        }}
-        className="relative flex h-full w-full items-center justify-center rounded-full"
-        style={{
-          background: activeBg,
-          boxShadow: active ? activeBoxShadow : activeBoxShadow,
-        }}
-      >
-        {active && (
-          <div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 50% 50%,
-                transparent 54%,
-                ${g0}50 72%,
-                ${g0}88 80%,
-                ${g0}50 88%,
-                transparent 100%)`,
-              filter: "blur(2px)",
-            }}
-          />
-        )}
-        <div
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: "42%",
-            height: "32%",
-            top: "10%",
-            left: "14%",
-            background: active
-              ? `radial-gradient(ellipse at 40% 40%,
-                  rgba(255,255,255,0.55) 0%,
-                  rgba(255,255,255,0.18) 45%,
-                  transparent 75%)`
-              : `radial-gradient(ellipse at 40% 40%,
-                  rgba(255,255,255,0.20) 0%,
-                  transparent 70%)`,
-            filter: "blur(1.5px)",
-          }}
-        />
-        {active && (
-          <div
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              width: "60%",
-              height: "30%",
-              bottom: "8%",
-              left: "20%",
-              background: `radial-gradient(ellipse, ${g0}35 0%, transparent 70%)`,
-              filter: "blur(4px)",
-            }}
-          />
-        )}
-        <div className="relative z-10 flex flex-col items-center gap-1 px-4">
-          <span
-            className="text-[clamp(1.4rem,2vw,2rem)] font-black tracking-tight leading-none"
-            style={{ color: valueColor, textShadow: valueShadow }}
-          >
-            {formatCounterValue(displayValue, parsed)}
-          </span>
-          <span
-            className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-center"
-            style={{ color: labelColor, textShadow: labelShadow }}
-          >
-            {orb.label}
-          </span>
-        </div>
-      </motion.div>
-      {active && (
-        <div
-          className="absolute left-1/2 -translate-x-1/2 rounded-full pointer-events-none"
-          style={{
-            bottom: "-12%",
-            width: "70%",
-            height: "14%",
-            background: `radial-gradient(ellipse, ${g0}60 0%, transparent 70%)`,
-            filter: "blur(6px)",
-            opacity: 0.6,
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-// ─── OrbCluster ───────────────────────────────────────────────────────────────
-function OrbCluster({ slide }: { slide: Slide }) {
-  const orbRefs = useRef<Record<OrbKey, HTMLDivElement | null>>({
-    careers: null,
-    support: null,
-    partners: null,
-  });
-
-  useEffect(() => {
-    const tweens: gsap.core.Tween[] = [];
-    ORBS.forEach((orb, index) => {
-      const node = orbRefs.current[orb.key];
-      if (!node) return;
-      tweens.push(
-        gsap.to(node, {
-          y: index === 2 ? -12 : index === 1 ? 10 : -8,
-          x: index === 1 ? 7 : -6,
-          duration: 4.2 + index * 0.6,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: index * 0.18,
-        }),
-      );
-    });
-    return () => tweens.forEach((t) => t.kill());
-  }, []);
-
-  return (
-    <div className="relative mx-auto aspect-square w-[clamp(16rem,82vw,500px)] sm:w-[min(62vw,500px)]">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={slide.id}
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-[12%] rounded-full blur-3xl"
-          style={{
-            background: `radial-gradient(circle at center,
-              ${ORB_GRADIENTS[slide.highlight][0]}33 0%,
-              ${ORB_GRADIENTS[slide.highlight][1]}22 38%,
-              transparent 72%)`,
-          }}
-        />
-      </AnimatePresence>
-
-      {ORBS.map((orb) => (
-        <FloatingOrb
-          key={orb.key}
-          orb={orb}
-          active={slide.highlight === orb.key}
-          registerRef={(node, key) => {
-            orbRefs.current[key] = node;
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 function useTypewriter(text: string, speed = 45) {
   const [display, setDisplay] = useState("");
@@ -437,9 +190,139 @@ function useTypewriter(text: string, speed = 45) {
   return display;
 }
 
+function CertificateCarousel({
+  currentGradient,
+  certIndex,
+}: {
+  currentGradient: [string, string];
+  certIndex: number;
+}) {
+  const total = CERTIFICATES.length;
+
+  return (
+    <div className="relative h-[24rem] w-full max-w-[46rem] md:h-[28rem]">
+      {CERTIFICATES.map((cert, index) => {
+        const relative = (index - certIndex + total) % total;
+        const slot = relative === 0 ? 0 : relative === 1 ? 1 : -1;
+        const isActive = slot === 0;
+        const isLandscape = cert.orientation === "landscape";
+
+        const width = isLandscape
+          ? isActive
+            ? 360
+            : 292
+          : isActive
+            ? 230
+            : 190;
+
+        const height = isLandscape
+          ? isActive
+            ? 232
+            : 188
+          : isActive
+            ? 328
+            : 272;
+
+        return (
+          <motion.div
+            key={cert.src}
+            initial={false}
+            animate={{
+              x: slot * 134,
+              y: 0,
+              rotateY: slot * -18,
+              width,
+              height,
+              scale: isActive ? 1.04 : 0.86,
+              opacity: isActive ? 1 : 0.6,
+              zIndex: isActive ? 30 : 10,
+            }}
+            transition={{ duration: 0.55, ease: [0.2, 0.8, 0.2, 1] }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.15rem]"
+            style={{
+              boxShadow: isActive
+                ? `0 22px 45px rgba(0,0,0,0.45), 0 0 30px ${currentGradient[0]}55`
+                : "0 14px 30px rgba(0,0,0,0.34)",
+              transformStyle: "preserve-3d",
+              background: "transparent",
+            }}
+          >
+            <Image
+              src={cert.src}
+              alt={cert.alt}
+              fill
+              sizes="(max-width: 768px) 300px, 360px"
+              className="object-contain object-center"
+              priority={index === 0}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.26) 0%, rgba(0,0,0,0.04) 52%, rgba(0,0,0,0) 80%)",
+              }}
+            />
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CountUpStat({
+  value,
+  label,
+  shouldStart,
+  compact = false,
+}: {
+  value: string;
+  label: string;
+  shouldStart: boolean;
+  compact?: boolean;
+}) {
+  const parsed = useMemo(() => parseStat(value), [value]);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!shouldStart) return;
+
+    let frame = 0;
+    const duration = 1450;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      setCurrent(Math.round(parsed.target * eased));
+
+      if (progress < 1) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [shouldStart, parsed.target]);
+
+  return (
+    <div
+      className={compact ? "flex w-full flex-col items-center text-center" : "flex min-w-[9rem] flex-1 flex-col px-2 py-1 md:min-w-0 md:px-5"}
+    >
+      <span className={compact ? "text-[1.4rem] font-semibold leading-none tracking-tight text-white" : "text-[1.15rem] font-semibold leading-none tracking-tight text-white md:text-[2rem]"}>
+        {current}
+        {parsed.suffix}
+      </span>
+      <span className={compact ? "mt-2 w-full whitespace-nowrap text-[0.7rem] leading-tight text-white/85" : "mt-2 text-lg leading-tight text-white/90 md:text-[1rem]"}>{label}</span>
+    </div>
+  );
+}
+
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [certIndex, setCertIndex] = useState(0);
+  const statsRef = useRef<HTMLDivElement | null>(null);
+  const [statsStarted, setStatsStarted] = useState(false);
 
   useEffect(() => {
     const id = window.setInterval(
@@ -448,6 +331,34 @@ export default function Hero() {
     );
     return () => window.clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setCertIndex((current) => (current + 1) % CERTIFICATES.length),
+      2400,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const node = statsRef.current;
+    if (!node || statsStarted) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsStarted(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.45,
+      },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [statsStarted]);
 
   const slide = SLIDES[activeIndex];
 
@@ -474,17 +385,11 @@ export default function Hero() {
           background: `
             radial-gradient(circle at 12% 18%, var(--hero-ambient-1), transparent 30%),
             radial-gradient(circle at 88% 82%, var(--hero-ambient-2), transparent 32%),
-            radial-gradient(circle at 70% 25%, var(--hero-ambient-3), transparent 24%)
+            
           `,
         }}
       />
-      <div
-        className="absolute inset-0 opacity-[0.035] mix-blend-multiply pointer-events-none"
-        style={{
-          backgroundImage:
-            "url('https://grainy-gradients.vercel.app/noise.svg')",
-        }}
-      />
+
       {/* Dot grid */}
       <div
         className="absolute inset-0 -z-10"
@@ -499,9 +404,9 @@ export default function Hero() {
         }}
       />
 
-      <div className="mx-auto grid w-full max-w-[1800px] grid-cols-1 items-center gap-6 px-3 md:px-6 xl:px-[7.5rem] lg:grid-cols-[1.35fr_0.65fr] lg:gap-2">
+      <div className="mx-auto grid w-full  grid-cols-1 items-center gap-6 px-3 md:px-6  lg:grid-cols-[1.05fr_0.95fr] lg:gap-2 ">
         {/* LEFT */}
-        <div className="relative w-full min-w-0">
+        <div className="relative w-full min-w-0 max-w-[960px] ">
           <AnimatePresence mode="wait">
             <div className="rounded-[2rem] p-2 md:p-3 lg:p-4 xl:py-10">
               {/* ── Live Cohort Chip ── */}
@@ -572,11 +477,14 @@ export default function Hero() {
                 className="mt-5 max-w-full text-base font-medium leading-8 md:text-md"
                 style={{ color: "var(--hero-summary)" }}
               >
-                Live, hands-on programs designed to help you build real
-                projects. Learn directly from industry veterans from top-tier
-                companies like Boston Consulting (BCG), Amazon, Microsoft, and
-                Deloitte through fully live interactive classes with real-time
-                mentorship and practical project experience.
+                Live, hands-on programs designed to help you build real-world
+                projects. Learn from industry veterans at{" "}
+                <strong className="text-white">Boston Consulting (BCG)</strong>,{" "}
+                <strong className="text-white">Amazon</strong>,{" "}
+                <strong className="text-white">Microsoft</strong>, and{" "}
+                <strong className="text-white">Deloitte</strong> through
+                interactive live classes, mentorship, and practical project
+                experience.
               </p>
 
               {/* CTA */}
@@ -641,7 +549,7 @@ export default function Hero() {
         </div>
 
         {/* RIGHT */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative mt-8 flex items-center justify-center lg:mt-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={`${slide.id}-halo`}
@@ -655,9 +563,103 @@ export default function Hero() {
               }}
             />
           </AnimatePresence>
-          <div className="relative w-full max-w-[680px] aspect-square rounded-[2.5rem] p-3">
-            <OrbCluster slide={slide} />
+
+          <div className="relative z-10 flex w-full max-w-[48rem] flex-col items-center rounded-[1.8rem]">
+            <p className="mb-4 text-sm font-semibold tracking-[0.2em] uppercase text-white">
+              Certificates & outcomes
+            </p>
+
+            <CertificateCarousel
+              currentGradient={currentGradient}
+              certIndex={certIndex}
+            />
           </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-12 w-full max-w-[1800px] px-3 md:px-6 xl:px-[7.5rem]">
+     
+          <div ref={statsRef}>
+            {/* MOBILE */}
+            <div className="md:hidden">
+              <div
+                className="relative overflow-hidden rounded-[1.4rem] border border-white/10 bg-[rgba(7,10,17,0.94)] backdrop-blur-xl"
+                style={{
+                  boxShadow:
+                    "0 18px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+                }}
+              >
+                {/* Vertical line */}
+                <div
+                  className="absolute left-1/2 top-[12%] h-[76%] w-px -translate-x-1/2"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 80%, transparent)",
+                  }}
+                />
+
+                {/* Horizontal line */}
+                <div
+                  className="absolute top-1/2 left-[12%] h-px w-[76%] -translate-y-1/2"
+                  style={{
+                    background:
+                      "linear-gradient(to right, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 80%, transparent)",
+                  }}
+                />
+
+                {/* Center glow */}
+                <div
+                  className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                  }}
+                />
+
+                {/* Grid */}
+                <div className="relative grid grid-cols-2">
+                  {HERO_STATS.map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex min-h-[7.5rem] items-center justify-center px-4 py-6"
+                    >
+                      <CountUpStat
+                        value={item.value}
+                        label={item.label}
+                        shouldStart={statsStarted}
+                        compact
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* DESKTOP */}
+            <div className="hidden w-full max-w-7xl mx-auto rounded-[1.2rem] px-2 py-4 md:block md:px-3 ">
+              <div className="flex flex-wrap items-center justify-center gap-10 md:flex-nowrap md:gap-16 xl:gap-24">
+                {HERO_STATS.map((item, index) => (
+                  <div key={item.label} className="contents">
+                    <CountUpStat
+                      value={item.value}
+                      label={item.label}
+                      shouldStart={statsStarted}
+                    />
+
+                    {index !== HERO_STATS.length - 1 && (
+                      <div
+                        className="h-14 w-px -rotate-[13deg]"
+                        style={{
+                          background:
+                            "linear-gradient(to bottom, transparent, rgba(255,255,255,0.7), transparent)",
+                        }}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+      
         </div>
       </div>
 

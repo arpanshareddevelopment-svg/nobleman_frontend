@@ -77,10 +77,10 @@ export default function ValuesSection() {
         className="absolute inset-0 top-10 -z-10 blur-3xl"
         style={{
           background: `
-            radial-gradient(circle at 50% 30%, var(--brand-green-glow), transparent 40%),
-            radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 50%)
+          
+            radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 20%)
           `,
-          opacity: 0.9,
+          opacity: 0.5,
         }}
       />
 
@@ -98,7 +98,7 @@ export default function ValuesSection() {
             className="bg-clip-text text-transparent"
             style={{
               backgroundImage:
-                "linear-gradient(120deg, var(--brand-green-light), var(--brand-green-dark))",
+                "linear-gradient(120deg, #84ff3d 0%, #c8ff74 60%, #55c9ff 100%)",
             }}
           >
             Nobleman Learning

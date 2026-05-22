@@ -69,7 +69,7 @@
   --blue-gradient-dark: linear-gradient(135deg, #2ea8ff, #7ed8ff);
 
   /* ─── HERO ──────────────────────────── */
-  --hero-bg: linear-gradient(135deg, #06182b 0%, #02040a 52%, #000000 100%);
+  --hero-bg: linear-gradient(135deg, #04101d 0%, #010309 52%, #000000 100%);
 
   --grid-dot: rgba(255, 255, 255, 0.407);
 
