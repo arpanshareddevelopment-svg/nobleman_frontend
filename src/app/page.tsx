@@ -20,11 +20,9 @@ export default function Home() {
         <Hero />
         <MissionStatement />
         <ValuesSection />
-        <InstructorCarousel />
-
         <ProgramsShowcase />
+        <InstructorCarousel />
         <CertificationsShowcase />
-
         <PlacementStats />
         <WhyNobleMaLearning />
         <Testimonials />

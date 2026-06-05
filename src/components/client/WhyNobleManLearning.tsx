@@ -2,71 +2,127 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Check, X } from "lucide-react";
+import { Check, X, Star } from "lucide-react";
 
 const TABLE_COLUMNS = [
-  { key: "skillxindia", label: "NobleMan", labelClass: "font-bold" },
-  { key: "typical", label: "Online Courses", labelClass: "text-[var(--fg-secondary)]" },
-  { key: "coaching", label: "Coaching", labelClass: "text-[var(--fg-secondary)]" },
+  { key: "nobleman", label: "Nobleman Learning", highlight: true },
+  { key: "online", label: "Online Courses", highlight: false },
+  { key: "coaching", label: "Coaching Centres", highlight: false },
 ];
 
 const COMPARISON_DATA = [
   {
     feature: "Live instructor-led classes",
-    skillxindia: true,
-    typical: false,
+    exclusive: false,
+    nobleman: true,
+    online: false,
     coaching: true,
   },
   {
-    feature: "Courses start from ₹999",
-    skillxindia: true,
-    typical: "₹5k – ₹80k",
-    coaching: true,
-  },
-  {
-    feature: "Industry mentor + real projects",
-    skillxindia: true,
-    typical: false,
+    feature: "Real industry projects + 1:1 mentor",
+    exclusive: false,
+    nobleman: true,
+    online: false,
     coaching: "Partial",
   },
   {
-    feature: "Placement assistance & referrals",
-    skillxindia: true,
-    typical: false,
+    feature: "Physical certificate on request",
+    exclusive: true,
+    nobleman: true,
+    online: false,
+    coaching: false,
+  },
+  {
+    feature: "Detailed project certificate",
+    exclusive: true,
+    nobleman: true,
+    online: false,
+    coaching: false,
+  },
+  {
+    feature: "Interview & operational-round prep",
+    exclusive: true,
+    nobleman: true,
+    online: false,
+    coaching: "Partial",
+  },
+  {
+    feature: "Support continues after you finish",
+    exclusive: true,
+    nobleman: true,
+    online: false,
+    coaching: false,
+  },
+  {
+    feature: "Placement assistance & recruiter referrals",
+    exclusive: false,
+    nobleman: true,
+    online: false,
     coaching: "Limited",
   },
   {
-    feature: "Free demo before paying",
-    skillxindia: true,
-    typical: "Sometimes",
+    feature: "Internship support",
+    exclusive: false,
+    nobleman: true,
+    online: false,
+    coaching: "Limited",
+  },
+  {
+    feature: "Free demo before you pay",
+    exclusive: false,
+    nobleman: true,
+    online: "Sometimes",
+    coaching: false,
+  },
+  {
+    feature: "Lifetime platform access",
+    exclusive: false,
+    nobleman: true,
+    online: "Sometimes",
     coaching: false,
   },
 ];
 
-function ComparisonCell({ value }: { value: boolean | string }) {
+function ComparisonCell({
+  value,
+  isHighlight,
+}: {
+  value: boolean | string;
+  isHighlight: boolean;
+}) {
   if (value === true) {
     return (
-      <Check size={20} className="mx-auto text-[var(--brand-green-dark)]" />
+      <div className="flex justify-center">
+        <Check
+          size={20}
+          strokeWidth={2.5}
+          style={{ color: isHighlight ? "#84ff3d" : "#84ff3d" }}
+        />
+      </div>
     );
   }
 
   if (value === false) {
-    return <X size={20} className="mx-auto text-red-400" />;
+    return (
+      <div className="flex justify-center">
+        <X size={18} strokeWidth={2.5} style={{ color: "#ff4d4d" }} />
+      </div>
+    );
   }
 
   return (
-    <span
-      className="rounded-full px-3 py-1 text-xs sm:text-sm"
-      style={{
-        background:
-          "linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.20))",
-        border: "1px solid rgba(255,255,255,0.45)",
-        backdropFilter: "blur(16px)",
-        color: "var(--fg-secondary)",
-      }}
-    >
-      {value}
-    </span>
+    <div className="flex justify-center">
+      <span
+        className="rounded-full px-3 py-[3px] text-[11px] font-medium"
+        style={{
+          background: "rgba(255,255,255,0.07)",
+          border: "1px solid rgba(255,255,255,0.14)",
+          color: "rgba(255,255,255,0.55)",
+        }}
+      >
+        {value}
+      </span>
+    </div>
   );
 }
 
@@ -79,165 +135,300 @@ export default function WhyNobleManLearning() {
       id="why"
       ref={ref}
       className="relative isolate overflow-hidden py-14 md:py-28"
-      style={{
-        background: `
-          linear-gradient(180deg, #05060a 0%, #070b12 45%, #05070d 100%)
-        `,
-      }}
+      style={{ background: "#08090c" }}
     >
-      {/* Ambient blobs */}
+      {/* Dot grid */}
       <div
-        className="absolute inset-0 -z-20"
+        className="absolute inset-0 -z-10 pointer-events-none"
         style={{
-          background: `
-            radial-gradient(circle at 12% 18%, rgba(46,168,255,0.10), transparent 30%),
-            radial-gradient(circle at 88% 82%, rgba(132,255,61,0.08), transparent 32%),
-            radial-gradient(circle at 70% 25%, rgba(255,208,64,0.08), transparent 24%)
-          `,
+          backgroundImage:
+            "radial-gradient(circle, rgba(255,255,255,0.028) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
         }}
       />
 
-      {/* Dot grid */}
+      {/* Ambient glow */}
       <div
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 -z-10 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, var(--grid-dot) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-          maskImage:
-            "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.92) 58%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.92) 58%, transparent 100%)",
+          background:
+            "radial-gradient(ellipse at 50% 60%, rgba(132,255,61,0.05), transparent 55%)",
         }}
       />
 
       <div className="relative z-[2] mx-auto max-w-6xl px-4 sm:px-6">
-        {/* HEADER */}
-        <motion.h2
+        {/* Header */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.45 }}
-          className="mb-10 text-center text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-tight text-[var(--fg-primary)]"
+          className="mb-12 text-center"
         >
-          Why{" "}
-          <span
-            className="bg-clip-text text-transparent"
-            style={{
-              backgroundImage:
-                "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)",
-            }}
+          <div
+            className="mb-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]"
+            style={{ color: "#84ff3d" }}
           >
-            NobleMan Learning
-          </span>
-        </motion.h2>
+            <span className="h-[1.5px] w-5" style={{ background: "#84ff3d" }} />
+            Why Choose Us
+            <span className="h-[1.5px] w-5" style={{ background: "#84ff3d" }} />
+          </div>
+          <h2
+            className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-tight"
+            style={{ color: "var(--fg-primary, #f0f6ff)" }}
+          >
+            Why{" "}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)",
+              }}
+            >
+              NobleMan Learning
+            </span>
+          </h2>
+        </motion.div>
 
-        {/* DESKTOP TABLE */}
+        {/* ── DESKTOP TABLE ── */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
-          transition={{ duration: 0.45 }}
-          className="hidden overflow-hidden rounded-[2rem] md:block"
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={{ duration: 0.5, delay: 0.08 }}
+          className="hidden overflow-hidden rounded-2xl md:block"
           style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)",
             border: "1px solid rgba(255,255,255,0.08)",
-            backdropFilter: "blur(28px)",
-            WebkitBackdropFilter: "blur(28px)",
-            boxShadow:
-              "0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.02)",
           }}
         >
-          <table className="w-full">
+          <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-[var(--border)]">
-                <th className="p-5 text-left text-sm font-bold text-[var(--fg-secondary)]">
+              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+                {/* Features label */}
+                <th
+                  className="p-5 text-left text-[10px] font-bold uppercase tracking-[0.18em]"
+                  style={{ color: "rgba(255,255,255,0.35)", width: "36%" }}
+                >
                   Features
                 </th>
-                {TABLE_COLUMNS.map((col, idx) => (
+
+                {TABLE_COLUMNS.map((col) => (
                   <th
                     key={col.key}
-                    className={`p-5 text-center text-sm ${col.labelClass}`}
+                    className="p-5 text-center text-[11px] font-bold uppercase tracking-[0.14em]"
+                    style={{
+                      width: "21.3%",
+                      background: col.highlight
+                        ? "rgba(132,255,61,0.06)"
+                        : "transparent",
+                      borderLeft: col.highlight
+                        ? "1px solid rgba(132,255,61,0.18)"
+                        : "1px solid rgba(255,255,255,0.06)",
+                      borderRight: col.highlight
+                        ? "1px solid rgba(132,255,61,0.18)"
+                        : "none",
+                      color: col.highlight
+                        ? "#84ff3d"
+                        : "rgba(255,255,255,0.4)",
+                    }}
                   >
-                    {idx === 0 ? (
-                      <span
-                        className="bg-clip-text text-transparent"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)",
-                        }}
-                      >
-                        {col.label}
-                      </span>
-                    ) : (
-                      col.label
-                    )}
+                    {col.label}
                   </th>
                 ))}
               </tr>
             </thead>
+
             <tbody>
               {COMPARISON_DATA.map((row, i) => (
                 <motion.tr
                   key={i}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="border-b border-[var(--border)] transition last:border-0 hover:bg-white/5"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={
+                    inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }
+                  }
+                  transition={{ delay: 0.1 + i * 0.04 }}
+                  className="group transition-colors duration-150"
+                  style={{
+                    borderBottom:
+                      i < COMPARISON_DATA.length - 1
+                        ? "1px solid rgba(255,255,255,0.05)"
+                        : "none",
+                  }}
                 >
-                  <td className="p-5 font-medium text-[var(--fg-primary)]">
-                    {row.feature}
+                  {/* Feature label */}
+                  <td className="p-5">
+                    <div className="flex items-center gap-2.5">
+                      {row.exclusive && (
+                        <Star
+                          size={13}
+                          fill="#ffcf33"
+                          stroke="none"
+                          style={{ flexShrink: 0 }}
+                        />
+                      )}
+                      <span
+                        className="text-[0.9rem] font-medium leading-snug"
+                        style={{
+                          color: row.exclusive
+                            ? "var(--fg-primary, #f0f6ff)"
+                            : "rgba(255,255,255,0.75)",
+                          fontWeight: row.exclusive ? 700 : 500,
+                        }}
+                      >
+                        {row.feature}
+                      </span>
+                      {row.exclusive && (
+                        <span
+                          className="ml-1 rounded-full px-2.5 py-[3px] text-[9px] font-bold uppercase tracking-[0.12em]"
+                          style={{
+                            background: "rgba(255,207,51,0.12)",
+                            border: "1px solid rgba(255,207,51,0.35)",
+                            color: "#ffcf33",
+                          }}
+                        >
+                          Only at Nobleman
+                        </span>
+                      )}
+                    </div>
                   </td>
-                  {TABLE_COLUMNS.map((col) => (
-                    <td key={col.key} className="p-5 text-center">
-                      <ComparisonCell
-                        value={row[col.key as keyof typeof row] as boolean | string}
-                      />
-                    </td>
-                  ))}
+
+                  {/* Nobleman column */}
+                  <td
+                    className="p-5 transition-colors duration-150 group-hover:bg-[rgba(132,255,61,0.05)]"
+                    style={{
+                      background: "rgba(132,255,61,0.04)",
+                      borderLeft: "1px solid rgba(132,255,61,0.18)",
+                      borderRight: "1px solid rgba(132,255,61,0.18)",
+                    }}
+                  >
+                    <ComparisonCell value={row.nobleman} isHighlight={true} />
+                  </td>
+
+                  {/* Online courses */}
+                  <td
+                    className="p-5 transition-colors duration-150 group-hover:bg-white/[0.02]"
+                    style={{ borderLeft: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <ComparisonCell value={row.online} isHighlight={false} />
+                  </td>
+
+                  {/* Coaching centres */}
+                  <td className="p-5 transition-colors duration-150 group-hover:bg-white/[0.02]">
+                    <ComparisonCell value={row.coaching} isHighlight={false} />
+                  </td>
                 </motion.tr>
               ))}
             </tbody>
           </table>
+
+          {/* Footer bar */}
+          <div
+            className="flex items-center justify-between px-5 py-4"
+            style={{
+              borderTop: "1px solid rgba(255,255,255,0.07)",
+              background: "rgba(255,255,255,0.015)",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <Star size={12} fill="#ffcf33" stroke="none" />
+              <span
+                className="text-[11px] font-semibold uppercase tracking-[0.14em]"
+                style={{ color: "#ffcf33" }}
+              >
+                Exclusive to Nobleman Learning
+              </span>
+            </div>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
+              The teaching of a classroom · the flexibility of online · the
+              outcomes nobody else commits to
+            </p>
+          </div>
         </motion.div>
 
-        {/* MOBILE */}
-        <div className="space-y-4 md:hidden">
+        {/* ── MOBILE CARDS ── */}
+        <div className="space-y-3 md:hidden">
           {COMPARISON_DATA.map((row, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 14 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
               transition={{ delay: i * 0.05 }}
-              className="rounded-[2rem] p-5"
+              className="overflow-hidden rounded-xl"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                backdropFilter: "blur(24px)",
-                boxShadow:
-                  "0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
-              <h3 className="mb-5 text-base font-semibold leading-relaxed text-[var(--fg-primary)]">
-                {row.feature}
-              </h3>
-              <div className="space-y-4">
+              {/* Feature name */}
+              <div
+                className="flex items-center gap-2 px-4 py-3"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+              >
+                {row.exclusive && (
+                  <Star size={12} fill="#ffcf33" stroke="none" />
+                )}
+                <span
+                  className="text-sm font-semibold leading-snug"
+                  style={{ color: "var(--fg-primary, #f0f6ff)" }}
+                >
+                  {row.feature}
+                </span>
+                {row.exclusive && (
+                  <span
+                    className="ml-auto rounded-full px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.1em]"
+                    style={{
+                      background: "rgba(255,207,51,0.12)",
+                      border: "1px solid rgba(255,207,51,0.3)",
+                      color: "#ffcf33",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Only at Nobleman
+                  </span>
+                )}
+              </div>
+
+              {/* Columns */}
+              <div className="divide-y divide-white/[0.06]">
                 {TABLE_COLUMNS.map((col) => (
                   <div
                     key={col.key}
-                    className="flex items-center justify-between gap-4 border-b border-[var(--border)] pb-3 last:border-0 last:pb-0"
+                    className="flex items-center justify-between px-4 py-3"
+                    style={{
+                      background: col.highlight
+                        ? "rgba(132,255,61,0.04)"
+                        : "transparent",
+                    }}
                   >
-                    <span className={`text-sm ${col.labelClass}`}>
+                    <span
+                      className="text-[11px] font-medium uppercase tracking-[0.1em]"
+                      style={{
+                        color: col.highlight
+                          ? "#84ff3d"
+                          : "rgba(255,255,255,0.4)",
+                      }}
+                    >
                       {col.label}
                     </span>
                     <ComparisonCell
-                      value={row[col.key as keyof typeof row] as boolean | string}
+                      value={
+                        row[col.key as keyof typeof row] as boolean | string
+                      }
+                      isHighlight={col.highlight}
                     />
                   </div>
                 ))}
               </div>
             </motion.div>
           ))}
+
+          {/* Mobile footer */}
+          <p
+            className="pt-2 text-center text-[11px]"
+            style={{ color: "rgba(255,255,255,0.3)" }}
+          >
+            The teaching of a classroom · the flexibility of online · the
+            outcomes nobody else commits to
+          </p>
         </div>
       </div>
     </section>

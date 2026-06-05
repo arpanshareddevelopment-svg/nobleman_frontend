@@ -32,8 +32,8 @@ const SECTION_COLORS: SectionColor[] = [
 // ─── Nav links ────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
   { href: "#programs", label: "Programs", short: "Programs" },
-  { href: "#subscriptions", label: "Subscriptions", short: "Subscriptions" },
-  { href: "#resources", label: "Resources", short: "Resources" },
+  { href: "#reviewss", label: "Reviewss", short: "Reviewss" },
+  { href: "#jobBoard", label: "JobBoard", short: "Job board" },
 ];
 
 // ─── User dropdown links ──────────────────────────────────────────────────────
@@ -62,7 +62,11 @@ function BrandLogo({
     return (
       <div
         className="relative flex items-center justify-center transition-all duration-300 rounded-full overflow-hidden"
-        style={{ height: isMobile ? 34 : 52, width: displayWidth, background: "transparent" }}
+        style={{
+          height: isMobile ? 34 : 52,
+          width: displayWidth,
+          background: "transparent",
+        }}
       />
     );
   }
@@ -72,7 +76,11 @@ function BrandLogo({
   return (
     <div
       className="relative flex items-center justify-center transition-all duration-300 rounded-full overflow-hidden"
-      style={{ height: isMobile ? 34 : 52, width: displayWidth, background: "transparent" }}
+      style={{
+        height: isMobile ? 34 : 52,
+        width: displayWidth,
+        background: "transparent",
+      }}
     >
       <Image
         src={src}
@@ -93,7 +101,8 @@ function UserAvatar({ userName = "Alex Johnson" }: { userName?: string }) {
 
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -133,7 +142,12 @@ function UserAvatar({ userName = "Alex Johnson" }: { userName?: string }) {
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 360, damping: 28, mass: 0.65 }}
+            transition={{
+              type: "spring",
+              stiffness: 360,
+              damping: 28,
+              mass: 0.65,
+            }}
             className="absolute right-0 top-[calc(100%+10px)] rounded-2xl overflow-hidden"
             style={{
               width: 244,
@@ -141,23 +155,38 @@ function UserAvatar({ userName = "Alex Johnson" }: { userName?: string }) {
               backdropFilter: "blur(22px)",
               WebkitBackdropFilter: "blur(22px)",
               border: "1px solid rgba(200,255,0,0.20)",
-              boxShadow: "0 12px 48px rgba(0,0,0,0.22), 0 0 0 1px rgba(200,255,0,0.08)",
+              boxShadow:
+                "0 12px 48px rgba(0,0,0,0.22), 0 0 0 1px rgba(200,255,0,0.08)",
               zIndex: 100,
             }}
           >
             {/* Header */}
-            <div className="px-4 py-3.5 border-b flex items-center gap-3" style={{ borderColor: "rgba(200,255,0,0.14)" }}>
+            <div
+              className="px-4 py-3.5 border-b flex items-center gap-3"
+              style={{ borderColor: "rgba(200,255,0,0.14)" }}
+            >
               <span
                 className="flex-shrink-0 flex items-center justify-center rounded-full text-xs font-bold"
-                style={{ width: 32, height: 32, background: avatarBg, color: avatarFg }}
+                style={{
+                  width: 32,
+                  height: 32,
+                  background: avatarBg,
+                  color: avatarFg,
+                }}
               >
                 <User size={14} strokeWidth={2.3} />
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] opacity-40 font-medium leading-none mb-1" style={{ color: "var(--fg-primary)" }}>
+                <p
+                  className="text-[11px] opacity-40 font-medium leading-none mb-1"
+                  style={{ color: "var(--fg-primary)" }}
+                >
                   Signed in as
                 </p>
-                <p className="text-sm font-semibold truncate leading-none" style={{ color: "#749401b3" }}>
+                <p
+                  className="text-sm font-semibold truncate leading-none"
+                  style={{ color: "#749401b3" }}
+                >
                   Hi, {userName.split(" ")[0]} 👋
                 </p>
               </div>
@@ -172,25 +201,53 @@ function UserAvatar({ userName = "Alex Johnson" }: { userName?: string }) {
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm transition-all duration-150 group"
                   style={{ color: "var(--fg-primary)" }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(200,255,0,0.07)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background =
+                      "rgba(200,255,0,0.07)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background =
+                      "transparent";
+                  }}
                 >
-                  <Icon size={14} strokeWidth={1.8} className="flex-shrink-0 opacity-75 group-hover:opacity-100 transition-opacity" style={{ color: "#c8ff00" }} />
-                  <span className="opacity-65 group-hover:opacity-100 transition-opacity">{label}</span>
+                  <Icon
+                    size={14}
+                    strokeWidth={1.8}
+                    className="flex-shrink-0 opacity-75 group-hover:opacity-100 transition-opacity"
+                    style={{ color: "#c8ff00" }}
+                  />
+                  <span className="opacity-65 group-hover:opacity-100 transition-opacity">
+                    {label}
+                  </span>
                 </Link>
               ))}
             </div>
 
             {/* Logout */}
-            <div className="px-2 pb-2.5 pt-1 border-t" style={{ borderColor: "rgba(200,255,0,0.10)" }}>
+            <div
+              className="px-2 pb-2.5 pt-1 border-t"
+              style={{ borderColor: "rgba(200,255,0,0.10)" }}
+            >
               <button
                 className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm transition-all duration-150 group"
                 style={{ color: "#ff6b6b" }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(255,107,107,0.10)"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background =
+                    "rgba(255,107,107,0.10)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background =
+                    "transparent";
+                }}
               >
-                <LogOut size={14} strokeWidth={1.8} className="opacity-80 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                <span className="opacity-90 group-hover:opacity-100 transition-opacity font-medium">Logout</span>
+                <LogOut
+                  size={14}
+                  strokeWidth={1.8}
+                  className="opacity-80 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                />
+                <span className="opacity-90 group-hover:opacity-100 transition-opacity font-medium">
+                  Logout
+                </span>
               </button>
             </div>
           </motion.div>
@@ -201,17 +258,25 @@ function UserAvatar({ userName = "Alex Johnson" }: { userName?: string }) {
 }
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
-export default function Navbar({ userName = "Alex Johnson" }: { userName?: string }) {
+export default function Navbar({
+  userName = "Alex Johnson",
+}: {
+  userName?: string;
+}) {
   const [isAtTop, setIsAtTop] = useState(true);
   const [hovered, setHovered] = useState(false);
   const [clickedOpen, setClickedOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [sectionColor, setSectionColor] = useState<SectionColor>(SECTION_COLORS[0]);
+  const [sectionColor, setSectionColor] = useState<SectionColor>(
+    SECTION_COLORS[0],
+  );
   const [isMobile, setIsMobile] = useState(false);
 
   const navRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!mounted) return;
@@ -228,7 +293,8 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
       let active = SECTION_COLORS[0];
       for (const s of SECTION_COLORS) {
         const el = document.getElementById(s.id);
-        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) active = s;
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5)
+          active = s;
       }
       setSectionColor(active);
     };
@@ -239,11 +305,17 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
 
   useEffect(() => {
     function handleOutsideClick(e: MouseEvent) {
-      if (clickedOpen && navRef.current && !navRef.current.contains(e.target as Node)) {
+      if (
+        clickedOpen &&
+        navRef.current &&
+        !navRef.current.contains(e.target as Node)
+      ) {
         setClickedOpen(false);
       }
     }
-    function handleScrollClose() { if (clickedOpen) setClickedOpen(false); }
+    function handleScrollClose() {
+      if (clickedOpen) setClickedOpen(false);
+    }
     document.addEventListener("mousedown", handleOutsideClick);
     window.addEventListener("scroll", handleScrollClose, { passive: true });
     return () => {
@@ -264,19 +336,26 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
     if (isMobile) return;
     if (isAtTop) return;
     const rel = e.relatedTarget;
-    if (navRef.current && rel instanceof Node && navRef.current.contains(rel)) return;
+    if (navRef.current && rel instanceof Node && navRef.current.contains(rel))
+      return;
     setHovered(false);
     setClickedOpen(false);
   }
 
   function handleNavClick() {
-    if (isMobile) { setClickedOpen(true); return; }
+    if (isMobile) {
+      setClickedOpen(true);
+      return;
+    }
     if (!isAtTop) setClickedOpen((p) => !p);
   }
 
   function handleBrandClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    if (isMobile) { setClickedOpen(true); return; }
+    if (isMobile) {
+      setClickedOpen(true);
+      return;
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
     setHovered(false);
     setClickedOpen(false);
@@ -286,7 +365,9 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
     <>
       <UserAvatar userName={userName} />
 
-      <div className={`fixed z-50 ${isMobile ? "left-4 top-4" : "left-5 top-3"}`}>
+      <div
+        className={`fixed z-50 ${isMobile ? "left-4 top-4" : "left-5 top-3"}`}
+      >
         <motion.nav
           ref={navRef}
           aria-label="Main navigation"
@@ -294,10 +375,21 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
           onMouseLeave={handleNavMouseLeave}
           onClick={handleNavClick}
           animate={{
-            width: isOpen ? (isMobile ? mobilePillWidth : 580) : (isMobile ? 40 : 52),
-            height: isOpen ? (isMobile ? 46 : 64) : (isMobile ? 40 : 52),
+            width: isOpen
+              ? isMobile
+                ? mobilePillWidth
+                : 580
+              : isMobile
+                ? 40
+                : 52,
+            height: isOpen ? (isMobile ? 46 : 64) : isMobile ? 40 : 52,
           }}
-          transition={{ type: "spring", stiffness: 220, damping: 24, mass: 0.9 }}
+          transition={{
+            type: "spring",
+            stiffness: 220,
+            damping: 24,
+            mass: 0.9,
+          }}
           className="relative flex items-center justify-center rounded-full border"
           style={{
             background: isOpen
@@ -308,7 +400,9 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
             boxShadow: isOpen
               ? `0 0 0 1px ${sectionColor.color}40, var(--shadow-nav)`
               : `0 0 0 1px ${sectionColor.color}, 0 0 16px ${sectionColor.glow}, var(--shadow-nav)`,
-            borderColor: isOpen ? `${sectionColor.color}40` : sectionColor.color,
+            borderColor: isOpen
+              ? `${sectionColor.color}40`
+              : sectionColor.color,
             overflow: "visible",
             paddingLeft: 0,
             paddingRight: isOpen ? (isMobile ? 4 : 8) : 0,
@@ -327,13 +421,19 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
                 style={
                   !isOpen
                     ? {
-                        boxShadow: hovered ? `0 0 0 2px ${sectionColor.color}, 0 0 20px ${sectionColor.glow}` : "none",
+                        boxShadow: hovered
+                          ? `0 0 0 2px ${sectionColor.color}, 0 0 20px ${sectionColor.glow}`
+                          : "none",
                         background: hovered ? sectionColor.glow : "transparent",
                       }
                     : {}
                 }
               >
-                <BrandLogo isOpen={isOpen} mounted={mounted} isMobile={isMobile} />
+                <BrandLogo
+                  isOpen={isOpen}
+                  mounted={mounted}
+                  isMobile={isMobile}
+                />
               </button>
             </div>
 
@@ -354,7 +454,10 @@ export default function Navbar({ userName = "Alex Johnson" }: { userName?: strin
                       <Link
                         key={href}
                         href={href}
-                        onClick={(e) => { e.stopPropagation(); setClickedOpen(false); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setClickedOpen(false);
+                        }}
                         className="opacity-75 hover:opacity-100 transition-opacity whitespace-nowrap"
                       >
                         {isMobile ? short : label}

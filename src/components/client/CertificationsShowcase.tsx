@@ -209,11 +209,11 @@ export default function CertificationsShowcase() {
           className="mt-16 text-center"
         >
           <p className="text-lg mb-6" style={{ color: "var(--fg-secondary)" }}>
-            12,000+ certificates issued • 92% career growth • 400+ hiring
-            partners trust our credentials
+            8000+ certificates issued • 92% career growth • 400+ hiring partners
+            trust our credentials
           </p>
           <button
-            className="px-8 py-3 rounded-full font-bold text-white transition-all duration-200 hover:-translate-y-2 hover:scale-[1.02] active:scale-95"
+            className="cursor-pointer px-8 py-3 rounded-full font-bold text-white transition-all duration-200 hover:-translate-y-2 hover:scale-[1.02] active:scale-95"
             style={{
               background:
                 "linear-gradient(135deg, var(--brand-blue-light), var(--brand-blue-dark))",

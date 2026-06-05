@@ -126,7 +126,7 @@ export default function MissionStatement() {
             className="mt-5 max-w-full text-base md:text-xl leading-[1.8] text-[var(--fg-secondary)]"
           >
             Our support doesn&apos;t end with your certificate. Our mentors stay
-            with you — through your first interview, your first offer, and every
+            with you - through your first interview, your first offer, and every
             milestone that follows.
           </motion.p>
 

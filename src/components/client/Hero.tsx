@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Radio, Sparkles } from "lucide-react";
@@ -39,8 +34,8 @@ const SLIDES: Slide[] = [
   {
     id: "green",
     tag: "Green",
-    titleTop: "Mentorship that moves",
-    titleBottom: "at the pace of momentum.",
+    titleTop: "If you're dreaming",
+    titleBottom: "make sure you dream big.",
     cta: "Explore Courses",
     solid: "#84ff3d",
     highlight: "support",
@@ -48,8 +43,8 @@ const SLIDES: Slide[] = [
   {
     id: "yellow",
     tag: "Yellow",
-    titleTop: "Hiring outcomes",
-    titleBottom: "with staying power.",
+    titleTop: "Learn today",
+    titleBottom: "empower & lead tomorrow.",
     cta: "Explore Courses",
     solid: "#ffcf33",
     highlight: "partners",
@@ -75,7 +70,7 @@ const CERTIFICATES: Certificate[] = [
 ];
 
 const HERO_STATS = [
-  { value: "15000+", label: "Careers Transformed" },
+  { value: "8000+", label: "Careers Transformed" },
   { value: "100%", label: "Placement Support" },
   { value: "400+", label: "Hiring Partners" },
   { value: "97%", label: "Reported Salary Hike" },
@@ -86,8 +81,6 @@ function parseStat(value: string) {
   const suffix = value.includes("%") ? "%" : value.includes("+") ? "+" : "";
   return { target, suffix };
 }
-
-
 
 // ─── Mentor accent map ────────────────────────────────────────────────────────
 const MENTOR_ACCENT = {
@@ -168,7 +161,6 @@ function LiveCohortChip() {
   );
 }
 
-
 function useTypewriter(text: string, speed = 45) {
   const [display, setDisplay] = useState("");
 
@@ -200,7 +192,7 @@ function CertificateCarousel({
   const total = CERTIFICATES.length;
 
   return (
-    <div className="relative h-[24rem] w-full max-w-[46rem] md:h-[28rem]">
+    <div className="relative h-[24rem] w-full max-w-[46rem]">
       {CERTIFICATES.map((cert, index) => {
         const relative = (index - certIndex + total) % total;
         const slot = relative === 0 ? 0 : relative === 1 ? 1 : -1;
@@ -238,7 +230,7 @@ function CertificateCarousel({
               zIndex: isActive ? 30 : 10,
             }}
             transition={{ duration: 0.55, ease: [0.2, 0.8, 0.2, 1] }}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.15rem]"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden  rounded-[1.15rem]"
             style={{
               boxShadow: isActive
                 ? `0 22px 45px rgba(0,0,0,0.45), 0 0 30px ${currentGradient[0]}55`
@@ -306,13 +298,31 @@ function CountUpStat({
 
   return (
     <div
-      className={compact ? "flex w-full flex-col items-center text-center" : "flex min-w-[9rem] flex-1 flex-col px-2 py-1 md:min-w-0 md:px-5"}
+      className={
+        compact
+          ? "flex w-full flex-col items-center text-center"
+          : "flex min-w-[9rem] flex-1 flex-col px-2 py-1 md:min-w-0 md:px-5"
+      }
     >
-      <span className={compact ? "text-[1.4rem] font-semibold leading-none tracking-tight text-white" : "text-[1.15rem] font-semibold leading-none tracking-tight text-white md:text-[2rem]"}>
+      <span
+        className={
+          compact
+            ? "text-[1.4rem] font-semibold leading-none tracking-tight text-white"
+            : "text-[1.15rem] font-semibold leading-none tracking-tight text-white md:text-[2rem]"
+        }
+      >
         {current}
         {parsed.suffix}
       </span>
-      <span className={compact ? "mt-2 w-full whitespace-nowrap text-[0.7rem] leading-tight text-white/85" : "mt-2 text-lg leading-tight text-white/90 md:text-[1rem]"}>{label}</span>
+      <span
+        className={
+          compact
+            ? "mt-2 w-full whitespace-nowrap text-[0.7rem] leading-tight text-white/85"
+            : "mt-2 text-lg leading-tight text-white/90 md:text-[1rem]"
+        }
+      >
+        {label}
+      </span>
     </div>
   );
 }
@@ -375,7 +385,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative isolate overflow-hidden py-0 md:py-12 lg:py-0 min-h-screen flex flex-col justify-center"
+      className="relative isolate overflow-x-hidden py-0 md:py-12 lg:py-0 min-h-screen flex flex-col justify-cente "
       style={{ background: "var(--hero-bg)" }}
     >
       {/* Ambient blobs */}
@@ -404,11 +414,11 @@ export default function Hero() {
         }}
       />
 
-      <div className="mx-auto grid w-full  grid-cols-1 items-center gap-6 px-3 md:px-6  lg:grid-cols-[1.05fr_0.95fr] lg:gap-2 ">
+      <div className="mx-auto grid w-full  grid-cols-1 items-center gap-6 px-3 md:px-6  lg:grid-cols-[1.05fr_0.95fr] lg:gap-2  mt-20">
         {/* LEFT */}
         <div className="relative w-full min-w-0 max-w-[960px] ">
           <AnimatePresence mode="wait">
-            <div className="rounded-[2rem] p-2 md:p-3 lg:p-4 xl:py-10">
+            <div className="rounded-[2rem] px-20">
               {/* ── Live Cohort Chip ── */}
               <LiveCohortChip />
 
@@ -436,41 +446,6 @@ export default function Hero() {
                   <span className="animate-pulse">|</span>
                 </span>
               </motion.h1>
-
-              {/* Mentor badge */}
-              <div
-                className="relative mt-6 inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-500 overflow-hidden"
-                style={{
-                  background: "var(--mentor-bg)",
-                  border: `1px solid ${accent.border}`,
-                  boxShadow: `0 0 0 1px ${accent.text}18, 0 4px 28px ${accent.text}40, inset 0 1px 0 rgba(255,255,255,0.12)`,
-                }}
-              >
-                <div
-                  className="absolute inset-x-0 top-0 h-px pointer-events-none"
-                  style={{
-                    background: `linear-gradient(90deg, transparent 10%, ${accent.text}99 50%, transparent 90%)`,
-                  }}
-                />
-                <Sparkles
-                  size={18}
-                  style={{
-                    color: accent.text,
-                    filter: `drop-shadow(0 0 6px ${accent.text})`,
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  className="text-sm font-semibold md:text-[1.02rem] bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: accent.gradient,
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Ongoing mentor support for 6 months, even after placement.
-                </span>
-              </div>
 
               {/* Summary */}
               <p
@@ -549,7 +524,7 @@ export default function Hero() {
         </div>
 
         {/* RIGHT */}
-        <div className="relative mt-8 flex items-center justify-center lg:mt-0">
+        <div className="  flex items-center justify-center overflow-visible ">
           <AnimatePresence mode="wait">
             <motion.div
               key={`${slide.id}-halo`}
@@ -558,9 +533,6 @@ export default function Hero() {
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.4 }}
               className="absolute inset-0 rounded-[2.5rem]"
-              style={{
-                background: `radial-gradient(circle at center, ${currentGradient[0]}18 0%, ${currentGradient[1]}10 42%, transparent 72%)`,
-              }}
             />
           </AnimatePresence>
 
@@ -573,93 +545,126 @@ export default function Hero() {
               currentGradient={currentGradient}
               certIndex={certIndex}
             />
+
+            {/* Mentor badge */}
+            <div
+              className="relative mt-6 inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-500 overflow-hidden"
+              style={{
+                background: "var(--mentor-bg)",
+                border: `1px solid ${accent.border}`,
+                boxShadow: `0 0 0 1px ${accent.text}18, 0 4px 28px ${accent.text}40, inset 0 1px 0 rgba(255,255,255,0.12)`,
+              }}
+            >
+              <div
+                className="absolute inset-x-0 top-0 h-px pointer-events-none"
+                style={{
+                  background: `linear-gradient(90deg, transparent 10%, ${accent.text}99 50%, transparent 90%)`,
+                }}
+              />
+              <Sparkles
+                size={18}
+                style={{
+                  color: accent.text,
+                  filter: `drop-shadow(0 0 6px ${accent.text})`,
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                className="text-sm font-semibold md:text-[1.02rem] bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: accent.gradient,
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                }}
+              >
+                Ongoing mentor support for 6 months, even after placement.
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="mx-auto mt-12 w-full max-w-[1800px] px-3 md:px-6 xl:px-[7.5rem]">
-     
-          <div ref={statsRef}>
-            {/* MOBILE */}
-            <div className="md:hidden">
+        <div ref={statsRef}>
+          {/* MOBILE */}
+          <div className="md:hidden">
+            <div
+              className="relative overflow-hidden rounded-[1.4rem] border border-white/10 bg-[rgba(7,10,17,0.94)] backdrop-blur-xl"
+              style={{
+                boxShadow:
+                  "0 18px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+              }}
+            >
+              {/* Vertical line */}
               <div
-                className="relative overflow-hidden rounded-[1.4rem] border border-white/10 bg-[rgba(7,10,17,0.94)] backdrop-blur-xl"
+                className="absolute left-1/2 top-[12%] h-[76%] w-px -translate-x-1/2"
                 style={{
-                  boxShadow:
-                    "0 18px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+                  background:
+                    "linear-gradient(to bottom, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 80%, transparent)",
                 }}
-              >
-                {/* Vertical line */}
-                <div
-                  className="absolute left-1/2 top-[12%] h-[76%] w-px -translate-x-1/2"
-                  style={{
-                    background:
-                      "linear-gradient(to bottom, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 80%, transparent)",
-                  }}
-                />
+              />
 
-                {/* Horizontal line */}
-                <div
-                  className="absolute top-1/2 left-[12%] h-px w-[76%] -translate-y-1/2"
-                  style={{
-                    background:
-                      "linear-gradient(to right, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 80%, transparent)",
-                  }}
-                />
+              {/* Horizontal line */}
+              <div
+                className="absolute top-1/2 left-[12%] h-px w-[76%] -translate-y-1/2"
+                style={{
+                  background:
+                    "linear-gradient(to right, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 80%, transparent)",
+                }}
+              />
 
-                {/* Center glow */}
-                <div
-                  className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                  }}
-                />
+              {/* Center glow */}
+              <div
+                className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                }}
+              />
 
-                {/* Grid */}
-                <div className="relative grid grid-cols-2">
-                  {HERO_STATS.map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex min-h-[7.5rem] items-center justify-center px-4 py-6"
-                    >
-                      <CountUpStat
-                        value={item.value}
-                        label={item.label}
-                        shouldStart={statsStarted}
-                        compact
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* DESKTOP */}
-            <div className="hidden w-full max-w-7xl mx-auto rounded-[1.2rem] px-2 py-4 md:block md:px-3 ">
-              <div className="flex flex-wrap items-center justify-center gap-10 md:flex-nowrap md:gap-16 xl:gap-24">
-                {HERO_STATS.map((item, index) => (
-                  <div key={item.label} className="contents">
+              {/* Grid */}
+              <div className="relative grid grid-cols-2">
+                {HERO_STATS.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex min-h-[7.5rem] items-center justify-center px-4 py-6"
+                  >
                     <CountUpStat
                       value={item.value}
                       label={item.label}
                       shouldStart={statsStarted}
+                      compact
                     />
-
-                    {index !== HERO_STATS.length - 1 && (
-                      <div
-                        className="h-14 w-px -rotate-[13deg]"
-                        style={{
-                          background:
-                            "linear-gradient(to bottom, transparent, rgba(255,255,255,0.7), transparent)",
-                        }}
-                        aria-hidden="true"
-                      />
-                    )}
                   </div>
                 ))}
               </div>
             </div>
-      
+          </div>
+
+          {/* DESKTOP */}
+          <div className="hidden w-full max-w-7xl mx-auto rounded-[1.2rem] px-2 py-4 md:block md:px-3 ">
+            <div className="flex flex-wrap items-center justify-center gap-10 md:flex-nowrap md:gap-16 xl:gap-24">
+              {HERO_STATS.map((item, index) => (
+                <div key={item.label} className="contents">
+                  <CountUpStat
+                    value={item.value}
+                    label={item.label}
+                    shouldStart={statsStarted}
+                  />
+
+                  {index !== HERO_STATS.length - 1 && (
+                    <div
+                      className="h-14 w-px -rotate-[13deg]"
+                      style={{
+                        background:
+                          "linear-gradient(to bottom, transparent, rgba(255,255,255,0.7), transparent)",
+                      }}
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

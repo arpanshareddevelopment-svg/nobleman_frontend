@@ -47,7 +47,7 @@ export default function ValuesSection() {
       className="relative isolate overflow-hidden py-12 md:py-28"
       style={{
         background:
-          "linear-gradient(180deg, #000000 0%, #030712 40%, #020617 100%)",
+          "linear-gradient(180deg, #000000 0%, #030712 40%, #08090c 100%)",
       }}
     >
       {/* seamless blend from MissionStatement above */}
@@ -166,6 +166,14 @@ export default function ValuesSection() {
           })}
         </div>
       </div>
+
+      <div
+        className="absolute inset-x-0 bottom-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(132,255,61,0.3) 30%, rgba(85,201,255,0.3) 70%, transparent 100%)",
+        }}
+      />
     </section>
   );
 }
