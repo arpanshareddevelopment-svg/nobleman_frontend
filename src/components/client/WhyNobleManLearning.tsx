@@ -137,26 +137,7 @@ export default function WhyNobleManLearning() {
       className="relative isolate overflow-hidden py-14 md:py-28"
       style={{ background: "#08090c" }}
     >
-      {/* Dot grid */}
-      <div
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.028) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
-
-      {/* Ambient glow */}
-      <div
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 60%, rgba(132,255,61,0.05), transparent 55%)",
-        }}
-      />
-
-      <div className="relative z-[2] mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="relative z-20 mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

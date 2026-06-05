@@ -247,25 +247,33 @@ export default function ProgramsShowcase() {
       id="programs"
       ref={sectionRef}
       className="relative overflow-x-hidden py-16 lg:py-28"
-      style={{ background: "var(--bg-page, #08090c)" }}
+      style={{
+        background: `
+  linear-gradient(
+    180deg,
+    #08090c 0%,
+    #060b14 35%,
+    #040913 70%,
+    #06040f 100%
+  )
+`,
+      }}
     >
-      {/* Dot grid background */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
+          backgroundImage: `
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)
+    `,
+          backgroundSize: "40px 40px",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 25%, rgba(0,0,0,0.45) 60%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 25%, rgba(0,0,0,0.45) 60%, transparent 100%)",
         }}
       />
-      {/* Remove these two existing top-fade divs and replace with one: */}
-      <div
-        className="absolute inset-x-0 top-0 h-48 pointer-events-none -z-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, #08090c 0%, transparent 100%)",
-        }}
-      />
+
       <div className="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-9">
         {/* Eyebrow */}
         <motion.div
@@ -347,6 +355,14 @@ export default function ProgramsShowcase() {
           </a>
         </motion.div>
       </div>
+      <div
+        className="absolute -bottom-32 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(46,168,255,0.12) 0%, rgba(46,168,255,0.06) 35%, transparent 75%)",
+          filter: "blur(120px)",
+        }}
+      />
     </section>
   );
 }

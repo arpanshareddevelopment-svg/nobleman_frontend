@@ -108,9 +108,7 @@ function InstructorCard({
             border: "1px solid rgba(255,255,255,0.1)",
             backdropFilter: "blur(12px)",
           }}
-        >
-         
-        </div>
+        ></div>
 
         {/* company */}
         <div
@@ -238,7 +236,7 @@ export default function InstructorCarousel() {
     >
       {/* bg glow */}
       <div
-        className="absolute inset-0 -z-10"
+        className="absolute -top-32 right-0 w-[45%] h-[45%] pointer-events-none"
         style={{
           background: `
             radial-gradient(circle at 10% 20%, rgba(255,230,0,0.08), transparent 35%),
@@ -289,7 +287,6 @@ export default function InstructorCarousel() {
               working at the world's top companies.
             </p>
           </div>
-
         </div>
       </div>
 

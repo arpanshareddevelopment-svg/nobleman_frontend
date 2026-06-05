@@ -1,228 +1,336 @@
 "use client";
+
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Award, BookOpen, Briefcase } from "lucide-react";
+import Image from "next/image";
+import { ShieldCheck, BookOpen, Briefcase, Award } from "lucide-react";
 
-const CERTIFICATIONS = [
+const CERTS = [
   {
     id: 1,
-    type: "Course Completion Certificate",
     icon: BookOpen,
-    color: "var(--brand-blue-light)",
+    label: "Course Completion Certificate",
+    color: "#2ea8ff",
+    src: "/certificates/course.jpeg",
+    orientation: "landscape" as const,
     title: "Master the Skills",
     description:
-      "Earn a professionally designed certificate recognized by 400+ hiring partners.",
+      "Earn a professionally designed certificate upon completing every module. Recognized by 400+ hiring partners across India - it validates what you know, not just that you showed up.",
+    points: [
+      "Issued on completion of all modules",
+      "Verified digital + physical copy",
+      "Accepted by 400+ hiring partners",
+    ],
   },
   {
     id: 2,
-    type: "Project Completion Certificate",
     icon: Briefcase,
-    color: "var(--brand-green-light)",
+    label: "Project Completion Certificate",
+    color: "#84ff3d",
+    src: "/certificates/project_report.jpeg",
+    orientation: "portrait" as const,
     title: "Prove Your Expertise",
     description:
-      "Showcase real hands-on projects you've built. Your work speaks louder than words.",
+      "Every project you build gets reviewed by an industry mentor and earns you a dedicated project certificate. Your work speaks louder than any exam score.",
+    points: [
+      "Mentor-reviewed projects",
+      "Detailed project report included",
+      "Stands out in interviews",
+    ],
   },
   {
     id: 3,
-    type: "Internship Completion Certificate",
     icon: Award,
-    color: "var(--brand-yellow-light)",
+    label: "Internship Certificate",
+    color: "#ffcf33",
+    src: "/certificates/internship.jpeg",
+    orientation: "portrait" as const,
     title: "Real-World Experience",
     description:
-      "Gain industry experience with guided projects and placement support.",
+      "Complete your guided internship and walk away with a certificate that proves industry exposure - not classroom theory. Employers know the difference.",
+    points: [
+      "Live project under real mentorship",
+      "Industry-standard evaluation",
+      "Boosts placement profile significantly",
+    ],
   },
 ];
 
-export default function CertificationsShowcase() {
+function CertRow({ cert, index }: { cert: (typeof CERTS)[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: false, margin: "-100px" });
+  const isEven = index % 2 === 0;
+  const Icon = cert.icon;
+
+  const imgW = cert.orientation === "landscape" ? 450 : 240;
+  const imgH = cert.orientation === "landscape" ? 320 : 300;
+
+  return (
+    <div ref={ref} className="relative">
+      <div
+        className={`flex flex-col gap-10 lg:gap-20 pt-6 items-center  ${
+          isEven ? "lg:flex-row" : "lg:flex-row-reverse"
+        }`}
+      >
+        {/* IMAGE SIDE */}
+        <motion.div
+          initial={{ opacity: 0, x: isEven ? -56 : 56 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex-shrink-0 flex items-center justify-center"
+        >
+          {/* Glow behind */}
+          <div
+            className="absolute pointer-events-none rounded-full"
+            style={{
+              width: imgW * 0.9,
+              height: imgH * 0.7,
+              background: cert.color,
+              opacity: 0.07,
+              filter: "blur(56px)",
+            }}
+          />
+
+          <motion.div
+            whileHover={{ y: -10, scale: 1.025 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className={`relative rounded-2xl overflow-hidden ${
+              cert.orientation === "landscape"
+                ? "w-[400px] h-[280px]"
+                : "w-[250px] h-[340px]"
+            }`}
+            style={{
+              rotate: isEven ? -1.5 : 1.5,
+              boxShadow: `0 32px 72px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08), 0 0 60px ${cert.color}14`,
+            }}
+          >
+            <Image
+              src={cert.src}
+              alt={cert.label}
+              fill
+              className="object-cover"
+              sizes={`${imgW}px`}
+              priority={index === 0}
+            />
+
+            {/* Shine overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 55%, rgba(0,0,0,0.1) 100%)",
+              }}
+            />
+
+            {/* Verified chip */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.75 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{
+                delay: 0.55,
+                duration: 0.4,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full px-3 py-1.5"
+              style={{
+                background: "rgba(8,9,12,0.88)",
+                border: `1px solid ${cert.color}44`,
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <ShieldCheck size={11} style={{ color: cert.color }} />
+              <span
+                className="text-[10px] font-bold uppercase tracking-[0.1em]"
+                style={{ color: cert.color }}
+              >
+                Verified
+              </span>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* TEXT SIDE */}
+        <div className="flex-1 min-w-0">
+          {/* Icon + label */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.12, duration: 0.45 }}
+            className="flex items-center gap-3 mb-5"
+          >
+            <div
+              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
+              style={{
+                background: cert.color + "15",
+                border: `1px solid ${cert.color}30`,
+                color: cert.color,
+              }}
+            >
+              <Icon size={20} strokeWidth={1.6} />
+            </div>
+            <span
+              className="text-[11px] font-bold uppercase tracking-[0.18em]"
+              style={{ color: cert.color }}
+            >
+              {cert.label}
+            </span>
+          </motion.div>
+
+          {/* Title */}
+          <motion.h3
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-[clamp(1.9rem,2.8vw,2.7rem)] font-black leading-[1.06] tracking-tight mb-4"
+            style={{ color: "var(--fg-primary, #f0f6ff)" }}
+          >
+            {cert.title}
+          </motion.h3>
+
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.27, duration: 0.5 }}
+            className="text-[0.95rem] leading-[1.85] mb-7"
+            style={{ color: "rgba(255,255,255,0.48)" }}
+          >
+            {cert.description}
+          </motion.p>
+
+          {/* Points */}
+          <ul className="flex flex-col gap-3">
+            {cert.points.map((point, pi) => (
+              <motion.li
+                key={pi}
+                initial={{ opacity: 0, x: isEven ? 16 : -16 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.35 + pi * 0.09, duration: 0.42 }}
+                className="flex items-center gap-3"
+              >
+                <span
+                  className="h-1.5 w-1.5 rounded-full flex-shrink-0"
+                  style={{ background: cert.color }}
+                />
+                <span
+                  className="text-[0.875rem] font-medium"
+                  style={{ color: "rgba(255,255,255,0.62)" }}
+                >
+                  {point}
+                </span>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Row divider - not on last */}
+      {index < CERTS.length - 1 && (
+        <div
+          className="mt-10 h-px w-full"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.06) 70%, transparent)",
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+export default function CertificationsShowcase() {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
     <section
       id="certifications"
-      ref={ref}
-      className="relative w-full overflow-hidden py-12 md:py-28"
+      className="relative w-full overflow-hidden py-20 md:py-32"
       style={{
-        background:
-          "linear-gradient(155deg, #010b27ff 0%, #00090489 45%, #000000 100%)",
+        background: `
+    linear-gradient(
+      145deg,
+      #060a129e 0%,
+      #000000 12%,
+      #0b0c0fc0 35%,
+      #010102 100%
+    )
+  `,
       }}
     >
-      {/* Dot-grid texture */}
+      {/* Ambient */}
       <div
-        className="absolute inset-0 -z-20 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 8% 35%, rgba(46, 168, 255, 0.14), transparent 40%), radial-gradient(ellipse at 92% 65%, rgba(132, 255, 61, 0.05), transparent 40%), radial-gradient(ellipse at 50% 80%, rgba(255, 207, 51, 0.05), transparent 35%)",
+        }}
+      />{" "}
+      {/* Dot grid */}
+      <div
+        className="absolute inset-0 z-10"
         style={{
           backgroundImage:
-            "radial-gradient(circle, var(--fg-muted) 1px, transparent 1px)",
+            "radial-gradient(circle, var(--grid-dot) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
-          opacity: 0.08,
+          maskImage:
+            "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.22) 58%, transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, rgba(0,0,0,0.62) 8%, transparent 100%)",
         }}
       />
-
-      {/* Ambient glows */}
-      <div
-        className="absolute inset-0 -z-10 pointer-events-none blur-3xl"
-        style={{
-          background: `
-            radial-gradient(circle at 15% 25%, var(--brand-blue-glow), transparent 40%),
-            radial-gradient(circle at 85% 75%, var(--brand-yellow-glow), transparent 45%),
-            radial-gradient(circle at 50% 50%, var(--brand-green-glow), transparent 55%)
-          `,
-        }}
-      />
-
-      <div className="max-w-6xl mx-auto px-6 md:px-14">
-        {/* Header */}
-        <div className="mb-16 text-center">
-          <motion.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-9">
+        {/* HEADER */}
+        <div ref={headerRef} className="mb-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.4 }}
-            className="inline-flex mb-6 px-4 py-1 rounded-full font-medium text-white transition-all duration-200 hover:-translate-y-2 hover:scale-[1.02] active:scale-95"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--brand-blue-light), var(--brand-blue-dark))",
-              boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)",
-            }}
+            className="mb-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]"
+            style={{ color: "#84ff3d" }}
           >
-            Recognized Credentials
-          </motion.span>
+            <span className="h-[1.5px] w-5" style={{ background: "#84ff3d" }} />
+            Credentials
+            <span className="h-[1.5px] w-5" style={{ background: "#84ff3d" }} />
+          </motion.div>
+
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-tight mb-2"
-            style={{ color: "var(--fg-primary)" }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.08 }}
+            className="text-[clamp(2.2rem,3.8vw,3.8rem)] font-black leading-[1.05] tracking-tight"
+            style={{ color: "var(--fg-primary, #f0f6ff)" }}
           >
             Credentials that{" "}
             <span
               className="bg-clip-text text-transparent"
               style={{
                 backgroundImage:
-                  "linear-gradient(135deg, #2ea8ff 0%, #84ff3d 50%, #ffcf33 100%)",
+                  "linear-gradient(120deg, #2ea8ff 0%, #84ff3d 55%, #ffcf33 100%)",
               }}
             >
-              matter
+              open doors
             </span>
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="text-lg max-w-2xl mx-auto"
-            style={{ color: "var(--fg-secondary)" }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.45, delay: 0.14 }}
+            className="mt-4 text-[0.95rem] leading-[1.8] max-w-xl mx-auto"
+            style={{ color: "rgba(255,255,255,0.42)" }}
           >
             Every certificate validates real skills. From completion to
-            internships, we certify capability—not just participation.
+            internships, we certify capability-not just participation.
           </motion.p>
         </div>
 
-        {/* Certifications grid */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {CERTIFICATIONS.map((cert, i) => {
-            const Icon = cert.icon;
-            return (
-              <motion.div
-                key={cert.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-                className="group rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] cursor-pointer"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)",
-                  backdropFilter: "blur(28px)",
-                  WebkitBackdropFilter: "blur(28px)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  boxShadow:
-                    "0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
-                }}
-              >
-                {/* Gradient overlay on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 rounded-2xl"
-                  style={{
-                    background: `radial-gradient(circle at 30% 30%, ${cert.color}18, transparent 65%)`,
-                  }}
-                />
-                <div className="flex gap-2 items-center">
-                  {/* Icon */}
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{
-                      background: `${cert.color}15`,
-                      color: cert.color,
-                    }}
-                  >
-                    <Icon size={28} strokeWidth={1.5} />
-                  </div>
-                  {/* Content */}
-                  <div>
-                    <div
-                      className="text-xs font-bold tracking-widest uppercase bg-clip-text text-transparent"
-                      style={{
-                        backgroundImage:
-                          cert.id === 1
-                            ? "var(--blue-gradient-dark)"
-                            : cert.id === 2
-                              ? "var(--green-gradient-dark)"
-                              : "var(--yellow-gradient-dark)",
-                        WebkitBackgroundClip: "text",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      {cert.type}
-                    </div>
-                  </div>
-                </div>
-                <h3
-                  className="text-xl font-black leading-tight mb-2"
-                  style={{ color: "var(--fg-primary)" }}
-                >
-                  {cert.title}
-                </h3>
-                {/* Description */}
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--fg-secondary)" }}
-                >
-                  {cert.description}
-                </p>
-
-                {/* Accent line */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-                  style={{
-                    background: `linear-gradient(90deg, ${cert.color}, transparent)`,
-                  }}
-                />
-              </motion.div>
-            );
-          })}
+        {/* ALTERNATING ROWS */}
+        <div className="flex flex-col gap-0">
+          {CERTS.map((cert, i) => (
+            <CertRow key={cert.id} cert={cert} index={i} />
+          ))}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-16 text-center"
-        >
-          <p className="text-lg mb-6" style={{ color: "var(--fg-secondary)" }}>
-            8000+ certificates issued • 92% career growth • 400+ hiring partners
-            trust our credentials
-          </p>
-          <button
-            className="cursor-pointer px-8 py-3 rounded-full font-bold text-white transition-all duration-200 hover:-translate-y-2 hover:scale-[1.02] active:scale-95"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--brand-blue-light), var(--brand-blue-dark))",
-              boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)",
-            }}
-          >
-            View Programs
-          </button>
-        </motion.div>
       </div>
     </section>
   );

@@ -9,6 +9,8 @@ import PlacementStats from "../components/client/PlacementStats";
 import WhyNobleMaLearning from "../components/client/WhyNobleManLearning";
 import Testimonials from "../components/client/Testimonials";
 import ValuesSection from "../components/client/ValuesSection";
+import About from "../components/client/About";
+import FAQ from "../components/client/FAQ";
 import Footer from "../components/Footer";
 
 export default function Home() {
@@ -20,12 +22,14 @@ export default function Home() {
         <Hero />
         <MissionStatement />
         <ValuesSection />
+        <About />
         <ProgramsShowcase />
         <InstructorCarousel />
         <CertificationsShowcase />
         <PlacementStats />
         <WhyNobleMaLearning />
         <Testimonials />
+        <FAQ />
       </main>
 
       <Footer />

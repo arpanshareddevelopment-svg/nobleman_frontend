@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
   Bell,
-  ShoppingBag,
-  CreditCard,
   HelpCircle,
   LogOut,
   User,
+  LayoutDashboard,
+  Gift,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -21,26 +21,30 @@ const SECTION_COLORS: SectionColor[] = [
   { id: "home", color: "#00c4ff", glow: "rgba(0,196,255,0.25)" },
   { id: "mission", color: "#c8ff00", glow: "rgba(200,255,0,0.25)" },
   { id: "values", color: "#ff6b6b", glow: "rgba(255,107,107,0.25)" },
+  { id: "about", color: "#00c4ff", glow: "rgba(0,196,255,0.25)" },
   { id: "instructors", color: "#ffe600", glow: "rgba(255,230,0,0.25)" },
   { id: "programs", color: "#a78bfa", glow: "rgba(167,139,250,0.25)" },
   { id: "certifications", color: "#34d399", glow: "rgba(52,211,153,0.25)" },
   { id: "placement", color: "#fb923c", glow: "rgba(251,146,60,0.25)" },
   { id: "why", color: "#f472b6", glow: "rgba(244,114,182,0.25)" },
   { id: "testimonials", color: "#38bdf8", glow: "rgba(56,189,248,0.25)" },
+  { id: "faq", color: "#c8ff00", glow: "rgba(200,255,0,0.25)" },
 ];
 
 // ─── Nav links ────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
   { href: "#programs", label: "Programs", short: "Programs" },
-  { href: "#reviewss", label: "Reviewss", short: "Reviewss" },
-  { href: "#jobBoard", label: "JobBoard", short: "Job board" },
+  { href: "#about", label: "About", short: "About" },
+  { href: "#faq", label: "FAQ", short: "FAQ" },
+  { href: "#testimonials", label: "Reviews", short: "Reviews" },
 ];
 
 // ─── User dropdown links ──────────────────────────────────────────────────────
 const USER_LINKS = [
+  { icon: LayoutDashboard, label: "User Dashboard", href: "/profile/dashboard" },
+ 
+  
   { icon: Bell, label: "Notifications & Messages", href: "#notifications" },
-  { icon: ShoppingBag, label: "My Purchases", href: "#purchases" },
-  { icon: CreditCard, label: "Payment Method", href: "#payment" },
   { icon: HelpCircle, label: "Help & Support", href: "#support" },
 ];
 
@@ -87,7 +91,7 @@ function BrandLogo({
         alt="Brand"
         fill
         sizes={isOpen ? `${expandedWidth}px` : `${collapsedWidth}px`}
-        className={`object-contain py-[2px] ${!isOpen ? "scale-110" : ""}`}
+        className={`cursor-pointer object-contain py-[2px] ${!isOpen ? "scale-110" : ""}`}
         priority
       />
     </div>

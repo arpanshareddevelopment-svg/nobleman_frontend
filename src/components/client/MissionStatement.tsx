@@ -14,8 +14,8 @@ export default function MissionStatement() {
       className="relative isolate overflow-hidden py-12 md:py-28"
       style={{
         background: `
-          radial-gradient(circle at 20% 20%, rgba(85,201,255,0.08), transparent 30%),
-          radial-gradient(circle at 80% 70%, rgba(132,255,61,0.06), transparent 32%),
+          radial-gradient(circle at 20% 20%, rgba(85,201,255,0.08), transparent 20%),
+          radial-gradient(circle at 80% 70%, rgba(132,255,61,0.02), transparent 22%),
           linear-gradient(180deg, #05060a 0%, #070b12 45%, #05070d 100%)
         `,
       }}
@@ -32,13 +32,13 @@ export default function MissionStatement() {
       <motion.div
         animate={{
           scale: [1, 1.08, 1],
-          opacity: [0.45, 0.65, 0.45],
+          opacity: [0.45, 0.65, 0.05],
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         className="absolute inset-0 -z-10 blur-3xl opacity-60"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 40%, var(--brand-green-glow) 0%, transparent 70%)",
+            "radial-gradient(ellipse 60% 50% at 50% 40%, var(--brand-green-glow) 0%, transparent 30%)",
         }}
       />
 
@@ -46,12 +46,12 @@ export default function MissionStatement() {
       <div
         className="absolute -z-10 blur-3xl opacity-12"
         style={{
-          width: "40%",
-          height: "60%",
+          width: "20%",
+          height: "20%",
           top: "20%",
           left: "-5%",
           background:
-            "radial-gradient(circle, rgba(46,168,255,0.16) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(46,168,255,0.16) 0%, transparent 10%)",
         }}
       />
 
@@ -145,9 +145,9 @@ export default function MissionStatement() {
 
       {/* blend into ValuesSection below */}
       <div
-        className="absolute inset-x-0 bottom-0 h-32 -z-10 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-40 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.6), transparent)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.9), transparent)",
         }}
       />
     </section>

@@ -44,7 +44,7 @@ export default function ValuesSection() {
   return (
     <section
       id="values"
-      className="relative isolate overflow-hidden py-12 md:py-28"
+      className="relative isolate overflow-x-hidden py-12 md:py-28"
       style={{
         background:
           "linear-gradient(180deg, #000000 0%, #030712 40%, #08090c 100%)",
@@ -59,28 +59,26 @@ export default function ValuesSection() {
         }}
       />
 
-      {/* GRID BG */}
       <div
-        className="absolute inset-0 -z-20"
+        className="absolute inset-0 -z-20 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(var(--fg-muted) 1px, transparent 1px),
-            linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
-          `,
+      linear-gradient(var(--fg-muted) 1px, transparent 1px),
+      linear-gradient(90deg, var(--fg-muted) 1px, transparent 1px)
+    `,
           backgroundSize: "40px 40px",
           opacity: 0.08,
         }}
       />
-
       {/* GLOW */}
       <div
-        className="absolute inset-0 top-10 -z-10 blur-3xl"
+        className="absolute inset-0 top-0 -z-10 blur-5xl"
         style={{
           background: `
           
-            radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 20%)
+            radial-gradient(circle at 80% 80%, var(--brand-blue-glow), transparent 15%)
           `,
-          opacity: 0.5,
+          opacity: 0.4,
         }}
       />
 
@@ -168,10 +166,10 @@ export default function ValuesSection() {
       </div>
 
       <div
-        className="absolute inset-x-0 bottom-0 h-px"
+        className="absolute inset-x-0 bottom-0 h-[1px]"
         style={{
           background:
-            "linear-gradient(90deg, transparent 0%, rgba(132,255,61,0.3) 30%, rgba(85,201,255,0.3) 70%, transparent 100%)",
+            "linear-gradient(90deg, transparent, rgba(85,201,255,0.18), rgba(132,255,61,0.18), transparent)",
         }}
       />
     </section>

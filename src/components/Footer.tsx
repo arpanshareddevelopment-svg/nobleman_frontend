@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Github, Linkedin, Twitter, Mail } from "lucide-react";
 import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 
 const FOOTER_SECTIONS = [
   {
@@ -90,23 +91,43 @@ function SocialButton({
   icon: Icon,
   href,
 }: {
-  icon: React.ComponentType<{ size?: number }>;
+  icon: LucideIcon;
   href: string;
 }) {
   return (
     <motion.a
       href={href}
-      whileHover={{ y: -4 }}
-      className="flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-300"
+      whileHover={{
+        y: -5,
+        scale: 1.08,
+      }}
+      whileTap={{ scale: 0.95 }}
+      className="group relative flex h-11 w-11 items-center justify-center rounded-2xl overflow-hidden"
       style={{
         border: "1px solid rgba(255,255,255,0.1)",
         background: "rgba(255,255,255,0.03)",
-        boxShadow: "0 0 25px rgba(46,168,255,0.08)",
         color: "rgba(255,255,255,0.7)",
         backdropFilter: "blur(14px)",
       }}
     >
-      <Icon size={18} />
+      <div
+        className="
+    absolute inset-0 opacity-0
+    transition-opacity duration-300
+    group-hover:opacity-100
+  "
+        style={{
+          background:
+            "radial-gradient(circle, rgba(46,168,255,0.25), rgba(132,255,61,0.15), transparent 70%)",
+          filter: "blur(12px)",
+        }}
+      />
+      <Icon
+        size={18}
+        className="relative z-10 transition-all duration-300
+    group-hover:scale-110
+  "
+      />
     </motion.a>
   );
 }
